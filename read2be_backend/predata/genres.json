@@ -1,0 +1,18 @@
+[
+    {
+        "genre_id": 1,
+        "name": "Drama"
+    },
+    {
+        "genre_id": 2,
+        "name": "Fantasy"
+    },
+    {
+        "genre_id": 3,
+        "name": "Educational"
+    },
+    {
+        "genre_id": 4,
+        "name": "History"
+    }
+]

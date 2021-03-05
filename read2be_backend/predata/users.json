@@ -1,0 +1,25 @@
+[
+    {
+        "user_id": "0000001",
+        "username": "a85272",
+        "nickname": "Jorge Mota",
+        "password_hash": "sha256:base64_salt:base64_hash",
+        "email": "a85272@alunos.uminho.pt",
+        "role": 1,
+        "avatar_url": "",
+        "books": [
+            {
+                "book_isbn": "",
+                "status": 1,
+                "rate": 10,
+                "date_registered": ""
+            }
+        ],
+        "friends": [
+            "0000002"
+        ],
+        "pending": [
+            "0000003"
+        ]
+    }
+]

@@ -1,0 +1,18 @@
+[
+    {
+        "status_id": 1,
+        "name": "Reading"
+    },
+    {
+        "status_id": 2,
+        "name": "Finished"
+    },
+    {
+        "status_id": 3,
+        "name": "Plan to Read"
+    },
+    {
+        "status_id": 4,
+        "name": "Dropped"
+    }
+]
