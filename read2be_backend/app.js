@@ -3,9 +3,38 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const mongoose = require('mongoose');
+const swagger_js_doc = require("swagger-jsdoc");
+const swagger_ui = require("swagger-ui-express");
+
 require('dotenv/config');
 
+const swagger_options = {
+    swaggerDefinition: {
+      info: {
+        version: "1.0.0",
+        title: "Read2Be API",
+        description: "Read2Be API",
+        contact: {
+          name: "Grupo X"
+        },
+        servers: ["http://localhost:8080"]
+      }
+    },
+    apis: ['./routes/*.js']
+};
+
+const swagger_docs = swaggerJsDoc(swagger_options);
+app.use("/docs", swagger_ui.serve, swagger_uiz.setup(swagger_docs));
+
 const index_router = require('./routes/index');
+
+const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://127.0.0.1/read2be';
+mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error', () => console.error("MongoDB connection error..."));
+db.once('open', () => console.log("Connected to MongoDB successfully..."));
+
 
 var app = express();
 
@@ -14,7 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index_router);
+app.use('/api', index_router);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

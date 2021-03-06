@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+const crypto = require('crypto');
+
+async function gen_password_hash(password)
+{
+    const SALT_SIZE = 9;
+    const salt_bytes = (await crypto.randomBytes(SALT_SIZE)).toString('base64');
+    const passwd_hash = crypto.createHash('sha256')
+        .update(salt_bytes + password)
+        .digest('base64');
+
+    return `sha256:${salt_bytes}:${passwd_hash}`;
+}
+
+gen_password_hash("a_password")
+.then(hash => console.log(hash));
