@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 // =========================== // User CRUD operations
 
 // List all users
-module.exports.list_all = () => {
+module.exports.list_all = (options={}) => {
+    const page_limit = options.page_limit || 20;
+    const page_num = options.page_num || 0;
     return User
         .find({},{_id:0,password_hash:0})
         .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
@@ -14,17 +16,24 @@ module.exports.list_all = () => {
 }
 
 // Get a user by id
-module.exports.get = (uid,no_password=false) => {
+module.exports.get = (username,no_password=false) => {
+    // return User
+    //     .findOne(
+    //         { username:username },
+    //         { _id:0, (no_password ? (password_hash:1) : undefined) }
+    //     )
+    //     .exec();
+
     if(no_password)
     {
         return User
-            .findOne({ username: uid },{_id:0,password_hash:0})
+            .findOne({ username: username },{_id:0,password_hash:0})
             .exec();
     }
     else
     {
         return User
-            .findOne({ username: uid },{_id:0})
+            .findOne({ username: username },{_id:0})
             .exec();
     }
 }

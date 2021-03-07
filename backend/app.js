@@ -4,28 +4,31 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const swaggerJsDoc = require("swagger-jsdoc");
-const swaggerUI = require("swagger-ui-express");
+const swagger_js_doc = require("swagger-jsdoc");
+const swagger_ui = require("swagger-ui-express");
 
 require('dotenv/config');
 
 const app = express();
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    info: {
-      title: "Read2Be API",
-      version: '0.0.1',
+const swagger_options = {
+    swaggerDefinition: {
+        info: {
+            title: "Read2Be API",
+            version: '0.0.1'
+        },
+        host:`localhost:${process.env.PORT || "8080"}`,
+        basePath:"/api"
     },
-  },
-  apis: ["app.js","routes/index.js"],
+    apis: ["routes/*.js"],
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+const swagger_docs = swagger_js_doc(swagger_options);
+app.use('/docs', swagger_ui.serve, swagger_ui.setup(swagger_docs));
 
 
 const index_router = require('./routes/index');
+const users_router = require('./routes/users');
 
 const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://127.0.0.1/read2be';
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -34,13 +37,13 @@ db.on('error', () => console.error("MongoDB connection error..."));
 db.once('open', () => console.log("Connected to MongoDB successfully..."));
 
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', index_router);
+app.use('/api', users_router);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

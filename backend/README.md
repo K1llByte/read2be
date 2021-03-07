@@ -27,21 +27,27 @@ GET /users
 GET /users/:user_id
 POST /users
 PATCH /users/:user_id
+
+POST /users/:user_id/books
+PATCH /users/:user_id/requests/:index
 ```
 
 ### Books
 ```
 GET /books
+GET /books/:isbn
 ```
 
 ### Publishers
 ```
 GET /publishers
+GET /publishers/:publisher_id
 ```
 
 ### Authors
 ```
-GET /publishers
+GET /authors
+GET /authors/:author_id
 ```
 
 

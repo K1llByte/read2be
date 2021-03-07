@@ -39,7 +39,7 @@ module.exports.authenticate = (required_permission = undefined) => {
                         };
                         next();
                     }
-                    else if((payload.perms & required_permission) > 0)
+                    else if((payload.role & required_permission) > 0)
                     {
                         req.user = { 
                             role : payload.role,

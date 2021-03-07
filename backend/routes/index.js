@@ -6,30 +6,46 @@ const { Blacklist } = require('../controllers/blacklist');
 const router = express.Router();
 var blacklist = new Blacklist();
 
+
 /**
  * @swagger
  * /login:
  *  post:
- *    description: Login
+ *    summary: Login
+ *    description: Login into the system and returns the authentication token
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: formData
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: password
+ *        in: formData
+ *        required: true
+ *        description: Password of the user
+ *        type: string
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: Successful, Authentication Token
+ *      '401':
+ *        description: Incorrect credentials
  */
 router.post('/login', (req, res) => {
 
-    console.log(req.body);
     User.verify_password(req.body.username,req.body.password)
-        .then(userdata => {
-            if(userdata != null)
-            {
-                const token = auth.gen_token(userdata);
-                res.json({ "TOKEN":token });
-            }
-            else
-            {
-                res.status(401).json({ "error":"Incorrect credentials" });
-            }
-        });
+    .then(userdata => {
+        if(userdata != null)
+        {
+            console.log("userdata",userdata);
+            const token = auth.gen_token(userdata);
+            res.json({ "TOKEN":token });
+        }
+        else
+        {
+            res.status(401).json({ "error":"Incorrect credentials" });
+        }
+    });
 });
 
 
@@ -37,17 +53,27 @@ router.post('/login', (req, res) => {
  * @swagger
  * /logout:
  *  post:
+ *    summary: Revoke authentication token
  *    description: Revoke authentication token
+ *    parameters:
+ *      - name: Authorization
+ *        in: header
+ *        required: true
+ *        description: Bearer Token
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: Succsessfully revoked token
+ *      '400':
+ *        description: Not logged in
+ *      '401':
+ *        description: Token already revoked
  */
 router.post('/logout', (req, res) => {
 
     const token = auth.fetch_token(req);
     if(token == null)
     {
-        res.status(401).json({ "error" : "Not logged in" });
+        res.status(400).json({ "error" : "No Authentication" });
     }
     else if(blacklist.has(token))
     {
@@ -66,10 +92,32 @@ router.post('/logout', (req, res) => {
  * @swagger
  * /register:
  *  post:
+ *    summary: Register an account
  *    description: Register an account
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: formData
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: password
+ *        in: formData
+ *        required: true
+ *        description: Password for the user
+ *        type: string
+ *      - name: email
+ *        in: formData
+ *        required: true
+ *        description: Email address
+ *        type: string
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: Successful
+ *      '400':
+ *        description: Invalid input
+ *      '406':
+ *        description: User already exists
  */
 router.post('/register', async (req,res) => {
     
@@ -106,26 +154,22 @@ router.post('/register', async (req,res) => {
                     res.json({ "status" : "success" });
                 })
                 .catch(err => {
-                    // TODO: error
-                    //console.log(err);
-                    res.json({ "status" : err.message });
+                    res.status(500).json({ "error" : err.message });
                 })
             }
             else
             {
-                // TODO: error
-                res.json({ "status" : "User already exists" });
+                res.status(406).json({ "error" : "User already exists" });
             }
         })
         .catch(err => {
-            console.log(err);
-            res.json({ "status" : err });
+            res.status(500).json({ "error" : err.message });
         })
         
     }
     else
     {
-        res.json({ "status" : "error" });
+        res.status(400).json({ "error" : "Invalid input" });
     }
 });
 

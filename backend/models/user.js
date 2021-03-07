@@ -28,16 +28,3 @@ const user_schema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('users', user_schema);
-
-// {
-//     "user_id": "",
-//     "username": "",
-//     "nickname": "",
-//     "password_hash": "",
-//     "email": "",
-//     "role": "",
-//     "avatar_url": "",
-//     "books": "",
-//     "friends": "",
-//     "pending": "",
-// }
