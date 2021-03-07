@@ -2,6 +2,7 @@ const express = require('express');
 const auth = require('../controllers/auth');
 const User = require('../controllers/user');
 const { Blacklist } = require('../controllers/blacklist');
+const { Regex } = require('../controllers/validation');
 
 const router = express.Router();
 var blacklist = new Blacklist();
@@ -11,6 +12,8 @@ var blacklist = new Blacklist();
  * @swagger
  * /login:
  *  post:
+ *    tags:
+ *      - Authentication
  *    summary: Login
  *    description: Login into the system and returns the authentication token
  *    produces: application/json
@@ -33,6 +36,8 @@ var blacklist = new Blacklist();
  */
 router.post('/login', (req, res) => {
 
+    console.log("req.body.username",req.body.username);
+    console.log("req.body.password",req.body.password);
     User.verify_password(req.body.username,req.body.password)
     .then(userdata => {
         if(userdata != null)
@@ -53,6 +58,8 @@ router.post('/login', (req, res) => {
  * @swagger
  * /logout:
  *  post:
+ *    tags:
+ *      - Authentication
  *    summary: Revoke authentication token
  *    description: Revoke authentication token
  *    parameters:
@@ -92,6 +99,8 @@ router.post('/logout', (req, res) => {
  * @swagger
  * /register:
  *  post:
+ *    tags:
+ *      - Authentication
  *    summary: Register an account
  *    description: Register an account
  *    produces: application/json
@@ -121,10 +130,10 @@ router.post('/logout', (req, res) => {
  */
 router.post('/register', async (req,res) => {
     
-    const USERNAME_REGEX = /^(\w|-){1,32}$/;
-    const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const WEAK_PASSWD_REGEX = /^(\w|-|\.){8,32}$/
-    const STRONG_PASSWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,32})/
+    const USERNAME_REGEX = Regex.USERNAME;
+    const EMAIL_REGEX = Regex.EMAIL;
+    const WEAK_PASSWD_REGEX = Regex.WEAK_PASSWD;
+    const STRONG_PASSWD_REGEX = Regex.STRONG_PASSWD;
 
     // Input Validation
     if(req.body.username.match(USERNAME_REGEX) &&

@@ -18,7 +18,12 @@ const swagger_options = {
             version: '0.0.1'
         },
         host:`localhost:${process.env.PORT || "8080"}`,
-        basePath:"/api"
+        basePath:"/api",
+        tags: [
+            {
+                name: "Authentication"
+            }
+        ]
     },
     apis: ["routes/*.js"],
 };

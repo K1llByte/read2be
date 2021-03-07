@@ -4,6 +4,12 @@ const mongoose = require('mongoose');
 
 // =========================== // User CRUD operations
 
+// Inserts a new user
+module.exports.insert = (userdata) => {
+    let new_user = new User(userdata);
+    return new_user.save()
+}
+
 // List all users
 module.exports.list_all = (options={}) => {
     const page_limit = options.page_limit || 20;
@@ -20,21 +26,22 @@ module.exports.get = (username,no_password=false) => {
     if(no_password)
     {
         return User
-            .findOne({ username: username },{_id:0})
+            .findOne({ username: username },{_id:0,password_hash:0})
             .exec();
     }
     else
     {
         return User
-            .findOne({ username: username },{_id:0,password_hash:0})
+            .findOne({ username: username },{_id:0})
             .exec();
     }
 }
 
-// Inserts a new user
-module.exports.insert = (userdata) => {
-    let new_user = new User(userdata);
-    return new_user.save()
+// Update user data
+module.exports.set = (username,userdata) => {
+    return User
+        .updateOne({username:username},{$set : userdata})
+        .exec();
 }
 
 // =========================== // User specific methods
@@ -67,9 +74,10 @@ module.exports.parse_password_hash = (password) => {
 
 // Verify user credentials
 module.exports.verify_password = async (username,in_password) => {
-    let userdata = await this.get(username)
+    let userdata = await this.get(username,false)
     if(userdata != null)
     {
+        console.log("userdata.password_hash",userdata.password_hash);
         const passwd_obj = this.parse_password_hash(userdata.password_hash);
         const in_pass_hash = crypto.createHash(passwd_obj.hash_algorithm)
             .update(passwd_obj.salt + in_password)
@@ -83,6 +91,33 @@ module.exports.verify_password = async (username,in_password) => {
     {
         return null;
     }
+}
+
+// Check if users already has a book
+module.exports.has_book = async (username,isbn) => {
+    let val = await User
+        .countDocuments({ 
+            "username": username,
+            "books.isbn":isbn }
+        )
+        .exec();
+    return val > 0;
+}
+
+// Add book to user book list
+module.exports.add_book = (username,bookdata) => {
+    return User.updateOne(
+        { username: username },
+        { $push : { books: bookdata} }
+    ).exec()
+}
+
+// Remove book from user list
+module.exports.remove_book = (username,isbn) => {
+    return User.updateOne(
+        { username: username },
+        { $pull: { books: { isbn: isbn } } }
+    ).exec()
 }
 
 // =========================== // 

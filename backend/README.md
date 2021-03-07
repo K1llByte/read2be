@@ -9,6 +9,9 @@ npm install
 npm start
 ```
 
+```sh
+mongoimport --jsonArray -d read2be -c status status.json
+```
 ___
 
 # Guide
@@ -23,13 +26,16 @@ This document will help in some hints on the project and some decisions that wer
 
 ### Users
 ```
-GET /users
-GET /users/:user_id
-POST /users
-PATCH /users/:user_id
+[User]  GET /users
+[User]  GET /users/:username
+[Admin] POST /users
+[User]  PATCH /users/:username
+[User]  DELETE /users/:username
 
-POST /users/:user_id/books
-PATCH /users/:user_id/requests/:index
+[User]  POST /users/:username/books
+[User]  DELETE /users/:username/books/:isbn
+[User]  PATCH /users/:username/books/:isbn
+[User]  PATCH /users/:username/requests/:friend_username
 ```
 
 ### Books
