@@ -9,8 +9,8 @@ var blacklist = new Blacklist();
 /**
  * @swagger
  * /login:
- *  get:
- *    description: Use to request all customers
+ *  post:
+ *    description: Login
  *    responses:
  *      '200':
  *        description: A successful response
@@ -35,9 +35,9 @@ router.post('/login', (req, res) => {
 
 /**
  * @swagger
- * /customers:
- *  get:
- *    description: Use to request all customers
+ * /logout:
+ *  post:
+ *    description: Revoke authentication token
  *    responses:
  *      '200':
  *        description: A successful response
@@ -64,9 +64,9 @@ router.post('/logout', (req, res) => {
 
 /**
  * @swagger
- * /customers:
- *  get:
- *    description: Use to request all customers
+ * /register:
+ *  post:
+ *    description: Register an account
  *    responses:
  *      '200':
  *        description: A successful response

@@ -4,28 +4,26 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const swagger_js_doc = require("swagger-jsdoc");
-const swagger_ui = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
 
 require('dotenv/config');
 
-const swagger_options = {
-    swaggerDefinition: {
-      info: {
-        version: "1.0.0",
-        title: "Read2Be API",
-        description: "Read2Be API",
-        contact: {
-          name: "Grupo X"
-        },
-        servers: ["http://localhost:8080"]
-      }
+const app = express();
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "Read2Be API",
+      version: '0.0.1',
     },
-    apis: ['./routes/*.js']
+  },
+  apis: ["app.js","routes/index.js"],
 };
 
-const swagger_docs = swaggerJsDoc(swagger_options);
-app.use("/docs", swagger_ui.serve, swagger_uiz.setup(swagger_docs));
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
 
 const index_router = require('./routes/index');
 
@@ -36,7 +34,6 @@ db.on('error', () => console.error("MongoDB connection error..."));
 db.once('open', () => console.log("Connected to MongoDB successfully..."));
 
 
-var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
