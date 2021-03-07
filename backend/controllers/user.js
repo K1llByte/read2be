@@ -17,23 +17,16 @@ module.exports.list_all = (options={}) => {
 
 // Get a user by id
 module.exports.get = (username,no_password=false) => {
-    // return User
-    //     .findOne(
-    //         { username:username },
-    //         { _id:0, (no_password ? (password_hash:1) : undefined) }
-    //     )
-    //     .exec();
-
     if(no_password)
     {
         return User
-            .findOne({ username: username },{_id:0,password_hash:0})
+            .findOne({ username: username },{_id:0})
             .exec();
     }
     else
     {
         return User
-            .findOne({ username: username },{_id:0})
+            .findOne({ username: username },{_id:0,password_hash:0})
             .exec();
     }
 }
