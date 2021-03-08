@@ -44,6 +44,13 @@ module.exports.set = (username,userdata) => {
         .exec();
 }
 
+// Delete user data
+module.exports.delete = (username,userdata) => {
+    return User
+        .deleteOne({username:username})
+        .exec();
+}
+
 // =========================== // User specific methods
 
 // Generate a User ID
@@ -109,7 +116,7 @@ module.exports.add_book = (username,bookdata) => {
     return User.updateOne(
         { username: username },
         { $push : { books: bookdata} }
-    ).exec()
+    ).exec();
 }
 
 // Remove book from user list
@@ -117,7 +124,25 @@ module.exports.remove_book = (username,isbn) => {
     return User.updateOne(
         { username: username },
         { $pull: { books: { isbn: isbn } } }
-    ).exec()
+    ).exec();
+}
+
+// Update book from user list
+module.exports.update_book = (username,isbn,bookdata) => {
+
+    let set_query = {};
+    if(bookdata.status)
+        set_query['books.$.status'] = bookdata.status;
+    if(bookdata.rate)
+        set_query['books.$.rate'] = bookdata.rate;
+
+    return User.updateOne(
+        { 
+            "username": username,
+            "books.isbn": isbn
+        },
+        { "$set" : set_query }
+    ).exec();
 }
 
 // =========================== // 

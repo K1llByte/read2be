@@ -187,6 +187,41 @@ router.patch('/users/:username', auth.authenticate(Permissions.Member), async (r
 
 /**
  * @swagger
+ * /users/{username}:
+ *  delete:
+ *    tags:
+ *      - User
+ *    summary: Delete user
+ *    description: Delete user
+ *    produces: application/json
+ *    responses:
+ *      '200':
+ *        description: User deleted successfully
+ *      '401':
+ *        description: Forbidden
+ */
+router.delete('/users/:username', auth.authenticate(Permissions.Member), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        User.delete(target_username)
+        .then(info => {
+            console.log(info);
+            res.json({ "success": "User deleted successfully" });
+        })
+        .catch(err => {
+            res.status(500).json({ "error": err.message })
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+/**
+ * @swagger
  * /users/{username}/books:
  *  post:
  *    tags:
@@ -238,9 +273,14 @@ router.post('/users/:username/books', auth.authenticate(Permissions.Member), asy
 
         // Check if isbn of book exists in database, 
         // and if it wasn't already added in this user
-        if(!(await book_exists_p) || (await has_book_p))
+        if(!(await book_exists_p))
         {
             res.status(400).json({ "error": "Invalid isbn" });
+            return;
+        }
+        if(await has_book_p)
+        {
+            res.status(400).json({ "error": "Book already registered" });
             return;
         }
 
@@ -309,6 +349,98 @@ router.delete('/users/:username/books/:isbn', auth.authenticate(Permissions.Memb
         .catch(err => {
             res.status(500).json({ "error": err.message });
         });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+/**
+ * @swagger
+ * /users/{username}/books/{isbn}:
+ *  patch:
+ *    tags:
+ *      - User
+ *    summary: Update user book
+ *    description: Update user book data
+ *    produces: application/json
+ *    parameters:
+ *      - name: status
+ *        in: formData
+ *        required: false
+ *        description: Status
+ *        type: integer
+ *      - name: rate
+ *        in: formData
+ *        required: false
+ *        description: Rate
+ *        type: integer
+ *    responses:
+ *      '200':
+ *        description: Successful
+ *      '400':
+ *        Invalid status,
+ *        Invalid rate,
+ *        No book data to update
+ *      '401':
+ *        description: Forbidden
+ */
+router.patch('/users/:username/books/:isbn', auth.authenticate(Permissions.Member), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        let bookdata = {};
+        let any = false;
+
+        const status = Number(req.body.status,10);
+        let status_exists_p =  Status.exists(status || 0);
+
+        if(req.body.status)
+        {
+            if(! isNaN(status) && (await status_exists_p))
+            {
+                bookdata.status = status;
+                any = true;
+            }
+            else
+            {
+                res.status(400).json({ "error": "Invalid status" });
+                return;
+            }
+        }
+        
+        if(req.body.rate)
+        {
+            const rate = Number(req.body.rate,10);
+            if(!isNaN(rate) && (rate >= 0 && rate <= 10))
+            {
+                bookdata.rate = rate;
+                any = true;
+            }
+            else
+            {
+                res.status(400).json({ "error": "Invalid rate" });
+                return;
+            }
+        }
+
+        if(any)
+        {
+            User.update_book(target_username,req.params.isbn,bookdata)
+            .then(info => {
+                console.log(info);
+                res.json({ "success": "User book information updated successfully" });
+            })
+            .catch(err => {
+                res.status(500).json({ "error": err.message });
+            });
+        }
+        else
+        {
+            res.status(400).json({ "error": "No book data to update" });
+        }
     }
     else
     {

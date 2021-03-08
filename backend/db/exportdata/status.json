@@ -1,0 +1,29 @@
+[{
+	"_id": {
+		"$oid": "60454e2fa95fd29e0c1b9997"
+	},
+	"status_id": 1,
+	"name": "Reading"
+},
+{
+	"_id": {
+		"$oid": "60454e2fa95fd29e0c1b9998"
+	},
+	"status_id": 2,
+	"name": "Finished"
+},
+{
+	"_id": {
+		"$oid": "60454e2fa95fd29e0c1b9999"
+	},
+	"status_id": 4,
+	"name": "Dropped"
+},
+{
+	"_id": {
+		"$oid": "60454e2fa95fd29e0c1b999a"
+	},
+	"status_id": 3,
+	"name": "Plan to Read"
+}]
+
