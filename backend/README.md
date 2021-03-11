@@ -1,6 +1,13 @@
 # Read2Be Backend
 
-The backend of the app, made with nodejs, expressjs and mongodb
+The backend of the book tracking platform.
+
+Software requirements:
+- nodejs
+- npm
+- mongodb
+
+## Running
 
 ```sh
 # Install all needed packages
@@ -9,7 +16,6 @@ npm install
 npm start
 ```
 
-
 ___
 
 # Guide
@@ -17,6 +23,69 @@ ___
 This document will help in some hints on the project and some decisions that were made in development. This will also describe some endpoints and useful info about database and api server.
 
 ## Database Model
+
+There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>Publisher</ins> and <ins>Author</ins> and three documents that provide value mapping to strings such as <ins>Language</ins>, <ins>Status</ins> and <ins>Genre</ins>
+
+### User
+```json
+{
+    "user_id":       "string",
+    "username":      "string",
+    "nickname":      "string",
+    "password_hash": "string",
+    "email":         "string",
+    "role":          "string",
+    "avatar_url":    "string",
+    "books": [
+        {
+            "isbn":            "string",
+            "status":          "int",
+            "rate":            "int",
+            "date_registered": "string"
+        }
+    ],
+    "friends":["user_id:string"],
+    "pending":["user_id:string"]
+```
+
+### Book
+```json
+{
+    "isbn":      "string",
+    "name":      "string",
+    "authors":   ["name:string"],
+    "publisher": "string",
+    "genre":     "int",
+    "language":  "int",
+    "rate": {
+        "num_rates":    "int",
+        "current_rate": "float"
+    },
+    "reviews": [
+        {
+            "user_id": "string",
+            "message": "string",
+            "date":    "date",
+        }
+    ]
+}
+```
+
+### Publisher
+```json
+{
+    "name": "string",
+    "books": "string"
+}
+```
+
+### Author
+```json
+{
+    "name": "string",
+    "books": "string"
+}
+```
 
 ## Endpoints
 
@@ -38,20 +107,21 @@ This document will help in some hints on the project and some decisions that wer
 
 ### Books
 ```
-GET /books
-GET /books/:isbn
+[User]  GET /books
+[User]  GET /books/:isbn
+[Admin] POST /books
 ```
 
 ### Publishers
 ```
-GET /publishers
-GET /publishers/:publisher_id
+[User]  GET /publishers
+[User]  GET /publishers/:publisher_id
 ```
 
 ### Authors
 ```
-GET /authors
-GET /authors/:author_id
+[User]  GET /authors
+[User]  GET /authors/:author_id
 ```
 
 
