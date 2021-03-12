@@ -55,12 +55,12 @@ is_allowed()
     return 1
 }
 
+array=("authors" "books" "publishers" "users" "genres" "languages" "status")
+
 #########################################
 
 import_db()
 {
-    array=("authors" "books" "publishers" "users" "genres" "languages" "status")
-
     is_allowed $1 "${array[@]}" &&    \
     delete_aux $1 && import_aux $1 || \
     echo "error: collection name is not valid"
@@ -68,8 +68,6 @@ import_db()
 
 export_db()
 {
-    array=("authors" "books" "publishers" "users" "genres" "languages" "status")
-    
     is_allowed $1 "${array[@]}" &&    \
     export_aux $1 || \
     echo "error: collection name is not valid"
@@ -101,8 +99,6 @@ export_all_db()
 
 override()
 {
-    #array=("authors" "books" "publishers" "users" "genres" "languages" "status")
-
     cp -f $EXPORT_FOLDER/*.json $IMPORT_FOLDER/
 }
 

@@ -19,13 +19,14 @@ const review_schema = new mongoose.Schema({
 
 const book_schema = new mongoose.Schema({
     isbn:      String,
-    name:      String,
+    title:      String,
     authors:   [String],
     publisher: String,
     genre:     Number,
     language:  Number,
     rate:      rate_schema,
-    reviews:   [review_schema]
+    reviews:   [review_schema],
+    cover_url: String
 }, 
 {
     versionKey: false,

@@ -99,6 +99,8 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [Done] [User]  PATCH /users/:username
 [Done] [User]  DELETE /users/:username
 
+       [User]  GET /users/:username/avatar
+
 [Done] [User]  POST /users/:username/books
 [Done] [User]  DELETE /users/:username/books/:isbn
 [Done] [User]  PATCH /users/:username/books/:isbn
@@ -110,22 +112,26 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [User]  GET /books
 [User]  GET /books/:isbn
 [Admin] POST /books
+[User]  GET /books/:isbn/cover
 ```
 
 ### Publishers
 ```
 [User]  GET /publishers
 [User]  GET /publishers/:publisher_id
+[Admin] POST /publishers
 ```
 
 ### Authors
 ```
 [User]  GET /authors
 [User]  GET /authors/:author_id
+[Admin] POST /authors
 ```
 
 
-> **Notes:**
+> **Note:**
 > 
 > All listing results must be paginated, endpoints like:
 > - GET /users
+

@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+const csv = require('csv-parser');
+const fs = require('fs');
+
+let i = 0;
+
+fs.createReadStream('db/books.csv')
+.pipe(csv())
+.on('data', (row) => {
+    console.log("Row:",row);
+    ++i;
+})
+.on('end', () => {
+    console.log('CSV file successfully processed, there are',i,'books :D');
+});
+
+/* 
+{
+	"isbn": <isbn>,
+	"title": <original_title>,
+	"authors": <splited_authors>,
+	"publisher": "",
+	"genre": 0,
+	"language": 1, (or <language_code>)
+	"rate": {
+		"num_rates": 0,
+		"current_rate": 0
+	},
+	"reviews": [],
+    "cover_url": <image_url>
+}
+*/
