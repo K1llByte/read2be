@@ -1,5 +1,20 @@
 [{
 	"_id": {
+		"$oid": "6044da5949805a4477fdcd2f"
+	},
+	"friends": [],
+	"pending": [],
+	"user_id": "6044da5949805a4477fdcd2e",
+	"username": "a85171",
+	"nickname": "",
+	"password_hash": "sha256:TBbpwuxZb0qx:Q4tvhMtSbmEXE67f/4vp8ArtRy9vD+uydGibj741loA=",
+	"email": "a85171@alunos.uminho.pt",
+	"role": 1,
+	"avatar_url": "",
+	"books": []
+},
+{
+	"_id": {
 		"$oid": "6043f84b6e6652f395f6dc7a"
 	},
 	"friends": [],
@@ -24,20 +39,5 @@
 			}
 		}
 	]
-},
-{
-	"_id": {
-		"$oid": "6044da5949805a4477fdcd2f"
-	},
-	"friends": [],
-	"pending": [],
-	"user_id": "6044da5949805a4477fdcd2e",
-	"username": "a85171",
-	"nickname": "",
-	"password_hash": "sha256:TBbpwuxZb0qx:Q4tvhMtSbmEXE67f/4vp8ArtRy9vD+uydGibj741loA=",
-	"email": "a85171@alunos.uminho.pt",
-	"role": 1,
-	"avatar_url": "",
-	"books": []
 }]
 

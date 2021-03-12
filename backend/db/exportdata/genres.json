@@ -1,12 +1,5 @@
 [{
 	"_id": {
-		"$oid": "60469cad59d674fbb78ad2d5"
-	},
-	"genre_id": 4,
-	"name": "History"
-},
-{
-	"_id": {
 		"$oid": "60469cad59d674fbb78ad2d6"
 	},
 	"genre_id": 1,
@@ -18,6 +11,13 @@
 	},
 	"genre_id": 3,
 	"name": "Educational"
+},
+{
+	"_id": {
+		"$oid": "60469cad59d674fbb78ad2d5"
+	},
+	"genre_id": 4,
+	"name": "History"
 },
 {
 	"_id": {

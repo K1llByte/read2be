@@ -4,32 +4,49 @@ const fs = require('fs');
 
 let i = 0;
 
-// fs.createReadStream('db/books.csv')
-// .pipe(csv())
-// .on('data', (row) => {
-//     console.log("Row:",row);
-//     ++i;
-// })
-// .on('end', () => {
-//     console.log('CSV file successfully processed, there are',i,'books :D');
-// });
 
-const str = "JK Rolling, Alfredo Macedo";
-console.log(str.split(', '));
+let authors = [];
+let books = [];
 
-/* 
-{
-	"isbn": <isbn>,
-	"title": <original_title>,
-	"authors": <splited_authors>,
-	"publisher": "",
-	"genre": 0,
-	"language": 1, (or <language_code>)
-	"rate": {
-		"num_rates": 0,
-		"current_rate": 0
-	},
-	"reviews": [],
-    "cover_url": <image_url>
-}
-*/
+fs.createReadStream('db/books.csv')
+.pipe(csv())
+.on('data', (row) => {
+    if(row.isbn != "" && row.isbn != undefined)
+    {
+        const splited_authors = row.authors.split(', ');
+        splited_authors.forEach(author => {
+            let author_data = authors.find((e) => author == e.name);
+            if(author_data == undefined)
+            {
+                authors.push({
+                    "name": author,
+                    "books": [row.isbn]
+                });
+            }
+            else
+            {
+                author_data.books.push(row.isbn);
+            }
+        });
+    
+        let book = {
+            "isbn": row.isbn,
+            "title": row.original_title,
+            "authors": splited_authors,
+            "publisher": "",
+            "genre": 0,
+            "language": 1,
+            "rate": {
+                "num_rates": 0,
+                "current_rate": 0
+            },
+            "reviews": [],
+            "cover_url": row.image_url
+        }
+        books.push(book);
+        ++i;
+    }
+})
+.on('end', () => {
+    console.log(JSON.stringify(authors,null,4));
+});
