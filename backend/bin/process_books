@@ -4,15 +4,18 @@ const fs = require('fs');
 
 let i = 0;
 
-fs.createReadStream('db/books.csv')
-.pipe(csv())
-.on('data', (row) => {
-    console.log("Row:",row);
-    ++i;
-})
-.on('end', () => {
-    console.log('CSV file successfully processed, there are',i,'books :D');
-});
+// fs.createReadStream('db/books.csv')
+// .pipe(csv())
+// .on('data', (row) => {
+//     console.log("Row:",row);
+//     ++i;
+// })
+// .on('end', () => {
+//     console.log('CSV file successfully processed, there are',i,'books :D');
+// });
+
+const str = "JK Rolling, Alfredo Macedo";
+console.log(str.split(', '));
 
 /* 
 {
