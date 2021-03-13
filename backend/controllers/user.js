@@ -145,6 +145,97 @@ module.exports.update_book = (username,isbn,bookdata) => {
     ).exec();
 }
 
+// Add friendship request
+module.exports.add_request = async (username,friend_username,friend_user_id) => {
+    // User1 - Friend request target
+    // User2 - User who's sending friend request
+
+    // Check if isn't requesting the same user
+    if(username == friend_username)
+        throw Error("You can't add yourself to your friends list");
+    
+    // Check if User1 is already friend of User2
+    let in_friends_p = User.countDocuments({
+        username: username,
+        friends: {
+            "$elemMatch": {
+                "$eq": friend_user_id
+            }
+        }
+    });
+
+    // Check if User1 has a pending request of User2
+    let in_pending_p = User.countDocuments({
+        username: username,
+        pending: {
+            "$elemMatch": {
+                "$eq": friend_user_id
+            }
+        }
+    });
+
+    if((await in_friends_p) == 1)
+        throw Error("User already in friends list");
+    if((await in_pending_p) == 1)
+        throw Error("Friend request already sent");
+
+    let user_id = (await User.findOne(
+        {username: username},
+        {_id:0,user_id:1}
+    )
+    .exec()).user_id;
+
+    try {
+        await this.update_request(friend_username,friend_user_id,user_id,true);
+    }
+    catch(err) {
+        
+        // Add friend request to User1
+        await User.updateOne(
+            { username: username },
+            { $push: { pending: friend_user_id } }
+        ).exec();
+    }
+}
+
+// Update friendship request
+module.exports.update_request = async (username,user_id,friend_user_id,accept) => {
+    // User1 - User who received the friend request
+    // User2 - User who sent the friend request
+    
+    // Remove request from User1's pending 
+    // requests list
+    console.log(`username: ${username} , friend_user_id: ${friend_user_id}`)
+    let info = await User.updateOne(
+        { username: username },
+        { $pull: { pending: friend_user_id } }
+    ).exec();
+    
+    if(accept)
+    {
+        if(info.nModified == 1)
+        {
+            // Add User2 to User1's friend list
+            var u1_add_u2_p = User.updateOne(
+                { user_id: user_id },
+                { $push: { friends: friend_user_id } }
+            ).exec();
+            // Add User1 to User2's friend list
+            var u2_add_u1_p = User.updateOne(
+                { user_id: friend_user_id },
+                { $push: { friends: user_id } }
+            ).exec();
+        }
+        else
+        {
+            throw Error("No pending request for 'friend_user_id'");
+        }
+        
+        let u1_add_u2 = (await u1_add_u2_p);
+        let u2_add_u1 = (await u2_add_u1_p);
+    }
+}
+
 // =========================== // 
   
 // Permissions Enum
@@ -161,3 +252,7 @@ module.exports.CPermissions = Object.freeze({
     ap :  (this.Permissions.Admin | this.Permissions.Producer),
     apc : (this.Permissions.Admin | this.Permissions.Producer | this.Permissions.Consumer)
 });
+
+
+// db.users.updateOne({username:"a85272"},{$push:{pending:"6044da5949805a4477fdcd2e"}})
+// .countDocuments({username: "a85272",friends:{"$elemMatch":{"$eq":"6044da5949805a4477fdcd2e"}},pending:{"$elemMatch":{"$eq":"6044da5949805a4477fdcd2e"}}});

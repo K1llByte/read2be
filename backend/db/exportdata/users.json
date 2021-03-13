@@ -2,7 +2,9 @@
 	"_id": {
 		"$oid": "6044da5949805a4477fdcd2f"
 	},
-	"friends": [],
+	"friends": [
+		"6043f84b6e6652f395f6dc79"
+	],
 	"pending": [],
 	"user_id": "6044da5949805a4477fdcd2e",
 	"username": "a85171",
@@ -17,7 +19,9 @@
 	"_id": {
 		"$oid": "6043f84b6e6652f395f6dc7a"
 	},
-	"friends": [],
+	"friends": [
+		"6044da5949805a4477fdcd2e"
+	],
 	"pending": [],
 	"user_id": "6043f84b6e6652f395f6dc79",
 	"username": "a85272",

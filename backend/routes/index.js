@@ -58,6 +58,8 @@ router.post('/login', (req, res) => {
  * @swagger
  * /logout:
  *  post:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - Authentication
  *    summary: Revoke authentication token

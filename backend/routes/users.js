@@ -13,6 +13,8 @@ const router = express.Router();
  * @swagger
  * /users:
  *  get:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: List users
@@ -22,7 +24,7 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/users', (req, res) => {
+router.get('/users', auth.authenticate(Permissions.Member), (req, res) => {
     User.list_all()
     .then(usersdata => {
         res.json({ "users": usersdata });
@@ -228,6 +230,51 @@ router.delete('/users/:username', auth.authenticate(Permissions.Member), async (
 
 /**
  * @swagger
+ * /users/{username}/avatar:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Get user avatar image
+ *    description: Get user avatar image
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: User username
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Successful
+ *      '404':
+ *        description: User not found
+ */
+router.get('/users/:username/avatar', auth.authenticate(Permissions.Member), (req, res) => {
+    User.get(req.params.username)
+    .then(userdata => {
+        if(userdata != null)
+        {
+            res.redirect( 
+                (userdata.avatar_url == "")
+                    ? '/storage/users/default.png'
+                    : userdata.avatar_url
+            );
+        }
+        else
+        {
+            res.status(404).json({ "error": "User not found" });
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
+});
+
+
+/**
+ * @swagger
  * /users/{username}/books:
  *  post:
  *    security:
@@ -393,9 +440,10 @@ router.delete('/users/:username/books/:isbn', auth.authenticate(Permissions.Memb
  *      '200':
  *        description: Successful
  *      '400':
- *        Invalid status,
- *        Invalid rate,
- *        No book data to update
+ *        description:
+ *          Invalid status,
+ *          Invalid rate,
+ *          No book data to update
  *      '401':
  *        description: Forbidden
  */
@@ -442,7 +490,6 @@ router.patch('/users/:username/books/:isbn', auth.authenticate(Permissions.Membe
         {
             User.update_book(target_username,req.params.isbn,bookdata)
             .then(info => {
-                console.log(info);
                 res.json({ "success": "User book information updated successfully" });
             })
             .catch(err => {
@@ -458,6 +505,97 @@ router.patch('/users/:username/books/:isbn', auth.authenticate(Permissions.Membe
     {
         res.status(401).json({ "error": "Forbidden" });
     }
+});
+
+
+/**
+ * @swagger
+ * /users/{username}/requests/{friend_user_id}:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Update friend request
+ *    description: Accept or reject  friend request
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: friend_user_id
+ *        in: path
+ *        required: true
+ *        description: User ID of friend request
+ *        type: string
+ *      - name: accept
+ *        in: formData
+ *        required: false
+ *        default: true
+ *        description: Accept or not friend request
+ *        type: boolean
+ *    responses:
+ *      '200':
+ *        description: Friend request updated successfully
+ *      '400':
+ *        description: No pending request for 'friend_user_id'
+ *      '401':
+ *        description: Forbidden
+ */
+router.patch('/users/:username/requests/:friend_user_id', auth.authenticate(Permissions.Member), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        const accept = req.body.accept || true;
+        User.update_request(target_username, req.user.user_id, req.params.friend_user_id, accept)
+        .then(() => {
+            res.json({ "success": "Friend request updated successfully" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+/**
+ * @swagger
+ * /users/{username}/requests:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Add friend request
+ *    description: Send a friend request to a user
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Friend request updated successfully
+ *      '400':
+ *        description: No pending request for 'friend_user_id'
+ */
+router.post('/users/:username/requests', auth.authenticate(Permissions.Member), async (req, res) => {
+
+    User.add_request(req.params.username,req.user.username,req.user.user_id)
+    .then(() => {
+        res.json({ "success": "Friend request added successfully" });
+    })
+    .catch(err => {
+        res.status(400).json({ "error": err.message });
+    });
 });
 
 module.exports = router;

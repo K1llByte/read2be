@@ -49,14 +49,19 @@ db.once('open', () => console.log("Connected to MongoDB successfully..."));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public',express.static(path.join(__dirname, 'public')));
+app.use('/storage',express.static(path.join(__dirname, 'storage')));
 
 const index_router = require('./routes/index');
 const users_router = require('./routes/users');
 const books_router = require('./routes/books');
+const authors_router = require('./routes/authors');
+const publishers_router = require('./routes/publishers');
 app.use('/api', index_router);
 app.use('/api', users_router);
 app.use('/api', books_router);
+app.use('/api', authors_router);
+app.use('/api', publishers_router);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

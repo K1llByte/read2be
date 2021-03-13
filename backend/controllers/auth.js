@@ -35,7 +35,8 @@ module.exports.authenticate = (required_permission = undefined) => {
                     {
                         req.user = { 
                             role : payload.role,
-                            username : payload.username
+                            username : payload.username,
+                            user_id: payload.user_id
                         };
                         next();
                     }
@@ -43,13 +44,14 @@ module.exports.authenticate = (required_permission = undefined) => {
                     {
                         req.user = { 
                             role : payload.role,
-                            username : payload.username
+                            username : payload.username,
+                            user_id: payload.user_id
                         };
                         next();
                     }
                     else
                     {
-                        console.log(payload.role);
+                        //console.log(payload.role);
                         // 403 Forbidden
                         res.status(403).jsonp({error: 'Forbidden! Insufficient permissions'});
                     }
