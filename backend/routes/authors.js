@@ -23,7 +23,30 @@ const router = express.Router();
  *        description: Successful
  */
 router.get('/authors', auth.authenticate(Permissions.Member), (req, res) => {
-    Author.list_all()
+
+    let options = {};
+
+    if(req.query.page_num != undefined)
+    {
+        options.page_num = Number(req.query.page_num);
+        if(!Number.isInteger(options.page_num))
+        {
+            res.status(400).json({'error': "Invalid page_num"});
+            return;
+        }
+    }
+
+    if(req.query.page_limit != undefined)
+    {
+        options.page_limit = Number(req.query.page_limit);
+        if(!Number.isInteger(options.page_limit))
+        {
+            res.status(400).json({'error': "Invalid page_limit"});
+            return;
+        }
+    }
+
+    Author.list_all(options)
     .then(authorsdata => {
         res.json({ "authors": authorsdata });
     })

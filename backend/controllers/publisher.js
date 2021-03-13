@@ -4,8 +4,11 @@ const Publisher = require('../models/publisher');
 
 // List all publishers
 module.exports.list_all = (options={}) => {
-    const page_limit = options.page_limit || 20;
-    const page_num = options.page_num || 0;
+    const page_limit = (options.page_limit != undefined) 
+        ? options.page_limit : 20 ;
+    const page_num = (options.page_num != undefined) 
+        ? options.page_num : 0 ;
+    
     return Publisher
         .find({},{_id:0})
         .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)

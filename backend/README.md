@@ -52,7 +52,7 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 ```json
 {
     "isbn":      "string",
-    "name":      "string",
+    "title":     "string",
     "authors":   ["name:string"],
     "publisher": "string",
     "genre":     "int",
