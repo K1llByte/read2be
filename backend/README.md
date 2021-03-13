@@ -93,40 +93,40 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 
 ### Users
 ```
-[Done] [User]  GET /users
-[Done] [User]  GET /users/:username
-       [Admin] POST /users
-[Done] [User]  PATCH /users/:username
-[Done] [User]  DELETE /users/:username
+[x] [User]  GET /users
+[x] [User]  GET /users/:username
+    [Admin] POST /users
+[x] [User]  PATCH /users/:username
+[x] [User]  DELETE /users/:username
 
-       [User]  GET /users/:username/avatar
+    [User]  GET /users/:username/avatar
 
-[Done] [User]  POST /users/:username/books
-[Done] [User]  DELETE /users/:username/books/:isbn
-[Done] [User]  PATCH /users/:username/books/:isbn
-       [User]  PATCH /users/:username/requests/:friend_username
+[x] [User]  POST /users/:username/books
+[x] [User]  DELETE /users/:username/books/:isbn
+[x] [User]  PATCH /users/:username/books/:isbn
+    [User]  PATCH /users/:username/requests/:friend_username
 ```
 
 ### Books
 ```
-[User]  GET /books
-[User]  GET /books/:isbn
-[Admin] POST /books
-[User]  GET /books/:isbn/cover
+[x] [User]  GET /books
+    [User]  GET /books/:isbn
+    [Admin] POST /books
+    [User]  GET /books/:isbn/cover
 ```
 
 ### Publishers
 ```
-[User]  GET /publishers
-[User]  GET /publishers/:publisher_id
-[Admin] POST /publishers
+    [User]  GET /publishers
+    [User]  GET /publishers/:publisher_id
+    [Admin] POST /publishers
 ```
 
 ### Authors
 ```
-[User]  GET /authors
-[User]  GET /authors/:author_id
-[Admin] POST /authors
+    [User]  GET /authors
+    [User]  GET /authors/:author_id
+    [Admin] POST /authors
 ```
 
 
@@ -134,4 +134,7 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 > 
 > All listing results must be paginated, endpoints like:
 > - GET /users
+>
+> Pagination arguments can be provided in query parameters:
+> - GET /user?page_num=0&page_limit=20
 

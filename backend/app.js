@@ -23,7 +23,14 @@ const swagger_options = {
             {
                 name: "Authentication"
             }
-        ]
+        ],
+        securityDefinitions: {
+            "bearerAuth": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
     },
     apis: ["routes/*.js"],
 };
@@ -31,9 +38,6 @@ const swagger_options = {
 const swagger_docs = swagger_js_doc(swagger_options);
 app.use('/docs', swagger_ui.serve, swagger_ui.setup(swagger_docs));
 
-
-const index_router = require('./routes/index');
-const users_router = require('./routes/users');
 
 const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://127.0.0.1/read2be';
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -47,8 +51,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const index_router = require('./routes/index');
+const users_router = require('./routes/users');
+const books_router = require('./routes/books');
 app.use('/api', index_router);
 app.use('/api', users_router);
+app.use('/api', books_router);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

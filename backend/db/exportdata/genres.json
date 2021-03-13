@@ -1,4 +1,8 @@
 [{
+	"genre_id": 0,
+	"name": "Unknown"
+},
+{
 	"_id": {
 		"$oid": "60469cad59d674fbb78ad2d6"
 	},

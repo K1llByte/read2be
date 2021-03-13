@@ -37,6 +37,8 @@ router.get('/users', (req, res) => {
  * @swagger
  * /users/{username}:
  *  get:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: Get user
@@ -76,6 +78,8 @@ router.get('/users/:username', auth.authenticate(Permissions.Member), (req, res)
  * @swagger
  * /users/{username}:
  *  patch:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: Update user
@@ -189,6 +193,8 @@ router.patch('/users/:username', auth.authenticate(Permissions.Member), async (r
  * @swagger
  * /users/{username}:
  *  delete:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: Delete user
@@ -224,6 +230,8 @@ router.delete('/users/:username', auth.authenticate(Permissions.Member), async (
  * @swagger
  * /users/{username}/books:
  *  post:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: Add book to user
@@ -317,6 +325,8 @@ router.post('/users/:username/books', auth.authenticate(Permissions.Member), asy
  * @swagger
  * /users/{username}/books/{isbn}:
  *  delete:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: Remove book from user
@@ -361,6 +371,8 @@ router.delete('/users/:username/books/:isbn', auth.authenticate(Permissions.Memb
  * @swagger
  * /users/{username}/books/{isbn}:
  *  patch:
+ *    security:
+ *      - bearerAuth: []
  *    tags:
  *      - User
  *    summary: Update user book
