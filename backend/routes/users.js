@@ -130,10 +130,11 @@ router.get('/users/:username', auth.authenticate(Permissions.Member), (req, res)
  *      '200':
  *        description: Successful
  *      '400':
- *        Invalid nickname,
- *        Invalid email,
- *        Invalid password,
- *        No user data to update
+ *        description:
+ *          Invalid nickname,
+ *          Invalid email,
+ *          Invalid password,
+ *          No user data to update
  *      '401':
  *        description: Forbidden
  */
