@@ -113,6 +113,8 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [x] [User]  GET /books
 [x] [User]  GET /books/:isbn
     [Admin] POST /books
+    [Admin] DELETE /books/:isbn
+    [Admin] PUT /books/:isbn
 
 [x] [User]  GET /books/:isbn/cover
 ```
@@ -122,6 +124,8 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [x] [User]  GET /publishers
 [x] [User]  GET /publishers/:publisher_id
     [Admin] POST /publishers
+    [Admin] DELETE /publishers/:publisher_id
+    [Admin] PUT /publishers/:publisher_id
 ```
 
 ### Authors
@@ -129,6 +133,8 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [x] [User]  GET /authors
 [x] [User]  GET /authors/:author_id
     [Admin] POST /authors
+    [Admin] DELETE /authors/:author_id
+    [Admin] PUT /authors/:author_id
 ```
 
 

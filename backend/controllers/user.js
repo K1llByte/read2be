@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 // Inserts a new user
 module.exports.insert = (userdata) => {
     let new_user = new User(userdata);
-    return new_user.save()
+    return new_user.save();
 }
 
 // List all users
@@ -48,7 +48,7 @@ module.exports.set = (username,userdata) => {
 }
 
 // Delete user data
-module.exports.delete = (username,userdata) => {
+module.exports.delete = (username) => {
     return User
         .deleteOne({username:username})
         .exec();
@@ -252,8 +252,8 @@ module.exports.Permissions = Object.freeze({
 
 // Compound Permissions Enum
 module.exports.CPermissions = Object.freeze({
-    ap :  (this.Permissions.Admin | this.Permissions.Producer),
-    apc : (this.Permissions.Admin | this.Permissions.Producer | this.Permissions.Consumer)
+    am :  (this.Permissions.Admin | this.Permissions.Member),
+    amm : (this.Permissions.Admin | this.Permissions.Member | this.Permissions.Mod)
 });
 
 
