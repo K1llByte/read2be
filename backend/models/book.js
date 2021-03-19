@@ -12,7 +12,7 @@ const review_schema = new mongoose.Schema({
     user_id: String,
     message: String,
     date:    Date
-}, 
+},
 {
     versionKey: false
 });

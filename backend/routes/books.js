@@ -99,6 +99,68 @@ router.get('/books/:isbn', auth.authenticate(Permissions.Member), (req, res) => 
 
 /**
  * @swagger
+ * /books:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Book
+ *    summary: Get book
+ *    description: Get book by isbn
+ *    produces: application/json
+ *    parameters:
+ *      - name: isbn
+ *        in: path
+ *        required: true
+ *        description: Book ISBN
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Successful
+ *      '404':
+ *        description: Book not found
+ */
+router.post('/books', auth.authenticate(Permissions.Admin), (req, res) => {
+    const book = {
+        "isbn": req.body.isbn,
+        "title": req.body.title,
+        "authors": req.body.authors,
+        "publisher": req.body.publisher,
+        "genre": req.body.genre,
+        "language": req.body.language
+    };
+
+    // TODO: Input validation
+    if( book.isbn === undefined ||
+        book.title === undefined ||
+        book.authors === undefined ||
+        book.publisher === undefined ||
+        book.genre === undefined ||
+        book.language === undefined)
+    {
+        res.status(400).json({ "error": "Invalid book parameters" });
+        return;
+    }
+
+    Book.insert(book)
+    .then(bookdata => {
+        console.log("bookdata",bookdata);
+        if(bookdata != null)
+        {
+            res.json(bookdata);
+        }
+        else
+        {
+            res.status(404).json({ "error": "Book not found" });
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
+});
+
+/**
+ * @swagger
  * /books/{isbn}/cover:
  *  get:
  *    security:

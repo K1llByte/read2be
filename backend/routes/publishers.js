@@ -104,20 +104,20 @@ router.get('/publishers/:name', auth.authenticate(Permissions.Member), (req, res
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Author
- *    summary: Add an author
- *    description: Add an author data
+ *      - Publisher
+ *    summary: Add a publisher
+ *    description: Add publisher data
  *    produces: application/json
  *    parameters:
  *      - name: name
  *        in: formData
  *        required: true
- *        description: Author name
+ *        description: Publisher name
  *        type: string
  *      - name: books
  *        in: body
  *        required: true
- *        description: Author books list
+ *        description: Publisher books list
  *        type: array
  *        items:
  *          type: string
@@ -181,7 +181,7 @@ router.post('/publishers', auth.authenticate(Permissions.Admin), async (req, res
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Author
+ *      - Publisher
  *    summary: Delete a publisher
  *    description: Delete publisher data
  *    produces: application/json
@@ -193,9 +193,9 @@ router.post('/publishers', auth.authenticate(Permissions.Admin), async (req, res
  *        type: string
  *    responses:
  *      '200':
- *        description: Author data deleted successfully
+ *        description: Publisher data deleted successfully
  *      '404':
- *        description: Author not found
+ *        description: Publisher not found
  */
 router.delete('/publishers/:name', auth.authenticate(Permissions.Admin), (req, res) => {
     Publisher.delete(req.params.name)
@@ -222,7 +222,7 @@ router.delete('/publishers/:name', auth.authenticate(Permissions.Admin), (req, r
  *    security:
  *      - bearerAuth: []
  *    tags:
- *      - Author
+ *      - Publisher
  *    summary: Update publisher data
  *    description: Update publisher data
  *    produces: application/json

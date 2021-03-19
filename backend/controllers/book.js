@@ -31,7 +31,24 @@ const LANGUAGE_LOOKUP = {
     }
 };
 
-// =========================== // User CRUD operations
+// =========================== // Book CRUD operations
+
+// Inserts a new book
+module.exports.insert = (bookdata) => {
+    const book = {
+        "isbn": bookdata.isbn,
+        "title": bookdata.title,
+        "authors": bookdata.authors,
+        "publisher": bookdata.publisher,
+        "genre": bookdata.genre,
+        "language": bookdata.language,
+        "rate": { "num_rates": 0, "current_rate": 0 },
+        "reviews": [],
+        "cover_url": ""
+    };
+    let new_book = new Publisher(book);
+    return new_book.save();
+}
 
 // List all users
 module.exports.list_all = (options={}) => {
