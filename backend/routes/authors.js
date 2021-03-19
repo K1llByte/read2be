@@ -222,8 +222,8 @@ router.delete('/authors/:name', auth.authenticate(Permissions.Admin), (req, res)
  *      - bearerAuth: []
  *    tags:
  *      - Author
- *    summary: Delete an author
- *    description: Delete author data
+ *    summary: Update author data
+ *    description: Update author data
  *    produces: application/json
  *    parameters:
  *      - name: name
@@ -231,15 +231,26 @@ router.delete('/authors/:name', auth.authenticate(Permissions.Admin), (req, res)
  *        required: true
  *        description: Author name
  *        type: string
+ *      - name: books
+ *        in: body
+ *        required: true
+ *        description: Author books list
+ *        type: array
+ *        items:
+ *          type: string
  *    responses:
  *      '200':
  *        description: Author data updated successfully
+ *      '400':
+ *        description:
+ *          Invalid books,
+ *          Author didn't change
  *      '404':
  *        description: Author not found
  */
 router.put('/authors/:name', auth.authenticate(Permissions.Admin), (req, res) => {
     const books = req.body.books;
-    
+
     if(books === undefined || !Array.isArray(books))
     {
         res.status(400).json({ "error": "Invalid books" });

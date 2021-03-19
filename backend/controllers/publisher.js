@@ -2,6 +2,12 @@ const Publisher = require('../models/publisher');
 
 // =========================== // User CRUD operations
 
+// Inserts a new publisher
+module.exports.insert = (publisherdata) => {
+    let new_publisher = new Publisher(publisherdata);
+    return new_publisher.save();
+}
+
 // List all publishers
 module.exports.list_all = (options={}) => {
     const page_limit = (options.page_limit != undefined) 
@@ -23,4 +29,26 @@ module.exports.get = (name) => {
         .exec();
 }
 
-// =========================== // Author specific methods
+// Update publisher data
+module.exports.set = (name,publisherdata) => {
+    return Publisher
+        .updateOne({name: name},{$set: publisherdata})
+        .exec();
+}
+
+// Delete publisher data
+module.exports.delete = (name) => {
+    return Publisher
+        .deleteOne({name:name})
+        .exec();
+}
+
+// =========================== // Publisher specific methods
+
+// Check if a publisher exists
+module.exports.exists = async (name) => {
+    let val = await Publisher
+        .countDocuments({ name: name })
+        .exec();
+    return val > 0;
+}

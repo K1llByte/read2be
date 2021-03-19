@@ -96,4 +96,186 @@ router.get('/publishers/:name', auth.authenticate(Permissions.Member), (req, res
     });
 });
 
+
+/**
+ * @swagger
+ * /publishers:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Author
+ *    summary: Add an author
+ *    description: Add an author data
+ *    produces: application/json
+ *    parameters:
+ *      - name: name
+ *        in: formData
+ *        required: true
+ *        description: Author name
+ *        type: string
+ *      - name: books
+ *        in: body
+ *        required: true
+ *        description: Author books list
+ *        type: array
+ *        items:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Publisher data added successfully
+ *      '400':
+ *        description:
+ *          Invalid name,
+ *          Invalid books,
+ *          Publisher could not be added
+ */
+router.post('/publishers', auth.authenticate(Permissions.Admin), async (req, res) => {
+    let publisher = {
+        "name": req.body.name,
+        "books": req.body.books || []
+    };
+
+    if(publisher.name == undefined)
+    {
+        res.status(400).json({ "error": "Invalid name" });
+        return;
+    }
+
+    if(!Array.isArray(publisher.books))
+    {
+        res.status(400).json({ "error": "Invalid books" });
+        return;
+    }
+
+    try
+    {
+        let exists = await Publisher.exists(publisher.name);
+        if(exists)
+        {
+            res.status(400).json({ "error": "Publisher already exists" });
+        }
+        else
+        {
+            let publisherdata = await Publisher.insert(publisher)
+            if(publisherdata != null)
+            {
+                res.json({ "success": "Publisher data added successfully" });
+            }
+            else
+            {
+                res.status(400).json({ "error": "Publisher could not be added" });
+            }
+        }
+    }
+    catch(err) {
+        res.status(500).json({ "error": err.message });
+    }
+});
+
+
+/**
+ * @swagger
+ * /publishers/{name}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Author
+ *    summary: Delete a publisher
+ *    description: Delete publisher data
+ *    produces: application/json
+ *    parameters:
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Publisher name
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Author data deleted successfully
+ *      '404':
+ *        description: Author not found
+ */
+router.delete('/publishers/:name', auth.authenticate(Permissions.Admin), (req, res) => {
+    Publisher.delete(req.params.name)
+    .then(info => {
+        if(info.deletedCount > 0)
+        {
+            res.json({ "success": "Publisher data deleted successfully" });
+        }
+        else
+        {
+            res.status(404).json({ "error": "Publisher not found" });
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
+});
+
+
+/**
+ * @swagger
+ * /publishers/{name}:
+ *  put:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Author
+ *    summary: Update publisher data
+ *    description: Update publisher data
+ *    produces: application/json
+ *    parameters:
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Publisher name
+ *        type: string
+ *      - name: books
+ *        in: body
+ *        required: true
+ *        description: Publisher books list
+ *        type: array
+ *        items:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Publisher data updated successfully
+ *      '400':
+ *        description:
+ *          Invalid books,
+ *          Publisher didn't change
+ *      '404':
+ *        description: Publisher not found
+ */
+router.put('/publishers/:name', auth.authenticate(Permissions.Admin), (req, res) => {
+    const books = req.body.books;
+
+    if(books === undefined || !Array.isArray(books))
+    {
+        res.status(400).json({ "error": "Invalid books" });
+        return;
+    }
+
+    Publisher.set(req.params.name,{books:books})
+    .then(info => {
+        if(info.n === 0)
+        {
+            res.status(404).json({ "error": "Publisher not found" });
+        }
+        else if(info.nModified === 0)
+        {
+            res.status(400).json({ "error": "Publisher didn't change" });
+        }
+        else
+        {
+            res.json({ "success": "Publisher data updated successfully" });
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
+});
+
 module.exports = router;

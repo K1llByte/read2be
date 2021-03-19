@@ -45,7 +45,7 @@ module.exports.delete = (name) => {
 
 // =========================== // Author specific methods
 
-// Check if an anthor exists
+// Check if an author exists
 module.exports.exists = async (name) => {
     let val = await Author
         .countDocuments({ name: name })
