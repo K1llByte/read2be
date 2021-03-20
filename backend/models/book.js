@@ -19,7 +19,7 @@ const review_schema = new mongoose.Schema({
 
 const book_schema = new mongoose.Schema({
     isbn:      String,
-    title:      String,
+    title:     String,
     authors:   [String],
     publisher: String,
     genre:     Number,

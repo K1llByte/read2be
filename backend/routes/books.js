@@ -105,14 +105,14 @@ router.get('/books/:isbn', auth.authenticate(Permissions.Member), (req, res) => 
  *      - bearerAuth: []
  *    tags:
  *      - Book
- *    summary: Get book
- *    description: Get book by isbn
+ *    summary: Post book data
+ *    description: Post book data
  *    produces: application/json
  *    parameters:
- *      - name: isbn
- *        in: path
+ *      - name: book
+ *        in: body
  *        required: true
- *        description: Book ISBN
+ *        description: Book data
  *        type: string
  *    responses:
  *      '200':
@@ -130,7 +130,7 @@ router.post('/books', auth.authenticate(Permissions.Admin), (req, res) => {
         "language": req.body.language
     };
 
-    // TODO: Input validation
+    // TODO: Input validation (and type checking)
     if( book.isbn === undefined ||
         book.title === undefined ||
         book.authors === undefined ||
@@ -158,6 +158,102 @@ router.post('/books', auth.authenticate(Permissions.Admin), (req, res) => {
         res.status(500).json({ "error": err.message });
     });
 });
+
+
+/**
+ * @swagger
+ * /books/{isbn}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Book
+ *    summary: Delete book data
+ *    description: Delete book data
+ *    produces: application/json
+ *    parameters:
+ *      - name: isbn
+ *        in: path
+ *        required: true
+ *        description: Book ISBN
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Book data deleted successfully
+ *      '404':
+ *        description: Book not found
+ */
+router.delete('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) => {
+    Book.delete(req.params.isbn)
+    .then(info => {
+        if(info.deletedCount > 0)
+        {
+            res.json({ "success": "Book data deleted successfully" });
+        }
+        else
+        {
+            res.status(404).json({ "error": "Book not found" });
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
+});
+
+
+/**
+ * @swagger
+ * /books/{isbn}:
+ *  put:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Book
+ *    summary: Update book data
+ *    description: Update book data
+ *    produces: application/json
+ *    parameters:
+ *      - name: isbn
+ *        in: path
+ *        required: true
+ *        description: Book ISBN
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Successful
+ *      '404':
+ *        description: Book not found
+ */
+router.put('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) => {
+    const book = {
+        "isbn": req.body.isbn,
+        "title": req.body.title,
+        "authors": req.body.authors,
+        "publisher": req.body.publisher,
+        "genre": req.body.genre,
+        "language": req.body.language
+    };
+    
+    Book.set(req.params.isbn,book)
+    .then(info => {
+        if(info.n === 0)
+        {
+            res.status(404).json({ "error": "Book not found" });
+        }
+        else if(info.nModified === 0)
+        {
+            res.status(400).json({ "error": "Book didn't change" });
+        }
+        else
+        {
+            res.json({ "success": "Book data updated successfully" });
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
+});
+
 
 /**
  * @swagger

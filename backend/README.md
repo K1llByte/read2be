@@ -112,8 +112,8 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 ```
 [x] [User]  GET /books
 [x] [User]  GET /books/:isbn
-    [Admin] POST /books
-    [Admin] DELETE /books/:isbn
+[x] [Admin] POST /books
+[x] [Admin] DELETE /books/:isbn
     [Admin] PUT /books/:isbn
 
 [x] [User]  GET /books/:isbn/cover

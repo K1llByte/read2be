@@ -46,7 +46,7 @@ module.exports.insert = (bookdata) => {
         "reviews": [],
         "cover_url": ""
     };
-    let new_book = new Publisher(book);
+    let new_book = new Book(book);
     return new_book.save();
 }
 
@@ -79,6 +79,20 @@ module.exports.get = async (isbn) => {
         { "$project": BOOK_PROJECTION }
     ]).exec();
     return b[0];
+}
+
+// Update book data
+module.exports.set = (name,bookdata) => {
+    return Publisher
+        .updateOne({name: name},{$set: bookdata})
+        .exec();
+}
+
+// Delete book data
+module.exports.delete = (isbn) => {
+    return Book
+        .deleteOne({isbn:isbn})
+        .exec();
 }
 
 // =========================== // Book specific methods
