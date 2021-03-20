@@ -22,7 +22,7 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/publishers', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/publishers', auth.authenticate(CPermissions.amm), (req, res) => {
     
     let options = {};
 
@@ -79,7 +79,7 @@ router.get('/publishers', auth.authenticate(Permissions.Member), (req, res) => {
  *      '404':
  *        description: Publisher not found
  */
-router.get('/publishers/:name', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/publishers/:name', auth.authenticate(CPermissions.amm), (req, res) => {
     Publisher.get(req.params.name)
     .then(publisherdata => {
         if(publisherdata != null)

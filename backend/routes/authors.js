@@ -21,7 +21,7 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/authors', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/authors', auth.authenticate(CPermissions.amm), (req, res) => {
 
     let options = {};
 
@@ -78,7 +78,7 @@ router.get('/authors', auth.authenticate(Permissions.Member), (req, res) => {
  *      '404':
  *        description: Author not found
  */
-router.get('/authors/:name', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/authors/:name', auth.authenticate(CPermissions.amm), (req, res) => {
     Author.get(req.params.name)
     .then(authordata => {
         if(authordata != null)

@@ -22,7 +22,7 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/books', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
     
     let options = {};
 
@@ -79,7 +79,7 @@ router.get('/books', auth.authenticate(Permissions.Member), (req, res) => {
  *      '404':
  *        description: Book not found
  */
-router.get('/books/:isbn', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/books/:isbn', auth.authenticate(CPermissions.amm), (req, res) => {
     Book.get(req.params.isbn)
     .then(bookdata => {
         if(bookdata != null)
@@ -278,7 +278,7 @@ router.put('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) => {
  *      '404':
  *        description: Book not found
  */
-router.get('/books/:isbn/cover', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res) => {
     Book.get(req.params.isbn)
     .then(bookdata => {
         if(bookdata != null)

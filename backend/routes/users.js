@@ -24,7 +24,7 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/users', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/users', auth.authenticate(CPermissions.amm), (req, res) => {
     
     let options = {};
 
@@ -81,7 +81,7 @@ router.get('/users', auth.authenticate(Permissions.Member), (req, res) => {
  *      '404':
  *        description: User not found
  */
-router.get('/users/:username', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/users/:username', auth.authenticate(CPermissions.amm), (req, res) => {
     User.get(req.params.username)
     .then(userdata => {
         if(userdata != null)
@@ -138,7 +138,7 @@ router.get('/users/:username', auth.authenticate(Permissions.Member), (req, res)
  *      '401':
  *        description: Forbidden
  */
-router.patch('/users/:username', auth.authenticate(Permissions.Member), async (req, res) => {
+router.patch('/users/:username', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
@@ -232,7 +232,7 @@ router.patch('/users/:username', auth.authenticate(Permissions.Member), async (r
  *      '401':
  *        description: Forbidden
  */
-router.delete('/users/:username', auth.authenticate(Permissions.Member), async (req, res) => {
+router.delete('/users/:username', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
@@ -275,7 +275,7 @@ router.delete('/users/:username', auth.authenticate(Permissions.Member), async (
  *      '404':
  *        description: User not found
  */
-router.get('/users/:username/avatar', auth.authenticate(Permissions.Member), (req, res) => {
+router.get('/users/:username/avatar', auth.authenticate(CPermissions.amm), (req, res) => {
     User.get(req.params.username)
     .then(userdata => {
         if(userdata != null)
@@ -335,7 +335,7 @@ router.get('/users/:username/avatar', auth.authenticate(Permissions.Member), (re
  *      '401':
  *        description: Forbidden
  */
-router.post('/users/:username/books', auth.authenticate(Permissions.Member), async (req, res) => {
+router.post('/users/:username/books', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
@@ -412,7 +412,7 @@ router.post('/users/:username/books', auth.authenticate(Permissions.Member), asy
  *      '401':
  *        description: Forbidden
  */
-router.delete('/users/:username/books/:isbn', auth.authenticate(Permissions.Member), (req, res) => {
+router.delete('/users/:username/books/:isbn', auth.authenticate(CPermissions.amm), (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
@@ -471,7 +471,7 @@ router.delete('/users/:username/books/:isbn', auth.authenticate(Permissions.Memb
  *      '401':
  *        description: Forbidden
  */
-router.patch('/users/:username/books/:isbn', auth.authenticate(Permissions.Member), async (req, res) => {
+router.patch('/users/:username/books/:isbn', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
@@ -568,7 +568,7 @@ router.patch('/users/:username/books/:isbn', auth.authenticate(Permissions.Membe
  *      '401':
  *        description: Forbidden
  */
-router.patch('/users/:username/requests/:friend_user_id', auth.authenticate(Permissions.Member), async (req, res) => {
+router.patch('/users/:username/requests/:friend_user_id', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
@@ -611,7 +611,7 @@ router.patch('/users/:username/requests/:friend_user_id', auth.authenticate(Perm
  *      '400':
  *        description: No pending request for 'friend_user_id'
  */
-router.post('/users/:username/requests', auth.authenticate(Permissions.Member), async (req, res) => {
+router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), async (req, res) => {
 
     User.add_request(req.params.username,req.user.username,req.user.user_id)
     .then(() => {
