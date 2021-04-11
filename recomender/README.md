@@ -21,5 +21,5 @@ source recomender_env/bin/activate
 ### Running
 
 ```sh
-source recomender_env/bin/activate
+python src/main.py
 ```
