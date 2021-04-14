@@ -1,71 +1,38 @@
-
 <template>
-   <v-app id="app">
-      <template v-if="!$route.path.includes('login')">
-         <v-navigation-drawer v-model="drawer" fixed app>
-            <v-toolbar flat dark color="success">
-               <v-list>
-                  <v-list-tile>
-                     <v-list-tile-title class="title">
-                        Simply Clinical Software
-                     </v-list-tile-title>
-                  </v-list-tile>
-               </v-list>
-            </v-toolbar>
-            <v-list dense>
-               <v-list-tile @click="drawer = false;" to="/login">
-                  <v-list-tile-action>
-                     <v-icon>home</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                     <v-list-tile-title>Login</v-list-tile-title>
-                  </v-list-tile-content>
-               </v-list-tile>
-               <v-list-tile @click="drawer = false;">
-                  <v-list-tile-action>
-                     <v-icon>contact_mail</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                     <v-list-tile-title>Contact</v-list-tile-title>
-                  </v-list-tile-content>
-               </v-list-tile>
-            </v-list>
-         </v-navigation-drawer>
-         <v-toolbar color="primary" dark fixed app>
-            <v-toolbar-side-icon
-               @click.stop="drawer = !drawer;"
-            ></v-toolbar-side-icon>
-            <v-toolbar-title>Application</v-toolbar-title>
-         </v-toolbar>
-      </template>
-      <v-content>
-         <keep-alive :include="['Login']">
-            <router-view></router-view>
-         </keep-alive>
-      </v-content>
-   </v-app>
+  <v-app>
+    <!-- <login></login> -->
+    <!-- <register></register> -->
+    <menu-bar></menu-bar>
+    <searchbar></searchbar>
+    <bookshelf></bookshelf>
+
+    <template>
+      <div class="text-center mt-6 mb-7">
+          <v-pagination
+            color="teal lighten-1"
+            v-model="page"
+            :length="10"
+            :total-visible="5"
+          ></v-pagination>
+      </div>
+    </template>
+  </v-app>
 </template>
 
 <script>
+// import Login from './components/Login.vue';
+// import Register from './components/Register.vue';
+import Bookshelf from './components/Bookshelf.vue';
+import Searchbar from './components/Searchbar.vue';
+import MenuBar from './components/MenuBar.vue';
+
 export default {
-   data: () => ({
-      drawer: false,
-   }),
-   props: {
-      source: String,
-   },
+  // components: { MenuBar, Login, Register, Bookshelf, Searchbar },
+  components: { Bookshelf, Searchbar, MenuBar },
+  name: 'App',
+
+  data: () => ({
+    page: 1,
+  })
 };
 </script>
-
-<script>
-export default {
-   name: 'App',
-   data() {
-      return {
-         drawer: false,
-      };
-   },
-};
-</script>
-
-<style></style>
