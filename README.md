@@ -22,36 +22,42 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 
 
 ### Goals
-<ins>**Base WebApp**</ins>
+> <ins>**Base WebApp**</ins>
+> 
+> The Base WebApp stage will satisfy the main system's objectives and provide basic functionality to users, but it isn't considered complete since any extra enhacements > will not be considered and the priority will always be the initial feature proposal.
+> 
+> - BackEnd
+>     - [x] Authentication
+>     - [x] Manage User data
+>     - [x] Manage User book data
+>     - [ ] Manage User defined book collections
+>     - [ ] Manage User friends
+>     - [ ] Book library search
+>     - [ ] Upgrade server configurability
+>     - [ ] Populate system's database 
+>     - [ ] Branding
+> 
+> - FrontEnd
+>     - [ ] Authors/Publisher page
+>     - [ ] User page
+>     - [ ] Book library page & search base
+>     - [ ] Port non administrive backend funcionalities to webapp
+>     
+> 
+> - Recommender
+>     - [ ] Collaborative Filtering based on user's classification on books
 
-The Base WebApp stage will satisfy the main system's objectives and provide basic functionality to users, but it isn't considered complete since any extra enhacements will not be considered and the priority will always be the initial feature proposal.
-
-- BackEnd
-    - [x] Authentication
-    - [x] Manage User data
-    - [x] Manage User book data
-    - [ ] Manage User friends
-    - [ ] Book library search
-    - [ ] Upgrade server configurability
-    - [ ] Populate system's database 
-
-- FrontEnd
-    - [ ] Port non administrive backend funcionalities to webapp
-
-- Recommender
-    - [ ] Collaborative Filtering based on user's classification on books
-
-<ins>**Upgrade 1**</ins>
-
-- BackEnd
-    - [ ] Automaticly build server (Docker Image)
-
-- FrontEnd
-    - [ ] Automaticly build server (Docker Image)
-    
-- Recommender
-    - [ ] Automaticly build server (Docker Image)
-    - [ ] Testing automation with github CI
+> <ins>**Upgrade 1**</ins>
+> 
+> - BackEnd
+>     - [ ] Automaticly build server (Docker Image)
+> 
+> - FrontEnd
+>     - [ ] Automaticly build server (Docker Image)
+>     
+> - Recommender
+>     - [ ] Automaticly build server (Docker Image)
+>     - [ ] Testing automation with github CI
 
 
 <!--
