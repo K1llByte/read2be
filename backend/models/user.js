@@ -10,6 +10,15 @@ const book_schema = new mongoose.Schema({
     versionKey: false
 });
 
+const collection_schema = new mongoose.Schema({
+    name:          String,
+    thumbnail_url: String,
+    books:         [String]
+},
+{
+    versionKey: false
+});
+
 const user_schema = new mongoose.Schema({
     user_id:       String,
     username:      String,
@@ -20,7 +29,8 @@ const user_schema = new mongoose.Schema({
     avatar_url:    String,
     books:         [book_schema],
     friends:       [String],
-    pending:       [String]
+    pending:       [String],
+    collections:   [collection_schema]
 },
 {
     versionKey: false,
