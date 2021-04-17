@@ -255,7 +255,3 @@ module.exports.CPermissions = Object.freeze({
     am :  (this.Permissions.Admin | this.Permissions.Member),
     amm : (this.Permissions.Admin | this.Permissions.Member | this.Permissions.Mod)
 });
-
-
-// db.users.updateOne({username:"a85272"},{$push:{pending:"6044da5949805a4477fdcd2e"}})
-// .countDocuments({username: "a85272",friends:{"$elemMatch":{"$eq":"6044da5949805a4477fdcd2e"}},pending:{"$elemMatch":{"$eq":"6044da5949805a4477fdcd2e"}}});

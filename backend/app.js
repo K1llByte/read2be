@@ -49,15 +49,15 @@ db.once('open', () => console.log("Connected to MongoDB successfully..."));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/public',express.static(path.join(__dirname, 'public')));
+//app.use('/public',express.static(path.join(__dirname, 'public')));
 app.use('/storage',express.static(path.join(__dirname, 'storage')));
 
-const index_router = require('./routes/index');
+const authentication_router = require('./routes/authentication');
 const users_router = require('./routes/users');
 const books_router = require('./routes/books');
 const authors_router = require('./routes/authors');
 const publishers_router = require('./routes/publishers');
-app.use('/api', index_router);
+app.use('/api', authentication_router);
 app.use('/api', users_router);
 app.use('/api', books_router);
 app.use('/api', authors_router);
