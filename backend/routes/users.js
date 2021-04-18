@@ -624,24 +624,25 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
 
 
 
-router.post('/users/:username/collections', auth.authenticate(CPermissions.amm), async (req, res) => {
+// router.post('/users/:username/collections', auth.authenticate(CPermissions.amm), async (req, res) => {
 
-    // User.add_request(req.params.username,req.user.username,req.user.user_id)
-    // .then(() => {
-    //     res.json({ "success": "Friend request added successfully" });
-    // })
-    // .catch(err => {
-    //     res.status(400).json({ "error": err.message });
-    // });
-});
+//     // User.add_request(req.params.username,req.user.username,req.user.user_id)
+//     // .then(() => {
+//     //     res.json({ "success": "Friend request added successfully" });
+//     // })
+//     // .catch(err => {
+//     //     res.status(400).json({ "error": err.message });
+//     // });
+// });
 
 
 // POST /users/:username/collections         // Add collection
 // GET /users/:username/collections/:name    // Get collection
 // PATCH /users/:username/collections/:name  // Update collection name & avatar
 // DELETE /users/:username/collections:name  // Delete a collection
-// POST /users/:username/collections/:name   // Add to collection (multiple isbn's)
-// DELETE /users/:username/collections/:name // Remove from collection (multiple isbn's)
+
+// POST /users/:username/collections/:name   // Add book to collection (multiple isbn's)
+// DELETE /users/:username/collections/:name // Remove book from collection (multiple isbn's)
 
 
 

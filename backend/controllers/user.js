@@ -103,6 +103,8 @@ module.exports.verify_password = async (username,in_password) => {
     }
 }
 
+// =========================== // User books methods
+
 // Check if users already has a book
 module.exports.has_book = async (username,isbn) => {
     let val = await User
@@ -147,6 +149,8 @@ module.exports.update_book = (username,isbn,bookdata) => {
         { "$set" : set_query }
     ).exec();
 }
+
+// =========================== // User friendship methods
 
 // Add friendship request
 module.exports.add_request = async (username,friend_username,friend_user_id) => {
@@ -238,6 +242,35 @@ module.exports.update_request = async (username,user_id,friend_user_id,accept) =
         let u2_add_u1 = (await u2_add_u1_p);
     }
 }
+
+// =========================== // User collections methods
+
+// Add a collection
+module.exports.add_collection = (username,collectiondata) => {
+    return User.updateOne(
+        { username: username },
+        { $push : { collections: collectiondata} }
+    ).exec();
+}
+
+// Get a collection by name
+module.exports.get_collection = (username,collection_name) => {
+    return User.find({
+        username: username
+    }).exec()
+}
+
+// Update collection name & avatar
+module.exports.update_collection = undefined
+
+// Delete a collection
+module.exports.delete_collection = undefined
+
+// Add book to collection
+module.exports.add_to_collection = undefined
+
+// Remove book from collection
+module.exports.delete_from_collection = undefined
 
 // =========================== // 
   
