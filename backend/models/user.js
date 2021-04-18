@@ -7,15 +7,17 @@ const book_schema = new mongoose.Schema({
     date_registered: Date
 },
 {
+    _id:        false,
     versionKey: false
 });
 
 const collection_schema = new mongoose.Schema({
-    name:          String,
+    name:          { type: String , unique: true, required: true },
     thumbnail_url: String,
     books:         [String]
 },
 {
+    _id:        false,
     versionKey: false
 });
 

@@ -105,7 +105,7 @@ module.exports.verify_password = async (username,in_password) => {
 
 // =========================== // User books methods
 
-// Check if users already has a book
+// Check if user already has a book
 module.exports.has_book = async (username,isbn) => {
     let val = await User
         .countDocuments({ 
@@ -245,17 +245,34 @@ module.exports.update_request = async (username,user_id,friend_user_id,accept) =
 
 // =========================== // User collections methods
 
+// Check if user already has a collection
+module.exports.has_collection = async (username,name) => {
+    let val = await User
+        .countDocuments({ 
+            "username": username,
+            "collections.name": name }
+        )
+        .exec();
+    return val > 0;
+}
+
 // Add a collection
-module.exports.add_collection = (username,collectiondata) => {
+module.exports.add_collection = async (username,collection_data) => {
+
+    if (await this.has_collection(username,collection_data.name))
+    {
+        throw Error("User has a collection with same name");
+    }
+
     return User.updateOne(
         { username: username },
-        { $push : { collections: collectiondata} }
+        { $push : { collections: collection_data} }
     ).exec();
 }
 
 // Get a collection by name
 module.exports.get_collection = (username,collection_name) => {
-    return User.find({
+    return User.findOne({
         username: username,
         "collections.name": collection_name
     },{
@@ -267,16 +284,30 @@ module.exports.get_collection = (username,collection_name) => {
 }
 
 // Update collection name & avatar
-module.exports.update_collection = undefined
+module.exports.update_collection = (username,collection_data) => {
+    // return User
+    //     .updateOne({username: username},{$set: { "collections" }})
+    //     .exec();
+}
 
 // Delete a collection
-module.exports.delete_collection = undefined
+module.exports.delete_collection = (username, collection_name) => {
+    return User.updateOne(
+        {
+            username: username,
+            "collections.name": collection_name
+        },
+        {"$pull":{
+            "collections": {"name":collection_name}
+        }
+    }).exec()
+}
 
 // Add book to collection
-module.exports.add_to_collection = undefined
+module.exports.add_to_collection = (username, collection_name, book_isbn) => {}
 
 // Remove book from collection
-module.exports.delete_from_collection = undefined
+module.exports.delete_from_collection = (username, collection_name, book_isbn) => {}
 
 // =========================== // 
   

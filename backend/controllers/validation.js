@@ -4,5 +4,5 @@ module.exports.Regex = Object.freeze({
     EMAIL           : /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
     WEAK_PASSWD     : /^(\w|-|\.){8,32}$/,
     STRONG_PASSWD   : /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,32})/,
-    COLLECTION_NAME : /.{1:32}/,
+    COLLECTION_NAME : /.{1,32}/,
 });
