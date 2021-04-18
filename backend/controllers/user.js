@@ -256,7 +256,13 @@ module.exports.add_collection = (username,collectiondata) => {
 // Get a collection by name
 module.exports.get_collection = (username,collection_name) => {
     return User.find({
-        username: username
+        username: username,
+        "collections.name": collection_name
+    },{
+        "_id":0,
+        "collection": {
+            "$arrayElemAt":["$collections", 0]
+        }
     }).exec()
 }
 

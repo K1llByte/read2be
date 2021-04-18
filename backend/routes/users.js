@@ -623,19 +623,41 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
 });
 
 
+router.post('/users/:username/collections', auth.authenticate(CPermissions.amm), async (req, res) => {
 
-// router.post('/users/:username/collections', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        const collection = {
+            name: req.body.name,
+            thumbnail_url: "",
+            books: req.body.books
+        }
 
-//     // User.add_request(req.params.username,req.user.username,req.user.user_id)
-//     // .then(() => {
-//     //     res.json({ "success": "Friend request added successfully" });
-//     // })
-//     // .catch(err => {
-//     //     res.status(400).json({ "error": err.message });
-//     // });
-// });
+        if(!collection.name.match(/.{1:32}/))
+        {
+            res.status(400).json({ "error": "Invalid name" });
+            return;
+        }
+
+        User.add_collection(target_username, collection)
+        .then(() => {
+            res.json({ "success": "Collection added successfully" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
 
 
+router.get('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
+    
+});
 // POST /users/:username/collections         // Add collection
 // GET /users/:username/collections/:name    // Get collection
 // PATCH /users/:username/collections/:name  // Update collection name & avatar
