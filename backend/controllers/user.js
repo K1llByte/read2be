@@ -103,7 +103,9 @@ module.exports.verify_password = async (username,in_password) => {
     }
 }
 
-// Check if users already has a book
+// =========================== // User books methods
+
+// Check if user already has a book
 module.exports.has_book = async (username,isbn) => {
     let val = await User
         .countDocuments({ 
@@ -147,6 +149,8 @@ module.exports.update_book = (username,isbn,bookdata) => {
         { "$set" : set_query }
     ).exec();
 }
+
+// =========================== // User friendship methods
 
 // Add friendship request
 module.exports.add_request = async (username,friend_username,friend_user_id) => {
@@ -239,6 +243,72 @@ module.exports.update_request = async (username,user_id,friend_user_id,accept) =
     }
 }
 
+// =========================== // User collections methods
+
+// Check if user already has a collection
+module.exports.has_collection = async (username,name) => {
+    let val = await User
+        .countDocuments({ 
+            "username": username,
+            "collections.name": name }
+        )
+        .exec();
+    return val > 0;
+}
+
+// Add a collection
+module.exports.add_collection = async (username,collection_data) => {
+
+    if (await this.has_collection(username,collection_data.name))
+    {
+        throw Error("User has a collection with same name");
+    }
+
+    return User.updateOne(
+        { username: username },
+        { $push : { collections: collection_data} }
+    ).exec();
+}
+
+// Get a collection by name
+module.exports.get_collection = (username,collection_name) => {
+    return User.findOne({
+        username: username,
+        "collections.name": collection_name
+    },{
+        "_id":0,
+        "collection": {
+            "$arrayElemAt":["$collections", 0]
+        }
+    }).exec()
+}
+
+// Update collection name & avatar
+module.exports.update_collection = (username,collection_data) => {
+    // return User
+    //     .updateOne({username: username},{$set: { "collections" }})
+    //     .exec();
+}
+
+// Delete a collection
+module.exports.delete_collection = (username, collection_name) => {
+    return User.updateOne(
+        {
+            username: username,
+            "collections.name": collection_name
+        },
+        {"$pull":{
+            "collections": {"name":collection_name}
+        }
+    }).exec()
+}
+
+// Add book to collection
+module.exports.add_to_collection = (username, collection_name, book_isbn) => {}
+
+// Remove book from collection
+module.exports.delete_from_collection = (username, collection_name, book_isbn) => {}
+
 // =========================== // 
   
 // Permissions Enum
@@ -255,7 +325,3 @@ module.exports.CPermissions = Object.freeze({
     am :  (this.Permissions.Admin | this.Permissions.Member),
     amm : (this.Permissions.Admin | this.Permissions.Member | this.Permissions.Mod)
 });
-
-
-// db.users.updateOne({username:"a85272"},{$push:{pending:"6044da5949805a4477fdcd2e"}})
-// .countDocuments({username: "a85272",friends:{"$elemMatch":{"$eq":"6044da5949805a4477fdcd2e"}},pending:{"$elemMatch":{"$eq":"6044da5949805a4477fdcd2e"}}});

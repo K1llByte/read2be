@@ -281,7 +281,7 @@ router.get('/users/:username/avatar', auth.authenticate(CPermissions.amm), (req,
         if(userdata != null)
         {
             res.redirect( 
-                (userdata.avatar_url == "")
+                (userdata.avatar_url === "")
                     ? '/storage/users/default.png'
                     : userdata.avatar_url
             );
@@ -621,5 +621,67 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
         res.status(400).json({ "error": err.message });
     });
 });
+
+
+router.post('/users/:username/collections', auth.authenticate(CPermissions.amm), async (req, res) => {
+
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        const collection = {
+            name: req.body.name,
+            thumbnail_url: "",
+            books: req.body.books
+        };
+
+        console.log(collection.name);
+        console.log(Regex.COLLECTION_NAME);
+        if(!collection.name.match(Regex.COLLECTION_NAME))
+        {
+            res.status(400).json({ "error": "Invalid name" });
+            return;
+        }
+
+        User.add_collection(target_username, collection)
+        .then(() => {
+            res.json({ "success": "Collection added successfully" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+router.get('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        User.get_collection(target_username, req.params.name)
+        .then(data => {
+            res.json(data);
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+// POST /users/:username/collections         // Add collection
+// GET /users/:username/collections/:name    // Get collection
+// PATCH /users/:username/collections/:name  // Update collection name & avatar
+// DELETE /users/:username/collections:name  // Delete a collection
+
+// POST /users/:username/collections/:name   // Add book to collection (multiple isbn's)
+// DELETE /users/:username/collections/:name // Remove book from collection (multiple isbn's)
 
 module.exports = router;

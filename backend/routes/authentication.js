@@ -36,13 +36,10 @@ var blacklist = new Blacklist();
  */
 router.post('/login', (req, res) => {
 
-    console.log("req.body.username",req.body.username);
-    console.log("req.body.password",req.body.password);
     User.verify_password(req.body.username,req.body.password)
     .then(userdata => {
         if(userdata != null)
         {
-            console.log("userdata",userdata);
             const token = auth.gen_token(userdata);
             res.json({ "TOKEN":token });
         }
@@ -159,7 +156,8 @@ router.post('/register', async (req,res) => {
                         "avatar_url": "",
                         "books": [],
                         "friends": [],
-                        "pending": []
+                        "pending": [],
+                        "collections": []
                     });
                     
                     res.json({ "status" : "success" });

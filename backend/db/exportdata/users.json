@@ -13,7 +13,8 @@
 	"email": "a85171@alunos.uminho.pt",
 	"role": 1,
 	"avatar_url": "",
-	"books": []
+	"books": [],
+	"collections": []
 },
 {
 	"_id": {
@@ -28,7 +29,7 @@
 	"nickname": "Jorge Mota",
 	"password_hash": "sha256:cKvRUClMSdol:AhU/RFep1ob+OdezMkxXMmzJCvm4vKjefaQLLCZJPOE=",
 	"email": "a85272@alunos.uminho.pt",
-	"role": 1,
+	"role": 128.0,
 	"avatar_url": "",
 	"books": [
 		{
@@ -42,6 +43,7 @@
 				"$date": "2021-03-08T19:05:21.027Z"
 			}
 		}
-	]
+	],
+	"collections": []
 }]
 

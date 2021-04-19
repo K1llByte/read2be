@@ -38,9 +38,9 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [ ] Branding
 > 
 > - FrontEnd
->     - [ ] Authors/Publisher page
->     - [ ] User page
->     - [ ] Book library page & search base
+>     - [ ] UI: Authors/Publisher (Optional)
+>     - [ ] UI: User with list
+>     - [ ] UI: Book library with search
 >     - [ ] Port non administrive backend funcionalities to webapp
 >     
 > 

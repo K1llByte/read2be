@@ -5,6 +5,7 @@ const rate_schema = new mongoose.Schema({
     current_rate: Number
 }, 
 {
+    _id:        false,
     versionKey: false
 });
 
@@ -14,6 +15,7 @@ const review_schema = new mongoose.Schema({
     date:    Date
 },
 {
+    _id:        false,
     versionKey: false
 });
 
