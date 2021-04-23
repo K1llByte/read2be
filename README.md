@@ -17,7 +17,7 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 
 |                |                     |
 |:--------------:|:-------------------:|
-| Base WebApp    | 20th May            |
+| Base WebApp    | May 20th            |
 | 2nd Checkpoint | May 31th - June 5th |
 
 
@@ -32,18 +32,20 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [x] Manage User book data
 >     - [ ] Manage User defined book collections
 >     - [ ] Manage User friends
->     - [ ] Book library search
+>     - [ ] Book library search engine
 >     - [ ] Upgrade server configurability
 >     - [ ] Populate system's database 
 >     - [ ] Branding
-> 
+>     - [ ] Make deployable build
+>
 > - FrontEnd
 >     - [ ] UI: Authors/Publisher (Optional)
 >     - [ ] UI: User with list
 >     - [ ] UI: Book library with search
+>     - [ ] UI: Login
+>     - [ ] UI: Register
 >     - [ ] Port non administrive backend funcionalities to webapp
->     
-> 
+>
 > - Recommender
 >     - [ ] Collaborative Filtering based on user's classification on books
 
