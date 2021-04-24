@@ -104,3 +104,11 @@ module.exports.exists = async (isbn) => {
         .exec()
     return val > 0;
 }
+
+// Check if multiple books exists
+module.exports.multiple_exists = async (books_isbn) => {
+    let val = await Book
+        .countDocuments({ isbn: { "$in": books_isbn } })
+        .exec()
+    return val == books_isbn.length;
+}

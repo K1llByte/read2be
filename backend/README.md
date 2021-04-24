@@ -106,7 +106,24 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [x] [User]  PATCH /users/:username/books/:isbn
 [x] [User]  PATCH /users/:username/requests/:friend_username
 [x] [User]  POST /users/:username/requests
+
+[x] [User]  POST /users/:username/collections
+[x] [User]  GET /users/:username/collections/:name
+[x] [User]  PATCH /users/:username/collections/:name
+[ ] [User]  DELETE /users/:username/collections/:name
+
+[ ] [User]  POST /users/:username/collections/:name
+[ ] [User]  DELETE /users/:username/collections/:name/books
 ```
+<!--
+// POST /users/:username/collections         // Add collection // TODO: CHECK IF BOOKS EXISTS
+// GET /users/:username/collections/:name    // Get collection
+// PATCH /users/:username/collections/:name  // Update collection name & avatar
+// DELETE /users/:username/collections:name  // Delete a collection
+
+// POST /users/:username/collections/:name   // Add book to collection (multiple isbn's) // TODO: CHECK IF BOOKS EXISTS
+// DELETE /users/:username/collections/:name/books // Remove book from collection (multiple isbn's)
+-->
 
 ### Books
 ```
