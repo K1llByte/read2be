@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const Book = require('../controllers/book');
 
 // =========================== // User CRUD operations
 
@@ -83,7 +84,7 @@ module.exports.parse_password_hash = (password) => {
 }
 
 // Verify user credentials
-module.exports.verify_password = async (username,in_password) => {
+module.exports.verify_password = async (username, in_password) => {
     let userdata = await this.get(username,false)
     if(userdata != null)
     {
@@ -106,7 +107,7 @@ module.exports.verify_password = async (username,in_password) => {
 // =========================== // User books methods
 
 // Check if user already has a book
-module.exports.has_book = async (username,isbn) => {
+module.exports.has_book = async (username, isbn) => {
     let val = await User
         .countDocuments({ 
             "username": username,
@@ -117,7 +118,7 @@ module.exports.has_book = async (username,isbn) => {
 }
 
 // Add book to user book list
-module.exports.add_book = (username,bookdata) => {
+module.exports.add_book = (username, bookdata) => {
     return User.updateOne(
         { username: username },
         { $push : { books: bookdata} }
@@ -125,7 +126,7 @@ module.exports.add_book = (username,bookdata) => {
 }
 
 // Remove book from user list
-module.exports.remove_book = (username,isbn) => {
+module.exports.remove_book = (username, isbn) => {
     return User.updateOne(
         { username: username },
         { $pull: { books: { isbn: isbn } } }
@@ -133,7 +134,7 @@ module.exports.remove_book = (username,isbn) => {
 }
 
 // Update book from user list
-module.exports.update_book = (username,isbn,bookdata) => {
+module.exports.update_book = (username, isbn, bookdata) => {
 
     let set_query = {};
     if(bookdata.status)
@@ -153,7 +154,7 @@ module.exports.update_book = (username,isbn,bookdata) => {
 // =========================== // User friendship methods
 
 // Add friendship request
-module.exports.add_request = async (username,friend_username,friend_user_id) => {
+module.exports.add_request = async (username, friend_username, friend_user_id) => {
     // User1 - Friend request target
     // User2 - User who's sending friend request
 
@@ -206,7 +207,7 @@ module.exports.add_request = async (username,friend_username,friend_user_id) => 
 }
 
 // Update friendship request
-module.exports.update_request = async (username,user_id,friend_user_id,accept) => {
+module.exports.update_request = async (username, user_id, friend_user_id, accept) => {
     // User1 - User who received the friend request
     // User2 - User who sent the friend request
     
@@ -246,7 +247,7 @@ module.exports.update_request = async (username,user_id,friend_user_id,accept) =
 // =========================== // User collections methods
 
 // Check if user already has a collection
-module.exports.has_collection = async (username,name) => {
+module.exports.has_collection = async (username, name) => {
     let val = await User
         .countDocuments({ 
             "username": username,
@@ -257,8 +258,9 @@ module.exports.has_collection = async (username,name) => {
 }
 
 // Add a collection
-module.exports.add_collection = async (username,collection_data) => {
+module.exports.add_collection = async (username, collection_data) => {
 
+    // Check if user has a collection with name 'collection_name'
     if (await this.has_collection(username,collection_data.name))
     {
         throw Error("User has a collection with same name");
@@ -271,7 +273,7 @@ module.exports.add_collection = async (username,collection_data) => {
 }
 
 // Get a collection by name
-module.exports.get_collection = (username,collection_name) => {
+module.exports.get_collection = (username, collection_name) => {
     return User.findOne({
         username: username,
         "collections.name": collection_name
@@ -284,30 +286,83 @@ module.exports.get_collection = (username,collection_name) => {
 }
 
 // Update collection name & avatar
-module.exports.update_collection = (username,collection_data) => {
-    // return User
-    //     .updateOne({username: username},{$set: { "collections" }})
-    //     .exec();
+module.exports.update_collection = async (username, collection_name, new_name) => {
+    
+    // Check if user has a collection with name 'collection_name'
+    if (!await this.has_collection(username,collection_name))
+    {
+        throw Error("User has no such collection");
+    }
+
+    if (await this.has_collection(username,new_name))
+    {
+        throw Error("User has a collection with same name");
+    }
+
+    return User.updateOne(
+        { username: username, "collections.name": collection_name },
+        { $set: { "collections.$.name" : new_name } }
+    ).exec();
 }
 
 // Delete a collection
-module.exports.delete_collection = (username, collection_name) => {
+module.exports.delete_collection = async (username, collection_name) => {
+
+    // Check if user has a collection with name 'collection_name'
+    if (!await this.has_collection(username,collection_name))
+    {
+        throw Error("User has no such collection");
+    }
+
     return User.updateOne(
+        { username: username },
         {
-            username: username,
-            "collections.name": collection_name
-        },
-        {"$pull":{
-            "collections": {"name":collection_name}
+            "$pull": {
+                "collections": { "name": collection_name }
         }
     }).exec()
 }
 
-// Add book to collection
-module.exports.add_to_collection = (username, collection_name, book_isbn) => {}
+// Add book(s) to collection
+module.exports.add_to_collection = async (username, collection_name, books_isbn) => {
+    
+    // Check if user has a collection with name 'collection_name'
+    if (!await this.has_collection(username, collection_name))
+    {
+        throw Error("User has no such collection");
+    }
 
-// Remove book from collection
-module.exports.delete_from_collection = (username, collection_name, book_isbn) => {}
+    // Check if books exist in the database
+    if(!await Book.multiple_exists(books_isbn))
+    {
+        throw Error(`Not every book exists`);
+    }
+
+    // Remove books to be inserted, to ensure there's no duplicates
+    User.updateMany(
+        { username: username, "collections.name": collection_name },
+        { "$pullAll": { "collections.$.books": books_isbn } }
+    ).exec();
+
+    return User.updateMany(
+        { username: username, "collections.name": collection_name },
+        { "$push": { "collections.$.books": { "$each": books_isbn } } }
+    ).exec();
+}
+
+// Remove book(s) from collection
+module.exports.remove_from_collection = async (username, collection_name, books_isbn) => {
+
+    if (!await this.has_collection(username, collection_name))
+    {
+        throw Error("User has no such collection");
+    }
+
+    return User.updateMany(
+        { username: username, "collections.name": collection_name },
+        { "$pullAll": { "collections.$.books": books_isbn } }
+    ).exec();
+}
 
 // =========================== // 
   

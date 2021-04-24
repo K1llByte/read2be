@@ -634,8 +634,6 @@ router.post('/users/:username/collections', auth.authenticate(CPermissions.amm),
             books: req.body.books
         };
 
-        console.log(collection.name);
-        console.log(Regex.COLLECTION_NAME);
         if(!collection.name.match(Regex.COLLECTION_NAME))
         {
             res.status(400).json({ "error": "Invalid name" });
@@ -676,12 +674,86 @@ router.get('/users/:username/collections/:name', auth.authenticate(CPermissions.
 });
 
 
-// POST /users/:username/collections         // Add collection
-// GET /users/:username/collections/:name    // Get collection
-// PATCH /users/:username/collections/:name  // Update collection name & avatar
-// DELETE /users/:username/collections:name  // Delete a collection
+router.patch('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        const new_name = req.body.new_name;
+        if(!new_name.match(Regex.COLLECTION_NAME))
+        {
+            res.status(400).json({ "error": "Invalid new_name" });
+            return;
+        }
 
-// POST /users/:username/collections/:name   // Add book to collection (multiple isbn's)
-// DELETE /users/:username/collections/:name // Remove book from collection (multiple isbn's)
+        User.update_collection(target_username, req.params.name, new_name)
+        .then(info => {
+            res.json({ "success": "Collection updated successfully" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+router.delete('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        User.delete_collection(target_username, req.params.name)
+        .then(info => {
+            res.json({ "success": "Collection deleted successfully" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+router.post('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        User.add_to_collection(target_username, req.params.name, req.body.books)
+        .then(info => {
+            res.json({ "success": "Book(s) added successfully to collection" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
+
+
+router.delete('/users/:username/collections/:name/books', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        User.remove_from_collection(target_username, req.params.name, req.body.books)
+        .then(info => {
+            res.json({ "success": "Book(s) removed successfully from collection" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+});
 
 module.exports = router;
