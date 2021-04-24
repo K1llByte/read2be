@@ -623,6 +623,43 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
 });
 
 
+/**
+ * @swagger
+ * /users/{username}/collections:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Add collection
+ *    description: Add a new collection to user collections list
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: name
+ *        in: formData
+ *        required: true
+ *        description: Collection name
+ *        type: string
+ *      - name: books
+ *        in: body
+ *        required: true
+ *        description: Collection books list
+ *        type: array
+ *        items:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Collection added successfully
+ *      '400':
+ *        description: Invalid name
+ *      '401':
+ *        description: Forbidden
+ */
 router.post('/users/:username/collections', auth.authenticate(CPermissions.amm), async (req, res) => {
 
     const target_username = req.params.username;
@@ -655,6 +692,34 @@ router.post('/users/:username/collections', auth.authenticate(CPermissions.amm),
 });
 
 
+/**
+ * @swagger
+ * /users/{username}/collections/{name}:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Get collection
+ *    description: Get collection data
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Collection name
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Successful
+ *      '401':
+ *        description: Forbidden
+ */
 router.get('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
@@ -674,6 +739,41 @@ router.get('/users/:username/collections/:name', auth.authenticate(CPermissions.
 });
 
 
+/**
+ * @swagger
+ * /users/{username}/collections/{name}:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Update collection name
+ *    description: Update collection name
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Collection name
+ *        type: string
+ *      - name: new_name
+ *        in: formData
+ *        required: true
+ *        description: New collection name
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Collection updated successfully
+ *      '400':
+ *        description: Invalid new_name
+ *      '401':
+ *        description: Forbidden
+ */
 router.patch('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
@@ -700,6 +800,34 @@ router.patch('/users/:username/collections/:name', auth.authenticate(CPermission
 });
 
 
+/**
+ * @swagger
+ * /users/{username}/collections/{name}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Delete a collection
+ *    description: Delete a collection by name
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Collection name
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Collection deleted successfully
+ *      '401':
+ *        description: Forbidden
+ */
 router.delete('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
@@ -719,6 +847,41 @@ router.delete('/users/:username/collections/:name', auth.authenticate(CPermissio
 });
 
 
+/**
+ * @swagger
+ * /users/{username}/collections/{name}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Add book to collection 
+ *    description: Add book to collection, multiple isbn's as a list 
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Collection name
+ *        type: string
+ *      - name: books
+ *        in: body
+ *        required: true
+ *        description: Collection books list
+ *        type: array
+ *        items:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Book(s) added successfully to collection
+ *      '401':
+ *        description: Forbidden
+ */
 router.post('/users/:username/collections/:name', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
@@ -738,6 +901,41 @@ router.post('/users/:username/collections/:name', auth.authenticate(CPermissions
 });
 
 
+/**
+ * @swagger
+ * /users/{username}/collections/{name}/books:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Remove book from collection
+ *    description: Remove book from collection, multiple isbn's as a list 
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        required: true
+ *        description: Collection name
+ *        type: string
+ *      - name: books
+ *        in: body
+ *        required: true
+ *        description: Collection books list
+ *        type: array
+ *        items:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Book(s) added successfully to collection
+ *      '401':
+ *        description: Forbidden
+ */
 router.delete('/users/:username/collections/:name/books', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
