@@ -142,6 +142,8 @@ module.exports.update_book = (username, isbn, bookdata) => {
     if(bookdata.rate)
         set_query['books.$.rate'] = bookdata.rate;
 
+    Book.update_rate(isbn, bookdata.rate);
+
     return User.updateOne(
         { 
             "username": username,

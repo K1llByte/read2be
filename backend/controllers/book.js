@@ -81,9 +81,9 @@ module.exports.get = async (isbn) => {
     return b[0];
 }
 
-// Update book data
-module.exports.set = (name,bookdata) => {
-    return Publisher
+// Update book data // TODO: 
+module.exports.set = (name, bookdata) => {
+    return publisher
         .updateOne({name: name},{$set: bookdata})
         .exec();
 }
@@ -96,6 +96,22 @@ module.exports.delete = (isbn) => {
 }
 
 // =========================== // Book specific methods
+
+// Update book rate
+module.exports.update_rate = async (isbn, rate) => {
+    
+    const bookdata = await Book.findOne({isbn: isbn},{ "rate":1 }).exec()
+    const nr = bookdata.num_rates;
+    const new_nr = nr + 1;
+    const new_cr = (bookdata.current_rate * nr + rate) / new_nr;
+
+    return Book
+        .updateOne({isbn: isbn},{$set: {
+            "rate.num_rates": new_nr,
+            "rate.current_rate": new_cr
+        }})
+        .exec();
+}
 
 // Check if a book exists
 module.exports.exists = async (isbn) => {
