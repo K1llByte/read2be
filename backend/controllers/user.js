@@ -119,6 +119,8 @@ module.exports.has_book = async (username, isbn) => {
 
 // Add book to user book list
 module.exports.add_book = (username, bookdata) => {
+    Book.add_rate(isbn, bookdata.rate);
+
     return User.updateOne(
         { username: username },
         { $push : { books: bookdata} }
@@ -134,7 +136,7 @@ module.exports.remove_book = (username, isbn) => {
 }
 
 // Update book from user list
-module.exports.update_book = (username, isbn, bookdata) => {
+module.exports.update_book = async (username, isbn, bookdata) => {
 
     let set_query = {};
     if(bookdata.status)
@@ -142,7 +144,13 @@ module.exports.update_book = (username, isbn, bookdata) => {
     if(bookdata.rate)
         set_query['books.$.rate'] = bookdata.rate;
 
-    Book.update_rate(isbn, bookdata.rate);
+    let tmp = await User.findOne(
+        {username:username},
+        {"books":{"$elemMatch":{"isbn":"439023483"}}}
+    ).exec();
+    let old_rate = tmp.books[0].rate;
+
+    Book.update_rate(isbn, bookdata.rate, old_rate);
 
     return User.updateOne(
         { 

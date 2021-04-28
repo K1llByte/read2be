@@ -97,17 +97,30 @@ module.exports.delete = (isbn) => {
 
 // =========================== // Book specific methods
 
-// Update book rate
-module.exports.update_rate = async (isbn, rate) => {
+// Add book rate
+module.exports.add_rate = async (isbn, rate) => {
     
     const bookdata = await Book.findOne({isbn: isbn},{ "rate":1 }).exec()
-    const nr = bookdata.num_rates;
+    const nr = bookdata.rate.num_rates;
     const new_nr = nr + 1;
-    const new_cr = (bookdata.current_rate * nr + rate) / new_nr;
+    const new_cr = (bookdata.rate.current_rate * nr + rate) / new_nr;
 
     return Book
         .updateOne({isbn: isbn},{$set: {
             "rate.num_rates": new_nr,
+            "rate.current_rate": new_cr
+        }})
+        .exec();
+}
+
+// Update book rate
+module.exports.update_rate = async (isbn, rate, old_rate) => {
+    
+    const bookdata = await Book.findOne({isbn: isbn},{ "rate":1 }).exec();
+    const new_cr = bookdata.rate.current_rate + (rate - old_rate) / bookdata.rate.num_rates;
+
+    return Book
+        .updateOne({isbn: isbn},{$set: {
             "rate.current_rate": new_cr
         }})
         .exec();
