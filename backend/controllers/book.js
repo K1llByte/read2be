@@ -82,9 +82,9 @@ module.exports.get = async (isbn) => {
 }
 
 // Update book data // TODO: 
-module.exports.set = (name, bookdata) => {
-    return publisher
-        .updateOne({name: name},{$set: bookdata})
+module.exports.set = (isbn, bookdata) => {
+    return Book
+        .updateOne({isbn: isbn},{$set: bookdata})
         .exec();
 }
 
