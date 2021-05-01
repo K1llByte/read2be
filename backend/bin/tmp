@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+const query = "harry potter";
+
+const a = RegExp(`((${query.replace(" ",")|(")}))+`,"gi")
+console.log(a);

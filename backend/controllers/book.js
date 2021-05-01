@@ -50,7 +50,7 @@ module.exports.insert = (bookdata) => {
     return new_book.save();
 }
 
-// List all users
+// List all books
 module.exports.list_all = (options={}) => {
     const page_limit = (options.page_limit != undefined) 
         ? options.page_limit : 20 ;
@@ -96,6 +96,32 @@ module.exports.delete = (isbn) => {
 }
 
 // =========================== // Book specific methods
+
+// Search books
+module.exports.search = (query, options={}) => {
+    const page_limit = (options.page_limit != undefined) 
+        ? options.page_limit : 20 ;
+    const page_num = (options.page_num != undefined) 
+        ? options.page_num : 0 ;
+    
+    // Split the search query string and
+    // turn it into a regex to match in the 
+    // database.
+    let seach_rgx = RegExp(`((${query.replace(" ",")|(")}))+`,"gi")
+
+    return Book.aggregate([
+            { "$match": {
+                    "title": { "$regex": RegExp(seach_rgx,"gi") }
+                }
+            },
+            GENRE_LOOKUP,
+            LANGUAGE_LOOKUP,
+            { "$project": BOOK_PROJECTION }
+        ])
+        .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
+        .limit(page_limit)
+        .exec();
+}
 
 // Add book rate
 module.exports.add_rate = async (isbn, rate) => {

@@ -24,6 +24,10 @@ const router = express.Router();
  */
 router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
     
+    // If the 'q' parameter is set, then its a search,
+    // otherwise, is just a listing of all books.
+    const search_query = req.query.q;
+    
     let options = {};
 
     if(req.query.page_num != undefined)
@@ -46,13 +50,26 @@ router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
         }
     }
 
-    Book.list_all(options)
-    .then(booksdata => {
-        res.json({ "books": booksdata });
-    })
-    .catch(err => {
-        res.status(500).json({ "error": err.message });
-    });
+    if(search_query != undefined)
+    {
+        Book.search(search_query,options)
+        .then(booksdata => {
+            res.json({ "books": booksdata });
+        })
+        .catch(err => {
+            res.status(500).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        Book.list_all(options)
+        .then(booksdata => {
+            res.json({ "books": booksdata });
+        })
+        .catch(err => {
+            res.status(500).json({ "error": err.message });
+        });
+    }
 });
 
 
