@@ -34,7 +34,11 @@ const LANGUAGE_LOOKUP = {
 // =========================== // Book CRUD operations
 
 // Inserts a new book
-module.exports.insert = (bookdata) => {
+module.exports.insert = async (bookdata) => {
+    // TODO: check if book exists
+    if(this.exists(bookdata.isbn))
+        return null;
+
     const book = {
         "isbn": bookdata.isbn,
         "title": bookdata.title,
@@ -44,7 +48,7 @@ module.exports.insert = (bookdata) => {
         "language": bookdata.language,
         "rate": { "num_rates": 0, "current_rate": 0 },
         "reviews": [],
-        "cover_url": ""
+        "cover_url": bookdata.cover_url
     };
     let new_book = new Book(book);
     return new_book.save();
@@ -99,9 +103,9 @@ module.exports.delete = (isbn) => {
 
 // Search books
 module.exports.search = (query, options={}) => {
-    const page_limit = (options.page_limit != undefined) 
+    const page_limit = (options.page_limit != undefined)
         ? options.page_limit : 20 ;
-    const page_num = (options.page_num != undefined) 
+    const page_num = (options.page_num != undefined)
         ? options.page_num : 0 ;
     
     // Split the search query string and

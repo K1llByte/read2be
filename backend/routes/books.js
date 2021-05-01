@@ -2,6 +2,7 @@ const express = require('express');
 const Book = require('../controllers/book');
 const { Permissions, CPermissions } = require('../controllers/user');
 const auth = require('../controllers/auth');
+const { upload, save_cover, delete_file, delete_book_storage } = require('../controllers/storage');
 //const { Regex } = require('../controllers/validation');
 
 const router = express.Router();
@@ -18,15 +19,32 @@ const router = express.Router();
  *    summary: List books
  *    description: List books
  *    produces: application/json
+ *    parameters:
+ *      - name: page_num
+ *        in: query
+ *        required: false
+ *        description: Select page from books list
+ *        type: number
+ *      - name: page_limit
+ *        in: query
+ *        required: false
+ *        description: Select number of books per page
+ *        type: number
+ *      - name: search
+ *        in: query
+ *        required: false
+ *        description: Search query
+ *        type: string
  *    responses:
  *      '200':
  *        description: Successful
  */
 router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
     
-    // If the 'q' parameter is set, then its a search,
+    // If the 'search' parameter is set, then its a search,
     // otherwise, is just a listing of all books.
-    const search_query = req.query.q;
+    // TODO: Input validation on 'search'
+    const search_query = req.query.search;
     
     let options = {};
 
@@ -134,45 +152,67 @@ router.get('/books/:isbn', auth.authenticate(CPermissions.amm), (req, res) => {
  *    responses:
  *      '200':
  *        description: Successful
- *      '404':
- *        description: Book not found
+ *      '400':
+ *        description: Invalid cover image
  */
-router.post('/books', auth.authenticate(Permissions.Admin), (req, res) => {
+router.post('/books', upload.single('cover'), auth.authenticate(Permissions.Admin), (req, res) => {
+    if(!req.valid_file)
+    {
+        res.status(400).json({ "error": "Invalid cover file" });
+        return;
+    }
+
     const book = {
         "isbn": req.body.isbn,
         "title": req.body.title,
         "authors": req.body.authors,
         "publisher": req.body.publisher,
         "genre": req.body.genre,
-        "language": req.body.language
+        "language": req.body.language,
+        "cover_url": req.body.cover_url,
     };
-
+    
     // TODO: Input validation (and type checking)
-    if( book.isbn === undefined ||
-        book.title === undefined ||
-        book.authors === undefined ||
-        book.publisher === undefined ||
-        book.genre === undefined ||
-        book.language === undefined)
+    if( book.isbn      == undefined ||
+        book.title     == undefined ||
+        book.authors   == undefined ||
+        book.publisher == undefined ||
+        book.genre     == undefined ||
+        book.language  == undefined )
     {
+        if(req.file != null)
+            delete_file(req.file);
         res.status(400).json({ "error": "Invalid book parameters" });
         return;
     }
-
+    
+    if(!book.cover_url)
+        book.cover_url = "http://localhost:8080/storage/books/default.jpg"
+    
+    if(req.file)
+        book.cover_url = `http://localhost:8080/storage/books/${book.isbn}/cover.${req.file.ext}`
+        
     Book.insert(book)
     .then(bookdata => {
-        console.log("bookdata",bookdata);
         if(bookdata != null)
         {
+            if(req.file != null)
+            {
+                save_cover(book.isbn,req.file);
+            }
             res.json(bookdata);
         }
         else
         {
-            res.status(404).json({ "error": "Book not found" });
+            res.status(400).json({ "error": "Book already exists" });
+            if(req.file != null)
+                delete_file(req.file);
         }
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });
+        if(req.file != null)
+            delete_file(req.file);
     });
 });
 
@@ -205,6 +245,7 @@ router.delete('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) =
     .then(info => {
         if(info.deletedCount > 0)
         {
+            delete_book_storage(req.params.isbn);
             res.json({ "success": "Book data deleted successfully" });
         }
         else
