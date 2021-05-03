@@ -38,16 +38,31 @@
                </v-hover>
             </v-col>
          </v-row>
+         <v-row class="mt-7">
+            <v-col offset=20>
+               <div class="text-center mt-6 mb-7">
+                  <v-pagination
+                     color="teal lighten-1"
+                     v-model="page"
+                     :length="10"
+                     :total-visible="5"
+                  ></v-pagination>
+               </div>
+            </v-col>
+         </v-row>
       </v-container>
    </v-card>
+   
 </template>
 
 
 <script>
 export default {
-     name: 'bookshelf',
+     name: 'books',
 
-     data: () => ({})
+     data: () => ({
+         page: 1,
+     })
 };
 
 </script>

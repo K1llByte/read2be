@@ -11,6 +11,10 @@
 
             <v-spacer></v-spacer>
 
+            <h3>{{currentDateFormatted()}}</h3>
+            
+            <v-spacer></v-spacer>
+
             <v-btn icon>
                 <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
@@ -29,7 +33,7 @@
             >
                 <v-list-item-group
                 v-model="group"
-                active-class="deep-purple--text text--accent-4"
+                active-class="teal--text text--accent-4"
                 >
                     <v-list-item>
                         <v-list-item-title>Foo</v-list-item-title>
@@ -61,11 +65,15 @@ export default {
         group: null,
     }),
 
-    watch: {
-        group () {
-            this.drawer = false
-        },
-    },
+    methods: {
+        currentDateFormatted: function(){
+            var date = new Date();
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+            
+            return monthNames[date.getMonth()] + ' ' + date.getDate() + ',' + ' ' + date.getFullYear();
+            }
+    }
+
 };
 </script>
 
