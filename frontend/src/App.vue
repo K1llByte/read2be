@@ -1,29 +1,37 @@
 <template>
-  <v-app>
-    <!-- <Login /> -->
-    <!-- <Register /> -->
-    <!-- <MenuBar /> -->
-    <!-- <Searchbar /> -->
-    <!-- <Books /> -->
-    <Teste />
-  </v-app>
+  <div id="app">
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/users">Users</router-link> |
+      <router-link to="/authors">Authors</router-link> |
+      <!-- <router-link to="/login">Login</router-link> | -->
+      <!-- <router-link to="/register">Register</router-link> | -->
+      <!-- <router-link to="/search">Search</router-link> | -->
+      <!-- <router-link to="/books">Books</router-link> -->
+    </div>
+    <router-view/>
+  </div>
 </template>
 
-<script>
-// import Login from './components/Login.vue';
-// import Register from './components/Register.vue';
-// import Books from './components/Books.vue';
-// import Searchbar from './components/Searchbar.vue';
-// import MenuBar from './components/MenuBar.vue';
-import Teste from './components/Teste.vue';
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 
-export default {
-  // components: { MenuBar, Login, Register, Bookshelf, Searchbar },
-  components: { Teste },
-  name: 'App',
+#nav {
+  padding: 30px;
 
-  data: () => ({
-    
-  })
-};
-</script>
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
+}
+</style>
