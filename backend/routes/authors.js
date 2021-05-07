@@ -79,7 +79,11 @@ router.get('/authors', auth.authenticate(CPermissions.amm), (req, res) => {
  *        description: Author not found
  */
 router.get('/authors/:name', auth.authenticate(CPermissions.amm), (req, res) => {
-    Author.get(req.params.name)
+    const options = {
+        inline_books: req.query.inline_books,
+    }
+
+    Author.get(req.params.name,options)
     .then(authordata => {
         if(authordata != null)
         {

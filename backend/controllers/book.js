@@ -35,7 +35,6 @@ const LANGUAGE_LOOKUP = {
 
 // Inserts a new book
 module.exports.insert = async (bookdata) => {
-    // TODO: check if book exists
     if(this.exists(bookdata.isbn))
         return null;
 

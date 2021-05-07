@@ -80,7 +80,11 @@ router.get('/publishers', auth.authenticate(CPermissions.amm), (req, res) => {
  *        description: Publisher not found
  */
 router.get('/publishers/:name', auth.authenticate(CPermissions.amm), (req, res) => {
-    Publisher.get(req.params.name)
+    const options = {
+        inline_books: req.query.inline_books,
+    }
+
+    Publisher.get(req.params.name,options)
     .then(publisherdata => {
         if(publisherdata != null)
         {
