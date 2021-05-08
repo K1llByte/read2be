@@ -34,7 +34,10 @@ const LANGUAGE_LOOKUP = {
 // =========================== // Book CRUD operations
 
 // Inserts a new book
-module.exports.insert = (bookdata) => {
+module.exports.insert = async (bookdata) => {
+    if(this.exists(bookdata.isbn))
+        return null;
+
     const book = {
         "isbn": bookdata.isbn,
         "title": bookdata.title,
@@ -44,13 +47,13 @@ module.exports.insert = (bookdata) => {
         "language": bookdata.language,
         "rate": { "num_rates": 0, "current_rate": 0 },
         "reviews": [],
-        "cover_url": ""
+        "cover_url": bookdata.cover_url
     };
     let new_book = new Book(book);
     return new_book.save();
 }
 
-// List all users
+// List all books
 module.exports.list_all = (options={}) => {
     const page_limit = (options.page_limit != undefined) 
         ? options.page_limit : 20 ;
@@ -81,10 +84,10 @@ module.exports.get = async (isbn) => {
     return b[0];
 }
 
-// Update book data
-module.exports.set = (name,bookdata) => {
-    return Publisher
-        .updateOne({name: name},{$set: bookdata})
+// Update book data // TODO: 
+module.exports.set = (isbn, bookdata) => {
+    return Book
+        .updateOne({isbn: isbn},{$set: bookdata})
         .exec();
 }
 
@@ -96,6 +99,61 @@ module.exports.delete = (isbn) => {
 }
 
 // =========================== // Book specific methods
+
+// Search books
+module.exports.search = (query, options={}) => {
+    const page_limit = (options.page_limit != undefined)
+        ? options.page_limit : 20 ;
+    const page_num = (options.page_num != undefined)
+        ? options.page_num : 0 ;
+    
+    // Split the search query string and
+    // turn it into a regex to match in the 
+    // database.
+    let seach_rgx = RegExp(`((${query.replace(" ",")|(")}))+`,"gi")
+
+    return Book.aggregate([
+            { "$match": {
+                    "title": { "$regex": RegExp(seach_rgx,"gi") }
+                }
+            },
+            GENRE_LOOKUP,
+            LANGUAGE_LOOKUP,
+            { "$project": BOOK_PROJECTION }
+        ])
+        .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
+        .limit(page_limit)
+        .exec();
+}
+
+// Add book rate
+module.exports.add_rate = async (isbn, rate) => {
+    
+    const bookdata = await Book.findOne({isbn: isbn},{ "rate":1 }).exec()
+    const nr = bookdata.rate.num_rates;
+    const new_nr = nr + 1;
+    const new_cr = (bookdata.rate.current_rate * nr + rate) / new_nr;
+
+    return Book
+        .updateOne({isbn: isbn},{$set: {
+            "rate.num_rates": new_nr,
+            "rate.current_rate": new_cr
+        }})
+        .exec();
+}
+
+// Update book rate
+module.exports.update_rate = async (isbn, rate, old_rate) => {
+    
+    const bookdata = await Book.findOne({isbn: isbn},{ "rate":1 }).exec();
+    const new_cr = bookdata.rate.current_rate + (rate - old_rate) / bookdata.rate.num_rates;
+
+    return Book
+        .updateOne({isbn: isbn},{$set: {
+            "rate.current_rate": new_cr
+        }})
+        .exec();
+}
 
 // Check if a book exists
 module.exports.exists = async (isbn) => {

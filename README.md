@@ -30,8 +30,8 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [x] Authentication
 >     - [x] Manage User data
 >     - [x] Manage User book data
->     - [ ] Manage User defined book collections
->     - [ ] Manage User friends
+>     - [x] Manage User defined book collections
+>     - [x] Manage User friends
 >     - [ ] Book library search engine
 >     - [ ] Upgrade server configurability
 >     - [ ] Populate system's database 

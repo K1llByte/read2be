@@ -1,4 +1,5 @@
 const Publisher = require('../models/publisher');
+const Book = require('../controllers/book');
 
 // =========================== // User CRUD operations
 
@@ -23,10 +24,38 @@ module.exports.list_all = (options={}) => {
 }
 
 // Get a publisher by name
-module.exports.get = (name) => {
-    return Publisher
-        .findOne({name:name},{_id:0})
-        .exec();
+module.exports.get = async (name, options={}) => {
+    if (options.inline_books == 1)
+    {
+        const BOOK_LOOKUP = {
+            "$lookup": {
+                "from": "books",
+                "localField": "books",
+                "foreignField": "isbn",
+                "as": "books"
+            }
+        };
+        const tmp = await Publisher.aggregate([
+            BOOK_LOOKUP,
+            {
+                "$match": { name: name }
+            },
+            {
+                "$project": {
+                    _id: 0,
+                    "books._id": 0,
+                    "books.reviews": 0,
+                }
+            }
+        ]);
+        return tmp[0];
+    }
+    else
+    {
+        return Publisher
+            .findOne({name:name},{_id:0})
+            .exec();
+    }
 }
 
 // Update publisher data

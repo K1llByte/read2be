@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+let val = false;
+val && console.log(val)

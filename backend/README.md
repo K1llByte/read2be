@@ -110,10 +110,10 @@ There are 4 main entities in the system, <ins>User</ins>, <ins>Book</ins>, <ins>
 [x] [User]  POST /users/:username/collections
 [x] [User]  GET /users/:username/collections/:name
 [x] [User]  PATCH /users/:username/collections/:name
-[ ] [User]  DELETE /users/:username/collections/:name
+[x] [User]  DELETE /users/:username/collections/:name
 
-[ ] [User]  POST /users/:username/collections/:name
-[ ] [User]  DELETE /users/:username/collections/:name/books
+[x] [User]  POST /users/:username/collections/:name
+[x] [User]  DELETE /users/:username/collections/:name/books
 ```
 <!--
 // POST /users/:username/collections         // Add collection // TODO: CHECK IF BOOKS EXISTS
