@@ -5,29 +5,42 @@
         <pre>{{books}}</pre>
         <v-container>
             <v-row
-                v-for="n1 in (Math.ceil(books.length/3))"
-                :key="n1"
             >
                 <v-col
-                    v-for="n2 in 3"
-                    :key="n2"
+                    v-for="b in books"
+                    :key="b"
+                    cols="3"
                 >
-                    
-                    <v-card color="rgb(255, 0, 0, 0.2)">
-                        {{books[counter++]}}
-                    </v-card>
-                </v-col>
-            </v-row>
-            <v-row
-            >
-                <v-col
-                    v-for="n in (3 % books.length)"
-                    :key="n"
-                >
-                    
-                    <v-card color="rgb(255, 0, 0, 0.2)">
-                        {{books[counter++]}}
-                    </v-card>
+                    <!-- <v-card color="rgb(255, 0, 0, 0.2)"> -->
+                        <!-- {{b.name}} -->
+                    <!-- </v-card> -->
+                    <v-hover>
+                        <template v-slot:default="{ hover }">
+                            <v-card
+                                class="mx-auto mb-14 mt-11"
+                                height="220"
+                                width="170"
+                            >
+                                <v-img src=b.cover_url></v-img>
+
+                                <v-card-text>
+                                    <h2 class="title primary--text">
+                                        {{b.name}}
+                                    </h2>
+                                </v-card-text>
+
+                                <v-fade-transition>
+                                    <v-overlay
+                                        v-if="hover"
+                                        absolute
+                                        color="#036358"
+                                    >
+                                        <v-btn>More info</v-btn>
+                                    </v-overlay>
+                                </v-fade-transition>
+                            </v-card>
+                        </template>
+                    </v-hover>
                 </v-col>
             </v-row>
         </v-container>
@@ -45,8 +58,7 @@ export default {
 
     data() {
         return {
-            books: null,
-            counter: 0,
+            books: [],
         };
     },
 
@@ -59,14 +71,15 @@ export default {
             headers: { Authorization: `Bearer ${token}` }
         };
 
-        console.log(this.ida);
-        // get books
+        // get author's books' name and image
         axios
-            .get('/read2be/api/authors/' + this.ida, options)
+            .get('/read2be/api/authors/' + this.ida + '?inline_books=1', options)
             .then(res => {
                 this.books = res.data.books;
             })
-            .catch(e => console.log('Erro no GET dos books: ' + e))
+            .catch(e => console.log('Erro no GET dos books do author: ' + e));
+
+
     },
 
 }
