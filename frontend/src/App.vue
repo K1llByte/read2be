@@ -1,71 +1,37 @@
-
 <template>
-   <v-app id="app">
-      <template v-if="!$route.path.includes('login')">
-         <v-navigation-drawer v-model="drawer" fixed app>
-            <v-toolbar flat dark color="success">
-               <v-list>
-                  <v-list-tile>
-                     <v-list-tile-title class="title">
-                        Simply Clinical Software
-                     </v-list-tile-title>
-                  </v-list-tile>
-               </v-list>
-            </v-toolbar>
-            <v-list dense>
-               <v-list-tile @click="drawer = false;" to="/login">
-                  <v-list-tile-action>
-                     <v-icon>home</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                     <v-list-tile-title>Login</v-list-tile-title>
-                  </v-list-tile-content>
-               </v-list-tile>
-               <v-list-tile @click="drawer = false;">
-                  <v-list-tile-action>
-                     <v-icon>contact_mail</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                     <v-list-tile-title>Contact</v-list-tile-title>
-                  </v-list-tile-content>
-               </v-list-tile>
-            </v-list>
-         </v-navigation-drawer>
-         <v-toolbar color="primary" dark fixed app>
-            <v-toolbar-side-icon
-               @click.stop="drawer = !drawer;"
-            ></v-toolbar-side-icon>
-            <v-toolbar-title>Application</v-toolbar-title>
-         </v-toolbar>
-      </template>
-      <v-content>
-         <keep-alive :include="['Login']">
-            <router-view></router-view>
-         </keep-alive>
-      </v-content>
-   </v-app>
+  <div id="app">
+    <div id="nav">
+        <router-link to="/">Home</router-link> |
+        <router-link to="/users">Users</router-link> |
+        <router-link to="/authors">Authors</router-link> |
+        <router-link to="/login">Login</router-link> |
+        <router-link to="/register">Register</router-link> |
+        <!-- <router-link to="/search">Search</router-link> | -->
+        <!-- <router-link to="/books">Books</router-link> -->
+    </div>
+    <router-view/>
+  </div>
 </template>
 
-<script>
-export default {
-   data: () => ({
-      drawer: false,
-   }),
-   props: {
-      source: String,
-   },
-};
-</script>
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 
-<script>
-export default {
-   name: 'App',
-   data() {
-      return {
-         drawer: false,
-      };
-   },
-};
-</script>
+#nav {
+  padding: 30px;
 
-<style></style>
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
+}
+</style>

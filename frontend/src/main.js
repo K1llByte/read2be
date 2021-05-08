@@ -1,42 +1,12 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from 'vue'
+import App from './App.vue'
+import vuetify from './plugins/vuetify';
+import router from './router'
 
-import App from './App';
+Vue.config.productionTip = false
 
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
-
-import Login from './components/Login';
-import Main  from './components/Main';
-
-Vue.use(VueRouter);
-Vue.use(Vuetify, {
-   theme: {
-      primary: '#7957d5',
-   },
-});
-
-const router = new VueRouter({
-   routes: [
-      {
-         path: '/login',
-         component: Login,
-      },
-      {
-         path: '/main',
-         component: Main,
-      }
-   ],
-});
-
-Vue.config.productionTip = false;
-
-/* eslint-disable no-new */
 new Vue({
-   router: router,
-   el: '#app',
-   components: { App },
-   template: '<App/>',
-});
-
-router.replace('/login');
+  vuetify,
+  router,
+  render: h => h(App)
+}).$mount('#app')
