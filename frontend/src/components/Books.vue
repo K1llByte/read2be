@@ -1,46 +1,18 @@
 <template>
-   <v-card color="rgb(255, 0, 0, 0.2)" height="900px" width="1300px" class="mx-auto mt-5">
+   <v-card class="mx-auto pt-5 pb-3 mt-6" color="rgb(255, 0, 0, 0.2)"  width="1300px">
       <v-container>
-         <v-row
-            v-for="j in 3"
-            :key="j"
-         >
+         <v-row>
             <v-col
-               v-for="k in 5"
-               :key="k"
+               v-for="b in books"
+               :key="b.name"
+               cols="2"
             >
-               <v-hover>
-                  <template v-slot:default="{ hover }">
-                     <v-card
-                     class="mx-auto mt-11"
-                     height="220"
-                     width="170"
-                     >
-                        <v-img src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"></v-img>
-
-                        <v-card-text>
-                           <h2 class="title primary--text">
-                              Magento Forests
-                           </h2>
-                        </v-card-text>
-
-                        <v-fade-transition>
-                           <v-overlay
-                              v-if="hover"
-                              absolute
-                              color="#036358"
-                           >
-                              <v-btn>More info</v-btn>
-                           </v-overlay>
-                        </v-fade-transition>
-                     </v-card>
-                  </template>
-               </v-hover>
+               <Book :b="b" />
             </v-col>
          </v-row>
-         <v-row class="mt-7">
-            <v-col offset=20>
-               <div class="text-center mt-6 mb-7">
+         <v-row class="mt-4">
+            <v-col>
+               <div class="text-center">
                   <v-pagination
                      color="teal lighten-1"
                      v-model="page"
@@ -57,12 +29,40 @@
 
 
 <script>
-export default {
-     name: 'books',
+import axios from "axios";
+import Book from "@/components/Book.vue";
 
-     data: () => ({
+export default {
+      name: 'Books',
+
+      components: {
+         Book,
+      },
+
+      data: () => ({
+         books: [],
          page: 1,
-     })
+      }),
+
+      created: function() {
+        
+         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjA0M2Y4NGI2ZTY2NTJmMzk1ZjZkYzc5IiwidXNlcm5hbWUiOiJhODUyNzIiLCJyb2xlIjoxLCJleHAiOjE2MjA1NzQ5NjUsImlhdCI6MTYxOTk3MDE2NX0.RwH1CnWvXXCj03XYRrDSK8tPVVC2hZhG7nBU47fArXg';
+
+         const options = {
+            crossdomain: true,
+            headers: { Authorization: `Bearer ${token}` }
+         };
+
+         // getbooks' name and image
+         axios
+            .get('/read2be/api/books/', options)
+            .then(res => {
+               this.books = res.data.books;
+            })
+            .catch(e => console.log('Erro no GET dos books do author: ' + e));
+
+
+    },
 };
 
 </script>

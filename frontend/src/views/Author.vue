@@ -1,5 +1,7 @@
 <template>
-    <ConsultAuthor :ida="$route.params.name" mensagem="Teste" />
+    <div>
+        <ConsultAuthor :ida="$route.params.name" />
+    </div>
 </template>
 
 <script>
@@ -9,7 +11,7 @@ export default {
     name: 'Authors',
     
     components: {
-        ConsultAuthor
+        ConsultAuthor,
     },
 }
 </script>

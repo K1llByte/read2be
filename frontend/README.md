@@ -1,4 +1,4 @@
-# reee
+# Read2Be
 
 ## Project setup
 ```

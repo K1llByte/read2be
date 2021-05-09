@@ -1,60 +1,36 @@
 <template>
     <div>
         <h3>Author: {{ida}}</h3>
-            <h4>{{books.length}} books</h4>
-        <pre>{{books}}</pre>
-        <v-container>
-            <v-row
-            >
-                <v-col
-                    v-for="b in books"
-                    :key="b"
-                    cols="3"
-                >
-                    <!-- <v-card color="rgb(255, 0, 0, 0.2)"> -->
-                        <!-- {{b.name}} -->
-                    <!-- </v-card> -->
-                    <v-hover>
-                        <template v-slot:default="{ hover }">
-                            <v-card
-                                class="mx-auto mb-14 mt-11"
-                                height="220"
-                                width="170"
-                            >
-                                <v-img src=b.cover_url></v-img>
-
-                                <v-card-text>
-                                    <h2 class="title primary--text">
-                                        {{b.name}}
-                                    </h2>
-                                </v-card-text>
-
-                                <v-fade-transition>
-                                    <v-overlay
-                                        v-if="hover"
-                                        absolute
-                                        color="#036358"
-                                    >
-                                        <v-btn>More info</v-btn>
-                                    </v-overlay>
-                                </v-fade-transition>
-                            </v-card>
-                        </template>
-                    </v-hover>
-                </v-col>
-            </v-row>
-        </v-container>
+        <h4>{{books.length}} books</h4>
+        <v-card class="mx-auto pt-5 pb-3 mt-5" color="rgb(255, 0, 0, 0.2)"  width="1300px">
+            <v-container>
+                <v-row>
+                    <v-col
+                        v-for="b in books"
+                        :key="b.name"
+                        cols="2"
+                    >
+                        <Book :b="b" />
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
     </div>
 </template>
 
 <script>
 import axios from "axios";
+import Book from "@/components/Book.vue";
 
 export default {
     
     name: 'ConsultAuthor',
 
-    props: ["ida", "mensagem"],
+    props: ["ida"],
+
+    components: {
+        Book,
+    },
 
     data() {
         return {

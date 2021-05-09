@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <Filters />
-    <Books />
-  </div>
+  <v-app>
+    <div>
+      <Filters />
+      <Books />
+    </div>
+  </v-app>
 </template>
 
 
@@ -11,8 +13,8 @@ import Books from '../components/Books.vue';
 import Filters from '../components/Filters.vue';
 
 export default {
-  name: 'Home',
-  components: { Books, Filters},
+  name: 'ShowBooks',
+  components: { Books, Filters },
 
   data: () => ({
   })
