@@ -8,7 +8,7 @@
 import ConsultAuthor from "@/components/ConsultAuthor.vue"
 
 export default {
-    name: 'Authors',
+    name: 'Author',
     
     components: {
         ConsultAuthor,
