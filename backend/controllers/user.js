@@ -26,19 +26,38 @@ module.exports.list_all = (options={}) => {
 }
 
 // Get a user by id
-module.exports.get = (username,no_password=false) => {
-    if(no_password)
-    {
-        return User
-            .findOne({ username: username },{_id:0,password_hash:0})
-            .exec();
-    }
-    else
-    {
-        return User
-            .findOne({ username: username },{_id:0})
-            .exec();
-    }
+module.exports.get = (username, options={}) => {
+    const BOOK_LOOKUP = {
+        "$lookup": {
+            "from": "books",
+            "localField": "books",
+            "foreignField": "isbn",
+            "as": "books"
+        }
+    };
+
+    const NO_PWD_PROJECTION = {
+        "$project": {
+            _id:0
+        }
+    };
+
+    const WITH_PWD_PROJECTION = {
+        "$project": {
+            _id:0,
+            password_hash:0
+        }
+    };
+
+    let pipeline = [];
+    if(options.inline_books)
+        pipeline.push(BOOK_LOOKUP);
+    pipeline.push({ "$match": { username: username } });
+    if(options.inline_books)
+        pipeline.push(PROJECTION);
+    
+    const tmp = await Author.aggregate();
+    return tmp[0];
 }
 
 // Update user data

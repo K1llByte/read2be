@@ -24,7 +24,7 @@ module.exports.list_all = (options = {}) => {
 }
 
 // Get an author by name
-module.exports.get = async (name, options = {}) => {
+module.exports.get = async (name, options={}) => {
     if (options.inline_books == 1)
     {
         const BOOK_LOOKUP = {
