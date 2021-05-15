@@ -26,19 +26,43 @@ module.exports.list_all = (options={}) => {
 }
 
 // Get a user by id
-module.exports.get = (username,no_password=false) => {
-    if(no_password)
-    {
-        return User
-            .findOne({ username: username },{_id:0,password_hash:0})
-            .exec();
-    }
-    else
-    {
-        return User
-            .findOne({ username: username },{_id:0})
-            .exec();
-    }
+module.exports.get = async (username, options={}) => {
+    // FIXME: Lookup only matches 1 book element && other field disapear
+    const BOOK_LOOKUP = {
+        "$lookup": {
+            "from": "books",
+            "localField": "books.isbn",
+            "foreignField": "isbn",
+            "as": "books"
+        }
+    };
+
+    const NO_PWD_PROJECTION = {
+        "$project": {
+            _id:0,
+            "books._id": 0,
+            "books.reviews": 0,
+        }
+    };
+
+    const WITH_PWD_PROJECTION = {
+        "$project": {
+            _id:0,
+            password_hash:0,
+            "books._id": 0,
+            "books.reviews": 0,
+        }
+    };
+
+    let pipeline = [];
+    if(options.inline_books == 1)
+        pipeline.push(BOOK_LOOKUP);
+    pipeline.push({ "$match": { username: username } });
+    
+    pipeline.push((options.no_password) ? NO_PWD_PROJECTION : WITH_PWD_PROJECTION);
+    
+    const tmp = await User.aggregate(pipeline);
+    return tmp[0];
 }
 
 // Update user data

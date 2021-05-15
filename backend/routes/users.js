@@ -82,7 +82,11 @@ router.get('/users', auth.authenticate(CPermissions.amm), (req, res) => {
  *        description: User not found
  */
 router.get('/users/:username', auth.authenticate(CPermissions.amm), (req, res) => {
-    User.get(req.params.username)
+    const options = {
+        inline_books: req.query.inline_books,
+    };
+
+    User.get(req.params.username, options)
     .then(userdata => {
         if(userdata != null)
         {
