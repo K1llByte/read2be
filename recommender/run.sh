@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 
-RECOMMENDER_VENV="recomender_env"
+RECOMMENDER_VENV="recommender_env"
 
 create_env()
 {

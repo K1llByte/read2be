@@ -143,7 +143,7 @@ module.exports.has_book = async (username, isbn) => {
 
 // Add book to user book list
 module.exports.add_book = (username, bookdata) => {
-    Book.add_rate(isbn, bookdata.rate);
+    Book.add_rate(bookdata.isbn, bookdata.rate);
 
     return User.updateOne(
         { username: username },
