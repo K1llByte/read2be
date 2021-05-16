@@ -7,27 +7,23 @@ app = Flask(__name__)
 api = Api(app)
 db = Read2Be()
 
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
 class Recommender(Resource):
     recommender = ContentFiltering()
     def get(self,isbn):
         books = list(db.get_books())
-        try:
-            target_book = list(filter(lambda b : b["isbn"] == isbn, books))[0]["title"]
-        except:
+        
+        # Check if isbn of target book doesn't exist on database
+        if not any(filter(lambda b: b["isbn"] == isbn ,books)):
             return { "error": f"ISBN '{isbn}' doesn't exist" } 
-        data = [ book['title'] for book in books]
 
+        # Train model if it isn't already
         if not self.recommender.is_trained():
-            self.recommender.fit(data)
+            self.recommender.fit(books)
 
-        predictions = self.recommender.predict(target_book)
+        # Get book recommendations
+        predictions = self.recommender.predict(isbn)
         return {'recommendations': list(predictions) }
 
-api.add_resource(HelloWorld, '/')
 api.add_resource(Recommender, '/recommender/<string:isbn>')
 
 if __name__ == '__main__':
