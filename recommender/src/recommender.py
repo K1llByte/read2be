@@ -25,7 +25,6 @@ class ContentFiltering:
 
     def predict(self, target_isbn, top_n=5):
         if self.is_trained():
-            print(self.books_isbns_series[self.books_isbns_series == target_isbn])
             idx = self.books_isbns_series[self.books_isbns_series == target_isbn].index[0]
             final = pd.Series(self.similarities[idx]).sort_values(ascending=False)
             top_n_indexes = list(final.drop(index=idx).iloc[:top_n].index)

@@ -48,5 +48,6 @@ fs.createReadStream('db/books.csv')
     }
 })
 .on('end', () => {
-    console.log(JSON.stringify(authors,null,4));
+    //console.log(JSON.stringify(authors,null,4));
+    console.log(books.length);
 });
