@@ -10,7 +10,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr @click="goAuthor(a.name)" v-for="a in authors" v-bind:key="a.name">
+                <tr
+                    @click="goAuthor(a.name)"
+                    v-for="a in authors"
+                    v-bind:key="a.name"
+                    class="w3-hover-pale-red"
+                >
                     <td>{{a.name}}</td>
                 </tr>
             </tbody>
@@ -31,17 +36,10 @@ export default {
     },
 
     created: function() {
-        
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjA0M2Y4NGI2ZTY2NTJmMzk1ZjZkYzc5IiwidXNlcm5hbWUiOiJhODUyNzIiLCJyb2xlIjoxLCJleHAiOjE2MjEyNTg1NzMsImlhdCI6MTYyMDY1Mzc3M30.HtqDxRG-GAh6OeZ3MyFoXf6OYLFTSI8IYCUsLcdI0qk';
-
-        const options = {
-            crossdomain: true,
-            headers: { Authorization: `Bearer ${token}` }
-        };
 
         // get authors
         axios
-            .get('/read2be/api/authors/', options)
+            .get('/read2be/api/authors/', this.$getOptions())
             .then(res => {
                 this.authors = res.data.authors;
             })
@@ -50,7 +48,7 @@ export default {
 
     methods: {
         goAuthor: function(name){
-            this.$router.push('/authors/' + name);
+            this.$goTo('/authors/' + name);
         }
     }
 }

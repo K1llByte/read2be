@@ -6,7 +6,12 @@
             <tr>
                 <th>ID</th><th>User</th><th>Name</th><th>Email</th>
             </tr>
-            <tr @click="goUser(u.username)" v-for="u in users" :key="u.user_id">
+            <tr
+                @click="goUser(u.username)"
+                v-for="u in users"
+                :key="u.user_id"
+                class="w3-hover-pale-red"
+            >
                 <td>{{u.user_id}}</td>
                 <td>{{u.username}}</td>
                 <td>{{u.nickname}}</td>
@@ -29,26 +34,21 @@ export default {
     },
 
     created: function() {
-        
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjA0M2Y4NGI2ZTY2NTJmMzk1ZjZkYzc5IiwidXNlcm5hbWUiOiJhODUyNzIiLCJyb2xlIjoxLCJleHAiOjE2MjEyNTg1NzMsImlhdCI6MTYyMDY1Mzc3M30.HtqDxRG-GAh6OeZ3MyFoXf6OYLFTSI8IYCUsLcdI0qk';
-
-        const options = {
-            crossdomain: true,
-            headers: { Authorization: `Bearer ${token}` }
-        };
 
         // get users
         axios
-            .get('/read2be/api/users/', options)
+            .get('/read2be/api/users/', this.$getOptions())
             .then(res => {
                 this.users = res.data.users;
             })
-            .catch(e => console.log('Erro no GET dos users: ' + e))
+            .catch(e => {
+                console.log('Erro no GET dos users: ' + e);
+            })
     },
 
     methods: {
         goUser: function(username){
-            this.$router.push('/users/' + username);
+            this.$goTo('/users/' + username).catch(e => console.log('Erro no router.push do user: ' + e));
         }
     }
 }

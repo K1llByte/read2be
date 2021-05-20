@@ -50,7 +50,7 @@ export default {
 
     methods: {
         goBook: function(isbn){
-            this.$router.push('/books/' + isbn);
+            this.$goTo('/books/' + isbn);
         }
     }
 }

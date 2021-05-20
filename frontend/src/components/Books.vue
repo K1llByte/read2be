@@ -45,17 +45,10 @@ export default {
       }),
 
       created: function() {
-        
-         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjA0M2Y4NGI2ZTY2NTJmMzk1ZjZkYzc5IiwidXNlcm5hbWUiOiJhODUyNzIiLCJyb2xlIjoxLCJleHAiOjE2MjEyNTg1NzMsImlhdCI6MTYyMDY1Mzc3M30.HtqDxRG-GAh6OeZ3MyFoXf6OYLFTSI8IYCUsLcdI0qk';
-
-         const options = {
-            crossdomain: true,
-            headers: { Authorization: `Bearer ${token}` }
-         };
 
          // getbooks' name and image
          axios
-            .get('/read2be/api/books/', options)
+            .get('/read2be/api/books/', this.$getOptions())
             .then(res => {
                this.books = res.data.books;
             })

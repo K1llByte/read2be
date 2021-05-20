@@ -1,8 +1,8 @@
 <template>
 	<v-container grid-list-md text-xs-center>
-		<v-card width="600px" class="mx-auto mt-5">
-			<v-card-title>
-				<h1>Register</h1>
+		<v-card width="600px" class="mx-auto mt-5 pb-2" color="#f8d4d4">
+			<v-card-title class="ml-16 mb-n2 pt-5">
+				<h1><strong class="ml-6">Register</strong></h1>
 			</v-card-title>
 			<v-spacer></v-spacer>
 			<v-card-text>
@@ -12,7 +12,7 @@
 					lazy-validation
 				>
 					<v-layout row wrap>
-						<v-flex xs5.1>
+						<v-flex xs6>
 							<v-text-field
 								v-model="firstName"
 								:rules="nameRules"
@@ -21,7 +21,9 @@
 								solo
 							></v-text-field>
 						</v-flex>
+						
 						<v-spacer></v-spacer>
+						
 						<v-flex xs6>
 							<v-text-field
 								v-model="lastName"
@@ -31,31 +33,30 @@
 								solo
 							></v-text-field>
 						</v-flex>
-						<v-flex xs5.1>
-							<v-text-field
-								v-model="user"
-								:counter="20"
-								:rules="userRules"
-								label="Username"
-								required
-								solo
-							></v-text-field>
-						</v-flex>
-						<v-spacer></v-spacer>
-						<v-flex xs5.1>
-							<v-text-field
-								v-model="password"
-								:counter="30"
-								:rules="passwordRules"
-								label="Password"
-								:type="showPassword ? 'text' : 'password'"
-								:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-								@click:append="showPassword = !showPassword"
-								required
-								solo
-							></v-text-field>
-						</v-flex>
 					</v-layout>
+					
+					<v-text-field
+						v-model="user"
+						:counter="20"
+						:rules="userRules"
+						label="Username"
+						required
+						solo
+					></v-text-field>
+
+					<v-spacer></v-spacer>
+					
+					<v-text-field
+						v-model="password"
+						:counter="30"
+						:rules="passwordRules"
+						label="Password"
+						:type="showPassword ? 'text' : 'password'"
+						:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+						@click:append="showPassword = !showPassword"
+						required
+						solo
+					></v-text-field>
 					
 					<v-text-field
 						v-model="email"
@@ -68,18 +69,16 @@
 					<v-btn
 						:disabled="!valid"
 						color="success"
-						class="mr-4"
+						class="mr-3"
 						@click="validate"
 					>
 						Validate
 					</v-btn>
 
 					<v-btn
-						color="error"
-						class="mr-4"
 						@click="reset"
 					>
-						Reset Form
+						Cancel
 					</v-btn>
 				</v-form>
 			</v-card-text>
@@ -89,7 +88,6 @@
 
 <script>
 import axios from "axios";
-import { token, options } from '../variables.js';
 
 export default {
 	name: 'register',
@@ -147,7 +145,7 @@ export default {
             axios
                .post('/read2be/register', form)
                .then(res => {
-                  token = res.data.token;
+                  this.$token = res.data.token;
                   alert("Success!");
                })
                .catch(e => console.log('Erro no register do user: ' + e));
@@ -162,7 +160,7 @@ export default {
 
       // get author's books' name and image
       axios
-         .get('/read2be/api/users/' + this.idu, options)
+         .get('/read2be/api/users/' + this.idu, this.$getOptions())
          .then(res => {
             this.user = res.data;
          })
@@ -170,7 +168,7 @@ export default {
 
       // TEMPORARIO
       axios
-         .get('/read2be/api/authors/Jane Austen?inline_books=1', options)
+         .get('/read2be/api/authors/Jane Austen?inline_books=1', this.$getOptions())
          .then(res => {
             this.books = res.data.books;
          })

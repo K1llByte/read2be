@@ -39,17 +39,10 @@ export default {
     },
 
     created: function() {
-        
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjA0M2Y4NGI2ZTY2NTJmMzk1ZjZkYzc5IiwidXNlcm5hbWUiOiJhODUyNzIiLCJyb2xlIjoxLCJleHAiOjE2MjEyNTg1NzMsImlhdCI6MTYyMDY1Mzc3M30.HtqDxRG-GAh6OeZ3MyFoXf6OYLFTSI8IYCUsLcdI0qk';
-
-        const options = {
-            crossdomain: true,
-            headers: { Authorization: `Bearer ${token}` }
-        };
 
         // get author's books' name and image
         axios
-            .get('/read2be/api/authors/' + this.ida + '?inline_books=1', options)
+            .get('/read2be/api/authors/' + this.ida + '?inline_books=1', this.$getOptions())
             .then(res => {
                 this.books = res.data.books;
             })
