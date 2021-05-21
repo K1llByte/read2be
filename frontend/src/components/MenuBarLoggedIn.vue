@@ -22,6 +22,7 @@
 
          <v-btn
             icon right
+            class="mr-n2"
             @click="messages=0"
          >
             <v-badge
@@ -98,12 +99,6 @@
                   <strong>Friends</strong>
                </v-list-item>
 
-               <v-spacer></v-spacer>
-
-               <v-list-item class="d-flex justify-center" @click="goTo('/account')">
-                  <strong>Account</strong>
-               </v-list-item>
-
             </v-list-item-group>
          </v-list>
          <template v-slot:append>
@@ -112,6 +107,7 @@
                   block
                   class="px-3 red accent-1"
                   height=50
+                  @click="goTo('/account')"
                >
                   My Account
                </v-btn>

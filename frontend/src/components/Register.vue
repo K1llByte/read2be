@@ -143,14 +143,14 @@ export default {
             var form = {
                nickname: this.firstName + ' ' + this.lastName,
                username: this.user,
-               email: this.email,
-               password: this.password
+               password: this.password,
+               email: this.email
             };
 
 				// CÓDIGO AINDA POR TESTAR
             
             axios
-               .post('/read2be/register', form)
+               .post('/read2be/api/register', form)
                .then(res => {
                   this.$token = res.data.token;
 						axios

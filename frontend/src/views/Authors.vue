@@ -1,8 +1,6 @@
 <template>
     <div class="w3-container">
-        <h1>Read2be</h1>
-        <h2>{{(new Date()).toISOString().substring(0,10)}}</h2>
-        <h3>Autores do read2be</h3>
+        <h1 class="armwrestler x-large dark my-5">Authors</h1>
         <table class="w3-table-all">
             <thead>
                 <tr>
