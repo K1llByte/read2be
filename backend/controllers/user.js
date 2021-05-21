@@ -27,7 +27,6 @@ module.exports.list_all = (options={}) => {
 
 // Get a user by id
 module.exports.get = async (username, options={}) => {
-    // FIXME: Lookup only matches 1 book element && other field disapear
     const BOOK_LOOKUP = {
         "$lookup": {
             "from": "books",
@@ -40,15 +39,15 @@ module.exports.get = async (username, options={}) => {
     const NO_PWD_PROJECTION = {
         "$project": {
             _id:0,
+            password_hash:0,
             "books._id": 0,
             "books.reviews": 0,
         }
     };
 
-    const WITH_PWD_PROJECTION = {
+    const PROJECTION = {
         "$project": {
             _id:0,
-            password_hash:0,
             "books._id": 0,
             "books.reviews": 0,
         }
@@ -58,11 +57,12 @@ module.exports.get = async (username, options={}) => {
     if(options.inline_books == 1)
         pipeline.push(BOOK_LOOKUP);
     pipeline.push({ "$match": { username: username } });
-    
-    pipeline.push((options.no_password) ? NO_PWD_PROJECTION : WITH_PWD_PROJECTION);
+    console.log("options.no_password",options.no_password);
+    pipeline.push((options.with_password) ? PROJECTION : NO_PWD_PROJECTION);
     
     const tmp = await User.aggregate(pipeline);
-    return tmp[0];
+    console.log("tmp[0]",tmp[0])
+;    return tmp[0];
 }
 
 // Update user data
@@ -109,10 +109,10 @@ module.exports.parse_password_hash = (password) => {
 
 // Verify user credentials
 module.exports.verify_password = async (username, in_password) => {
-    let userdata = await this.get(username,false)
+    let userdata = await this.get(username,{ with_password: true })
     if(userdata != null)
     {
-        console.log("userdata.password_hash",userdata.password_hash);
+        //console.log("userdata.password_hash",userdata.password_hash);
         const passwd_obj = this.parse_password_hash(userdata.password_hash);
         const in_pass_hash = crypto.createHash(passwd_obj.hash_algorithm)
             .update(passwd_obj.salt + in_password)
@@ -126,6 +126,18 @@ module.exports.verify_password = async (username, in_password) => {
     {
         return null;
     }
+}
+
+// Check if a user exists
+module.exports.exists = async (username) => {
+    let val = await User
+        .countDocuments({ username: username })
+        .exec()
+    return val > 0;
+}
+
+module.exports.register = async (authdata) => {
+
 }
 
 // =========================== // User books methods

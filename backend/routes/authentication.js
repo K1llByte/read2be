@@ -41,11 +41,11 @@ router.post('/login', (req, res) => {
         if(userdata != null)
         {
             const token = auth.gen_token(userdata);
-            res.json({ "TOKEN":token });
+            res.json({ "TOKEN": token });
         }
         else
         {
-            res.status(401).json({ "error":"Incorrect credentials" });
+            res.status(401).json({ "error": "Incorrect credentials" });
         }
     });
 });
@@ -128,53 +128,40 @@ router.post('/logout', (req, res) => {
  *        description: User already exists
  */
 router.post('/register', async (req,res) => {
-    
-    const USERNAME_REGEX = Regex.USERNAME;
-    const EMAIL_REGEX = Regex.EMAIL;
-    const WEAK_PASSWD_REGEX = Regex.WEAK_PASSWD;
-    const STRONG_PASSWD_REGEX = Regex.STRONG_PASSWD;
 
+    const authdata = {
+        
+    };
     // Input Validation
-    if(req.body.username.match(USERNAME_REGEX) &&
-        req.body.email.match(EMAIL_REGEX)      &&
-        req.body.password.match(WEAK_PASSWD_REGEX))
+    if(req.body.username.match(Regex.USERNAME) &&
+        req.body.email.match(Regex.EMAIL)      &&
+        req.body.password.match(Regex.WEAK_PASSWD))
     {
         // Check if username exists
-        User.get(req.body.username)
-        .then(data => {
-            if(data == null)
-            {
-                User.gen_password_hash(req.body.password)
-                .then(password_hash => {
-                    User.insert({
-                        "user_id": User.gen_id(),
-                        "username": req.body.username,
-                        "nickname": "",
-                        "password_hash": password_hash,
-                        "email": req.body.email,
-                        "role": User.CPermissions.amm,
-                        "avatar_url": "",
-                        "books": [],
-                        "friends": [],
-                        "pending": [],
-                        "collections": []
-                    });
-                    
-                    res.json({ "status" : "success" });
-                })
-                .catch(err => {
-                    res.status(500).json({ "error" : err.message });
-                })
-            }
-            else
-            {
-                res.status(406).json({ "error" : "User already exists" });
-            }
-        })
-        .catch(err => {
-            res.status(500).json({ "error" : err.message });
-        })
-        
+        if(await User.exists(req.body.username))
+        {
+            let pass_hash_p = User.gen_password_hash(req.body.password);
+            User.insert({
+                user_id: User.gen_id(),
+                username: req.body.username,
+                nickname: "",
+                password_hash: await pass_hash_p,
+                email: req.body.email,
+                role: User.CPermissions.amm,
+                avatar_url: "",
+                books: [],
+                friends: [],
+                pending: [],
+                collections: []
+            })
+            .then(info => 
+                res.json({ "status" : "success" })
+            );
+        }
+        else
+        {
+            res.status(404).json({ "error" : "User already exists" });
+        }
     }
     else
     {
