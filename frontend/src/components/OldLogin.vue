@@ -1,8 +1,8 @@
 <template>
 	<v-container grid-list-md text-xs-center>
 		<v-card width="400px" class="mx-auto mt-5" color="#f8d4d4">
-			<v-card-title class="ml-16 mb-n2 pt-5">
-				<h1><strong class="ml-10">Login</strong></h1>
+			<v-card-title class="mb-n2 pt-5">
+				<h1 class="armwrestler">Login</h1>
 			</v-card-title>
 			<v-spacer></v-spacer>
 			<v-card-text>
@@ -37,16 +37,19 @@
 										
 					<v-btn
 						:disabled="!valid"
-						color="success"
+						dark
+						color="#f07977"
 						class="mr-3 mb-2"
 						width=100
 						@click="submit"
 					>
-						Validate
+						Login
 					</v-btn>
 					
 					<v-btn
-						class=" mb-2"
+						class="mb-2"
+						color="#bfaaaa"
+						dark
 						width=100
 						@click="reset"
 					>

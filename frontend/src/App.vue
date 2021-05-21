@@ -58,4 +58,15 @@ export default {
       text-align: center;
       background: #f6eaea;
    }
+   @font-face {
+      font-family: "ArmWrestler";
+      src: local("ArmWrestler"),
+         url(./fonts/ArmWrestler/ArmWrestler.ttf) format("truetype");
+   }
+   .armwrestler {
+      font-family: 'ArmWrestler', bold;
+      font-size: 230%;
+      margin:auto;
+      color:#fff7f6;
+   }
 </style>
