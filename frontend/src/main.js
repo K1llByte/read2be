@@ -3,7 +3,7 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 
-// global variable
+// global variables
 Vue.prototype.$token = '';
 Vue.prototype.$options = null;
 Vue.prototype.$logged = false;
@@ -15,19 +15,14 @@ Vue.prototype.$getOptions = function(){
 	};
 };
 
-Vue.prototype.$getToken = function() {
-	return Vue.prototype.$token;
-};
-
-Vue.prototype.$setToken = function(t) {
+Vue.prototype.$login = function(t) {
 	Vue.prototype.$token = t;
-};
-
-Vue.prototype.$login = function() {
 	Vue.prototype.$logged = true;
+	this.$router.push('/home');
 };
 
 Vue.prototype.$logout = function() {
+	Vue.prototype.$token = '';
 	Vue.prototype.$logged = false;
 	this.$router.push('/');
 };
@@ -39,7 +34,7 @@ Vue.prototype.$goTo = function(route) {
 		this.$router.push(route);
 	}
 	else {
-		if (route != '/' && route != '/login' && route != '/register') {
+		if (route != '/') {
 			this.$router.push('/');
 		}
 		else {

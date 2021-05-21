@@ -5,19 +5,24 @@
          app
          dark
       >
-         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+         <v-app-bar-nav-icon
+            class="ml-n2"
+            large
+            color="#fff7f6"
+            @click.stop="drawer = !drawer"
+         ></v-app-bar-nav-icon>
 
          <v-spacer></v-spacer>
 
          <div>
-            <h3><strong>{{currentDateFormatted()}}</strong></h3>
+            <h2 class="armwrestler">{{currentDateFormatted()}}</h2>
          </div>
          
          <v-spacer></v-spacer>
 
          <v-btn
             icon right
-            @click="messages = 0"
+            @click="messages=0"
          >
             <v-badge
                :value="messages"
@@ -25,7 +30,10 @@
                dot
                left
             >
-               <v-icon large>
+               <v-icon
+                  large
+                  color="#fff7f6"
+               >
                   mdi-bell-outline
                </v-icon>
             </v-badge>
@@ -124,6 +132,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
    name: 'MenuBar',
@@ -144,7 +153,12 @@ export default {
          this.$goTo(route);
       },
       logout: function() {
-         this.$logout();
+         axios
+            .post('/read2be/api/logout', {} , this.$getOptions())
+            .then(this.$logout())
+            .catch(e => {
+               console.log('Erro no login do user: ' + e);
+            });
       }
    }
 

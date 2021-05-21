@@ -5,13 +5,8 @@
       <MenuBarLoggedIn v-if="this.$logged" />
       <MenuBar v-else />
 
-      <!-- Sizes your content based upon application components -->
       <v-main>
-
-         <!-- Provides the application the proper gutter -->
          <v-container fluid>
-
-            <!-- If using vue-router -->
             <router-view />
          </v-container>
       </v-main>
@@ -38,7 +33,7 @@ export default {
    }),
 
    beforeCreate: function() {
-      if (!this.$logged && this.$route.path != '/login' && this.$route.path != '/register') {
+      if (!this.$logged) {
          this.$router.push('/');
       }
       else if (this.$logged && this.$route.path == '/') {

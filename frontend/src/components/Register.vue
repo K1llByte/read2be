@@ -71,7 +71,7 @@
 						dark
 						color="#f07977"
 						class="mr-3 mb-2"
-						@click="validate"
+						@click="submit"
 					>
 						Register
 					</v-btn>
@@ -146,39 +146,57 @@ export default {
                email: this.email,
                password: this.password
             };
+
+				// CÓDIGO AINDA POR TESTAR
             
             axios
                .post('/read2be/register', form)
                .then(res => {
                   this.$token = res.data.token;
-                  alert("Success!");
+						axios
+							.post('/read2be/api/login', form, this.$getOptions())
+							.then(res => {
+								this.$login(res.data.TOKEN);
+							})
+							.catch(e => {
+								console.log('Erro no login do user: ' + e);
+								if (e.response.status == 400) {
+									alert("Error: Not Logged In");
+								} else if (e.response.status == 401) {
+									alert("Token Already Revoked");
+								}
+							});
+                  alert("Success!\nRegistered and Logged In! :)");
                })
-               .catch(e => console.log('Erro no register do user: ' + e));
+               .catch(e => {
+						console.log('Erro no register do user: ' + e);
+						if (e.response.status == 400) {
+							alert("Invalid Input");
+						} else if (e.response.status == 406) {
+							alert("User Already Exists");
+						}
+						// console.log('user:' + form.username + ', pass: ' + form.password);
+					});
+            
+            // axios
+            //    .patch('/read2be/ mudar o nickname', form)
+            //    .then(res => {
+            //       this.$token = res.data.token;
+            //       alert("Success!");
+            //    })
+            //    .catch(e => {
+				// 		console.log('Erro no register do user: ' + e);
+				// 		if (e.response.status == 400) {
+				// 			alert("Invalid Input");
+				// 		} else if (e.response.status == 406) {
+				// 			alert("User Already Exists");
+				// 		}
+				// 	});
          } else {
             this.$refs.form.reset();
             this.$refs.form.resetValidation();
          }
       }
 	},
-
-   created: function() {
-
-      // get author's books' name and image
-      axios
-         .get('/read2be/api/users/' + this.idu, this.$getOptions())
-         .then(res => {
-            this.user = res.data;
-         })
-         .catch(e => console.log('Erro no GET dos books do user: ' + e));
-
-      // TEMPORARIO
-      axios
-         .get('/read2be/api/authors/Jane Austen?inline_books=1', this.$getOptions())
-         .then(res => {
-            this.books = res.data.books;
-         })
-         .catch(e => console.log('Erro no GET dos books do user: ' + e));
-
-   },
 };
 </script>

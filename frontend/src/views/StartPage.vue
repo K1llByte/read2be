@@ -25,19 +25,15 @@
       </v-col>
 
       <v-col id="aux">
-         <OldLogin v-if="login" class="mt-16"/>
+         <Login v-if="login" class="mt-16"/>
          <Register v-if="register" />
       </v-col>
       </v-row>
    </div>
-   <!-- <div
-      class="d-flex justify-center mr-16 ml-n16"
-   >
-   </div> -->
 </template>
 
 <script>
-import OldLogin from '../components/OldLogin.vue';
+import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 
 export default {
@@ -47,7 +43,7 @@ export default {
    }),
 
    components: {
-      OldLogin,
+      Login,
       Register,
    }
 }
