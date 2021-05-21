@@ -129,11 +129,11 @@ router.post('/logout', (req, res) => {
  */
 router.post('/register', async (req,res) => {
 
-    const authdata = {
-        
-    };
     // Input Validation
-    if(req.body.username.match(Regex.USERNAME) &&
+    if( typeof req.body.username === "string" &&
+        typeof req.body.email    === "string" &&
+        typeof req.body.password === "string" &&
+        req.body.username.match(Regex.USERNAME) &&
         req.body.email.match(Regex.EMAIL)      &&
         req.body.password.match(Regex.WEAK_PASSWD))
     {
