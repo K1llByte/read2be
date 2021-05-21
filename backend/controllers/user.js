@@ -137,7 +137,43 @@ module.exports.exists = async (username) => {
 }
 
 module.exports.register = async (authdata) => {
-
+    if( typeof authdata.username === "string" &&
+        typeof authdata.email    === "string" &&
+        typeof authdata.password === "string" &&
+        authdata.username.match(Regex.USERNAME) &&
+        authdata.email.match(Regex.EMAIL)      &&
+        authdata.password.match(Regex.WEAK_PASSWD))
+    {
+        // Check if username exists
+        if(await User.exists(req.body.username))
+        {
+            let pass_hash_p = User.gen_password_hash(req.body.password);
+            User.insert({
+                user_id: User.gen_id(),
+                username: req.body.username,
+                nickname: "",
+                password_hash: await pass_hash_p,
+                email: req.body.email,
+                role: User.CPermissions.amm,
+                avatar_url: "",
+                books: [],
+                friends: [],
+                pending: [],
+                collections: []
+            })
+            .then(info => 
+                res.json({ "status" : "success" })
+            );
+        }
+        else
+        {
+            res.status(404).json({ "error" : "User already exists" });
+        }
+    }
+    else
+    {
+        res.status(400).json({ "error" : "Invalid input" });
+    }
 }
 
 // =========================== // User books methods
