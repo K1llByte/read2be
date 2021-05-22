@@ -99,7 +99,7 @@ export default {
             axios
                .post('/read2be/api/login', form, this.$getOptions())
                .then(res => {
-						this.$login(res.data.TOKEN);
+						this.$login(res.data.TOKEN, form.username);
                })
                .catch(e => {
 						console.log('Erro no login do user: ' + e);

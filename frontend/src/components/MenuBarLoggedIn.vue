@@ -1,46 +1,85 @@
 <template>
    <div>
+      <!-- Teal App Bar -->
       <v-app-bar
          color="teal lighten-1"
          app
          dark
       >
+         <!-- Navigation Drawer Icon -->
          <v-app-bar-nav-icon
             class="ml-n2"
             large
             color="#fff7f6"
-            @click.stop="drawer = !drawer"
+            @click.stop="drawer=!drawer"
          ></v-app-bar-nav-icon>
 
          <v-spacer></v-spacer>
 
+         <!-- Today's Date -->
          <div>
             <h2 class="armwrestler">{{currentDateFormatted()}}</h2>
          </div>
          
          <v-spacer></v-spacer>
 
-         <v-btn
-            icon right
-            class="mr-n2"
-            @click="messages=0"
+         <!-- Notifications button/menu -->
+         <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            :nudge-width="220"
+            :nudge-bottom="20"
+            :nudge-right="40"
+            offset-x
+            offset-y
+            bottom
+            left
          >
-            <v-badge
-               :value="messages"
-               color="red lighten-3"
-               dot
-               left
-            >
-               <v-icon
-                  large
-                  color="#fff7f6"
+            <template v-slot:activator="{ on, attrs }">
+               <v-btn
+                  dark
+                  icon
+                  right
+                  v-bind="attrs"
+                  v-on="on"
+                  class="mr-n2"
+                  @click="messages=0"
                >
-                  mdi-bell-outline
-               </v-icon>
-            </v-badge>
-         </v-btn>
+                  <v-badge
+                     :value="messages"
+                     color="red lighten-3"
+                     dot
+                     left
+                  >
+                     <v-icon
+                        large
+                        color="#fff7f6"
+                     >
+                        mdi-bell-outline
+                     </v-icon>
+                  </v-badge>
+               </v-btn>
+            </template>
+
+            <v-list
+               v-if="user.pending.length"
+            >
+               <v-list-item
+                  v-for="u in user.pending"
+                  :key="u"
+               >
+               <!-- <Notification :idu=u /> -->
+                  <v-list-item-title>{{ u }}</v-list-item-title>
+               </v-list-item>
+            </v-list>
+            <v-list v-else>
+               <p class="armwrestler cadet">Nothing new...</p>
+            </v-list>
+         </v-menu>
+         
       </v-app-bar>
 
+      <!-- Navigation Drawer -->
       <v-navigation-drawer
          v-model="drawer"
          dark
@@ -49,28 +88,35 @@
          left
          temporary
       >
+
+         <!-- User Basic Info -->
          <v-list>
             <v-list-item class="d-flex justify-center mt-2">
                <v-list-item-avatar
                   size=80
                >
-                  <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+                  <v-img v-if="user" :src=user.avatar_url></v-img>
                </v-list-item-avatar>
             </v-list-item>
 
             <v-list-item class="mt-n1 mb-n3">
                <v-list-item-content>
-                  <v-list-item-title class="title">
-                     Sandra Adams
+                  <v-list-item-title v-if="user" class="title">
+                     {{user.username}}
                   </v-list-item-title>
-                  <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+
+                  <p v-else> Loading...</p>
+                  
+                  <v-list-item-subtitle v-if="user">
+                     {{user.email}}
+                  </v-list-item-subtitle>
                </v-list-item-content>
             </v-list-item>
-
          </v-list>
 
          <v-divider></v-divider>
 
+         <!-- Menu Buttons -->
          <v-list
             nav
          >
@@ -101,6 +147,8 @@
 
             </v-list-item-group>
          </v-list>
+
+         <!-- Menu Bottom Buttons -->
          <template v-slot:append>
             <div>
                <v-btn
@@ -135,7 +183,15 @@ export default {
 
    data: () => ({
       drawer: false,
-      messages: 1,
+      messages: 0,
+      user: null,
+      items: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' },
+      ],
+      menu: false,
    }),
 
    methods: {
@@ -153,10 +209,21 @@ export default {
             .post('/read2be/api/logout', {} , this.$getOptions())
             .then(this.$logout())
             .catch(e => {
-               console.log('Erro no login do user: ' + e);
+               console.log('Erro no logout do user: ' + e);
             });
-      }
-   }
+      },
+   },
 
+   created: function() {
+      axios
+         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .then(res => {
+            this.user = res.data;
+            this.messages = this.user.pending.length;
+         })
+         .catch(e => console.log('Erro no GET da info do user (MenuBar): ' + e));
+   },
+
+   
 };
 </script>

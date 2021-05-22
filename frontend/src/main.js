@@ -5,8 +5,8 @@ import router from './router'
 
 // global variables
 Vue.prototype.$token = '';
-Vue.prototype.$options = null;
 Vue.prototype.$logged = false;
+Vue.prototype.$user = null;
 
 Vue.prototype.$getOptions = function(){
 	return {
@@ -15,9 +15,10 @@ Vue.prototype.$getOptions = function(){
 	};
 };
 
-Vue.prototype.$login = function(t) {
+Vue.prototype.$login = function(t, u) {
 	Vue.prototype.$token = t;
 	Vue.prototype.$logged = true;
+	Vue.prototype.$user = u;
 	this.$router.push('/home');
 };
 

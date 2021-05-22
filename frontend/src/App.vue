@@ -80,4 +80,12 @@ export default {
       margin:auto;
       color:#936464;
    }
+   .armwrestler.cadet {
+      font-family: 'ArmWrestler', bold;
+      font-size: 170%;
+      margin:auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color:#5F9EA0;
+   }
 </style>
