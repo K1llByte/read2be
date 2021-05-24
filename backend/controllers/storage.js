@@ -32,11 +32,21 @@ module.exports.upload = multer({
 // =========================== //
 
 // Save book cover
-module.exports.save_cover = (isbn,file) => {
+module.exports.save_cover = (isbn, file) => {
     if(file != null)
     {
         this.create_book_storage(isbn);
         file.new_path = `storage/books/${isbn}/cover.${file.ext}`;
+        fs.renameSync(file.path, file.new_path);
+    }
+}
+
+// Save user avatar
+module.exports.save_avatar = (username, file) => {
+    if(file != null)
+    {
+        this.create_user_storage(username);
+        file.new_path = `storage/users/${username}/avatar.${file.ext}`;
         fs.renameSync(file.path, file.new_path);
     }
 }
@@ -55,8 +65,20 @@ module.exports.create_book_storage = (isbn) => {
     !fs.existsSync(book_storage) && fs.mkdirSync(book_storage);
 }
 
+// Create user storage
+module.exports.create_user_storage = (username) => {
+    const user_storage = `storage/users/${username}`;
+    !fs.existsSync(user_storage) && fs.mkdirSync(user_storage);
+}
+
 // Delete book storage
 module.exports.delete_book_storage = (isbn) => {
     const book_storage = `storage/books/${isbn}`;
     fs.existsSync(book_storage) && fs.rmdirSync(book_storage,{recursive: true});
+}
+
+// Delete user storage
+module.exports.delete_user_storage = (username) => {
+    const user_storage = `storage/users/${username}`;
+    fs.existsSync(user_storage) && fs.rmdirSync(user_storage,{recursive: true});
 }

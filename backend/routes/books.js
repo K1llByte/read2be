@@ -155,8 +155,8 @@ router.get('/books/:isbn', auth.authenticate(CPermissions.amm), (req, res) => {
  *      '400':
  *        description: Invalid cover image
  */
-router.post('/books', upload.single('cover'), auth.authenticate(Permissions.Admin), (req, res) => {
-    if(!req.valid_file)
+router.post('/books', auth.authenticate(Permissions.Admin), upload.single('cover'), (req, res) => {
+    if(!req.valid_file && req.file !== undefined)
     {
         res.status(400).json({ "error": "Invalid cover file" });
         return;
@@ -171,7 +171,7 @@ router.post('/books', upload.single('cover'), auth.authenticate(Permissions.Admi
         "language": req.body.language,
         "cover_url": req.body.cover_url,
     };
-    
+
     // TODO: Input validation (and type checking)
     if( book.isbn      == undefined ||
         book.title     == undefined ||
@@ -180,8 +180,7 @@ router.post('/books', upload.single('cover'), auth.authenticate(Permissions.Admi
         book.genre     == undefined ||
         book.language  == undefined )
     {
-        if(req.file != null)
-            delete_file(req.file);
+        delete_file(req.file);
         res.status(400).json({ "error": "Invalid book parameters" });
         return;
     }
@@ -191,28 +190,23 @@ router.post('/books', upload.single('cover'), auth.authenticate(Permissions.Admi
     
     if(req.file)
         book.cover_url = `http://localhost:8080/storage/books/${book.isbn}/cover.${req.file.ext}`
-        
+    
     Book.insert(book)
     .then(bookdata => {
         if(bookdata != null)
         {
-            if(req.file != null)
-            {
-                save_cover(book.isbn,req.file);
-            }
+            save_cover(book.isbn,req.file);
             res.json(bookdata);
         }
         else
         {
             res.status(400).json({ "error": "Book already exists" });
-            if(req.file != null)
-                delete_file(req.file);
+            delete_file(req.file);
         }
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });
-        if(req.file != null)
-            delete_file(req.file);
+        delete_file(req.file);
     });
 });
 
@@ -262,7 +256,7 @@ router.delete('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) =
 /**
  * @swagger
  * /books/{isbn}:
- *  put:
+ *  patch:
  *    security:
  *      - bearerAuth: []
  *    tags:
@@ -282,33 +276,53 @@ router.delete('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) =
  *      '404':
  *        description: Book not found
  */
-router.put('/books/:isbn', auth.authenticate(Permissions.Admin), (req, res) => {
+router.patch('/books/:isbn', auth.authenticate(Permissions.Admin), upload.single('cover'), (req, res) => {
+    if(!req.valid_file && req.file !== undefined)
+    {
+        res.status(400).json({ "error": "Invalid cover file" });
+        return;
+    }
+
+    req.body.isbn = req.params.isbn;
+
     const book = {
         "isbn": req.body.isbn,
         "title": req.body.title,
         "authors": req.body.authors,
         "publisher": req.body.publisher,
         "genre": req.body.genre,
-        "language": req.body.language
+        "language": req.body.language,
+        "cover_url": req.body.cover_url
     };
+
+    if(!book.cover_url)
+        book.cover_url = "http://localhost:8080/storage/books/default.jpg"
     
+    if(req.file)
+        book.cover_url = `http://localhost:8080/storage/books/${book.isbn}/cover.${req.file.ext}`
+
     Book.set(req.params.isbn,book)
     .then(info => {
         if(info.n === 0)
         {
             res.status(404).json({ "error": "Book not found" });
+            delete_file(req.file);
         }
-        else if(info.nModified === 0)
+        else if(info.nModified === 0 && req.file === undefined)
         {
             res.status(400).json({ "error": "Book didn't change" });
+            delete_file(req.file);
         }
         else
         {
+            save_cover(book.isbn,req.file);
+            
             res.json({ "success": "Book data updated successfully" });
         }
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });
+        delete_file(req.file);
     });
 });
 

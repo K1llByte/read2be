@@ -1,16 +1,17 @@
 const Book = require('../models/book');
 
 const BOOK_PROJECTION = {
-    "_id"       : 0,
-    "isbn"      : 1,
-    "title"     : 1,
-    "authors"   : 1,
-    "publisher" : 1,
-    "genre"    : { $arrayElemAt: [ "$genre.name" , 0 ] },
-    "language" : { $arrayElemAt: [ "$language.name" , 0 ] },
-    "rate"      : "$rate.current_rate",
-    "reviews"   : 1,
-    "cover_url" : 1
+    "_id"         : 0,
+    "isbn"        : 1,
+    "title"       : 1,
+    "authors"     : 1,
+    "publisher"   : 1,
+    "genre"       : { $arrayElemAt: [ "$genre.name" , 0 ] },
+    "language"    : { $arrayElemAt: [ "$language.name" , 0 ] },
+    "description" : 1,
+    "rate"        : "$rate.current_rate",
+    "reviews"     : 1,
+    "cover_url"   : 1
 };
 
 const GENRE_LOOKUP = {
@@ -35,19 +36,20 @@ const LANGUAGE_LOOKUP = {
 
 // Inserts a new book
 module.exports.insert = async (bookdata) => {
-    if(this.exists(bookdata.isbn))
+    if(await this.exists(bookdata.isbn))
         return null;
 
     const book = {
-        "isbn": bookdata.isbn,
-        "title": bookdata.title,
-        "authors": bookdata.authors,
-        "publisher": bookdata.publisher,
-        "genre": bookdata.genre,
-        "language": bookdata.language,
-        "rate": { "num_rates": 0, "current_rate": 0 },
-        "reviews": [],
-        "cover_url": bookdata.cover_url
+        "isbn":        bookdata.isbn,
+        "title":       bookdata.title,
+        "authors":     bookdata.authors,
+        "publisher":   bookdata.publisher,
+        "genre":       bookdata.genre,
+        "language":    bookdata.language,
+        "description": bookdata.description,
+        "rate":        { "num_rates": 0, "current_rate": 0 },
+        "reviews":     [],
+        "cover_url":   bookdata.cover_url
     };
     let new_book = new Book(book);
     return new_book.save();
@@ -84,10 +86,23 @@ module.exports.get = async (isbn) => {
     return b[0];
 }
 
-// Update book data // TODO: 
+// Update book data
 module.exports.set = (isbn, bookdata) => {
+    const book = {
+        isbn: bookdata.isbn,
+        title: bookdata.title,
+        authors: bookdata.authors,
+        publisher: bookdata.publisher,
+        genre: bookdata.genre,
+        language: bookdata.language,
+        cover_url: bookdata.cover_url
+    };
+
+    Object.keys(book)
+        .forEach(key => book[key] === undefined ? delete book[key] : {});
+
     return Book
-        .updateOne({isbn: isbn},{$set: bookdata})
+        .updateOne({isbn: isbn},{$set: book})
         .exec();
 }
 
@@ -159,7 +174,7 @@ module.exports.update_rate = async (isbn, rate, old_rate) => {
 module.exports.exists = async (isbn) => {
     let val = await Book
         .countDocuments({ isbn: isbn })
-        .exec()
+        .exec();
     return val > 0;
 }
 

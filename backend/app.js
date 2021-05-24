@@ -51,6 +51,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use('/public',express.static(path.join(__dirname, 'public')));
 app.use('/storage/books',express.static(path.join(__dirname, 'storage/books')));
+app.use('/storage/users',express.static(path.join(__dirname, 'storage/users')));
 
 const authentication_router = require('./routes/authentication');
 const users_router = require('./routes/users');
