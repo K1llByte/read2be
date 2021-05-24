@@ -1,7 +1,6 @@
 <template>
     <div class="w3-container">
-        <h1>Read2be</h1>
-        <h3>Utilizadores do read2be</h3>
+        <h1 class="armwrestler x-large dark my-4">Users</h1>
         <table class="w3-table-all">
             <tr>
                 <th>ID</th><th>User</th><th>Name</th><th>Email</th>

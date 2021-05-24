@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <div>
+      <h1 class="armwrestler x-large dark my-4">Books</h1>
       <Filters />
       <Books />
     </div>

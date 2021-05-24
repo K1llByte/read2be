@@ -88,4 +88,7 @@ export default {
       margin-bottom: 10px;
       color:#5F9EA0;
    }
+   .main-color {
+      color: #936464;
+   }
 </style>

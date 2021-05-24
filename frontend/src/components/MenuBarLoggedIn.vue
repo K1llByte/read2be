@@ -29,7 +29,6 @@
             :close-on-content-click="false"
             :nudge-width="220"
             :nudge-bottom="20"
-            :nudge-right="40"
             offset-x
             offset-y
             bottom
