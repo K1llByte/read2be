@@ -15,6 +15,7 @@
 						v-model="user"
 						:counter="20"
 						:rules="userRules"
+                  background-color="#F6EAEA"
 						label="Username"
 						required
 						solo
@@ -25,6 +26,7 @@
 						v-model="password"
 						:counter="30"
 						:rules="passwordRules"
+                  background-color="#F6EAEA"
 						label="Password"
 						:type="showPassword ? 'text' : 'password'"
 						:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"

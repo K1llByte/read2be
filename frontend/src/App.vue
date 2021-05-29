@@ -89,6 +89,7 @@ export default {
       color:#5F9EA0;
    }
    .main-color {
-      color: #936464;
+      font-family: 'ArmWrestler', bold;
+      color: #a57474;
    }
 </style>

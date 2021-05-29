@@ -14,6 +14,7 @@
 					<v-layout row wrap>
 						<v-flex xs6>
 							<v-text-field
+                        background-color="#F6EAEA"
 								v-model="firstName"
 								:rules="nameRules"
 								label="First Name"
@@ -26,6 +27,7 @@
 						
 						<v-flex xs6>
 							<v-text-field
+                        background-color="#F6EAEA"
 								v-model="lastName"
 								:rules="nameRules"
 								label="Last Name"
@@ -36,6 +38,7 @@
 					</v-layout>
 					
 					<v-text-field
+                  background-color="#F6EAEA"
 						v-model="user"
 						:counter="20"
 						:rules="userRules"
@@ -47,6 +50,7 @@
 					<v-spacer></v-spacer>
 					
 					<v-text-field
+                  background-color="#F6EAEA"
 						v-model="password"
 						:counter="30"
 						:rules="passwordRules"
@@ -59,6 +63,7 @@
 					></v-text-field>
 					
 					<v-text-field
+                  background-color="#F6EAEA"
 						v-model="email"
 						:rules="emailRules"
 						label="Email"
