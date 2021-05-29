@@ -36,12 +36,30 @@ module.exports.get = async (username, options={}) => {
         }
     };
 
+    const FRIENDS_LOOKUP = {
+        "$lookup": {
+            "from": "users",
+            "localField": "friends",
+            "foreignField": "user_id",
+            "as": "friends"
+        }
+    };
+
     const NO_PWD_PROJECTION = {
         "$project": {
             _id:0,
             password_hash:0,
             "books._id": 0,
             "books.reviews": 0,
+            
+            "friends._id": 0,
+            "friends.friends": 0,
+            "friends.pending": 0,
+            "friends.password_hash": 0,
+            "friends.email": 0,
+            "friends.role": 0,
+            "friends.books": 0,
+            "friends.collections": 0,
         }
     };
 
@@ -50,12 +68,22 @@ module.exports.get = async (username, options={}) => {
             _id:0,
             "books._id": 0,
             "books.reviews": 0,
+
+            "friends._id": 0,
+            "friends.friends": 0,
+            "friends.pending": 0,
+            "friends.password_hash": 0,
+            "friends.email": 0,
+            "friends.role": 0,
+            "friends.books": 0,
+            "friends.collections": 0,
         }
     };
 
     let pipeline = [];
     if(options.inline_books == 1)
         pipeline.push(BOOK_LOOKUP);
+    pipeline.push(FRIENDS_LOOKUP);
     pipeline.push({ "$match": { username: username } });
     console.log("options.no_password",options.no_password);
     pipeline.push((options.with_password) ? PROJECTION : NO_PWD_PROJECTION);

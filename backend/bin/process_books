@@ -7,47 +7,80 @@ let i = 0;
 
 let authors = [];
 let books = [];
+let genres = [];
 
-fs.createReadStream('db/books.csv')
+// Small Books Dataset
+
+// fs.createReadStream('db/books.csv')
+// .pipe(csv())
+// .on('data', (row) => {
+//     if(row.isbn != "" && row.isbn != undefined)
+//     {
+//         const splited_authors = row.authors.split(', ');
+//         splited_authors.forEach(author => {
+//             let author_data = authors.find((e) => author == e.name);
+//             if(author_data == undefined)
+//             {
+//                 authors.push({
+//                     "name": author,
+//                     "books": [row.isbn]
+//                 });
+//             }
+//             else
+//             {
+//                 author_data.books.push(row.isbn);
+//             }
+//         });
+    
+//         let book = {
+//             "isbn": row.isbn,
+//             "title": row.original_title,
+//             "authors": splited_authors,
+//             "publisher": "",
+//             "genre": 0,
+//             "language": 1,
+//             "rate": {
+//                 "num_rates": 0,
+//                 "current_rate": 0
+//             },
+//             "reviews": [],
+//             "cover_url": row.image_url
+//         }
+//         books.push(book);
+//         ++i;
+//     }
+// })
+// .on('end', () => {
+//     //console.log(JSON.stringify(authors,null,4));
+//     console.log(books.length);
+// });
+
+
+// Goodreads Books Dataset
+
+fs.createReadStream('db/goodreads_books.csv')
 .pipe(csv())
 .on('data', (row) => {
-    if(row.isbn != "" && row.isbn != undefined)
-    {
-        const splited_authors = row.authors.split(', ');
-        splited_authors.forEach(author => {
-            let author_data = authors.find((e) => author == e.name);
-            if(author_data == undefined)
-            {
-                authors.push({
-                    "name": author,
-                    "books": [row.isbn]
-                });
-            }
-            else
-            {
-                author_data.books.push(row.isbn);
-            }
-        });
     
-        let book = {
-            "isbn": row.isbn,
-            "title": row.original_title,
-            "authors": splited_authors,
-            "publisher": "",
-            "genre": 0,
-            "language": 1,
-            "rate": {
-                "num_rates": 0,
-                "current_rate": 0
-            },
-            "reviews": [],
-            "cover_url": row.image_url
-        }
-        books.push(book);
-        ++i;
+    // title, link, series, cover_link, author, rating_count,
+    // number_of_pages, date_published, publisher, genre_and_votes,
+    // isbn, isbn13, , awards
+    // books_in_series, description, settings
+
+    if(i >= 0 && i <= 10)
+    {
+        console.log(`isbn:            "${row.isbn}"`);
+        console.log(`author:          "${row.author}"`);
+        console.log(`title:           "${row.title}"`);
+        console.log(`publisher:       "${row.publisher}"`);
+        console.log(`genre_and_votes: "${row.genre_and_votes}"`);
+        console.log(`series:          "${row.series}"`);
+        console.log();
     }
+    ++i;
 })
 .on('end', () => {
     //console.log(JSON.stringify(authors,null,4));
-    console.log(books.length);
 });
+
+
