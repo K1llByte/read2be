@@ -6,7 +6,7 @@ const BOOK_PROJECTION = {
     "title"       : 1,
     "authors"     : 1,
     "publisher"   : 1,
-    "genre"       : { $arrayElemAt: [ "$genre.name" , 0 ] },
+    "genres"      : "$genres.name",
     "language"    : { $arrayElemAt: [ "$language.name" , 0 ] },
     "description" : 1,
     "rate"        : "$rate.current_rate",
@@ -14,12 +14,12 @@ const BOOK_PROJECTION = {
     "cover_url"   : 1
 };
 
-const GENRE_LOOKUP = {
+const GENRES_LOOKUP = {
     "$lookup": {
       "from"         : "genres",
-      "localField"   : "genre",
+      "localField"   : "genres",
       "foreignField" : "genre_id",
-      "as"           : "genre"
+      "as"           : "genres"
     }
 };
 
@@ -44,7 +44,7 @@ module.exports.insert = async (bookdata) => {
         "title":       bookdata.title,
         "authors":     bookdata.authors,
         "publisher":   bookdata.publisher,
-        "genre":       bookdata.genre,
+        "genres":      bookdata.genres,
         "language":    bookdata.language,
         "description": bookdata.description,
         "rate":        { "num_rates": 0, "current_rate": 0 },
@@ -63,7 +63,7 @@ module.exports.list_all = (options={}) => {
         ? options.page_num : 0 ;
     
     return Book.aggregate([
-            GENRE_LOOKUP,
+            GENRES_LOOKUP,
             LANGUAGE_LOOKUP,
             { "$project": BOOK_PROJECTION }
         ])
@@ -76,7 +76,7 @@ module.exports.list_all = (options={}) => {
 module.exports.get = async (isbn) => {
     let b = await Book
     .aggregate([
-        GENRE_LOOKUP,
+        GENRES_LOOKUP,
         LANGUAGE_LOOKUP,
         {
             "$match": { isbn: isbn }
@@ -93,8 +93,9 @@ module.exports.set = (isbn, bookdata) => {
         title: bookdata.title,
         authors: bookdata.authors,
         publisher: bookdata.publisher,
-        genre: bookdata.genre,
+        genres: bookdata.genres,
         language: bookdata.language,
+        description: bookdata.description,
         cover_url: bookdata.cover_url
     };
 
@@ -132,7 +133,7 @@ module.exports.search = (query, options={}) => {
                     "title": { "$regex": RegExp(seach_rgx,"gi") }
                 }
             },
-            GENRE_LOOKUP,
+            GENRES_LOOKUP,
             LANGUAGE_LOOKUP,
             { "$project": BOOK_PROJECTION }
         ])

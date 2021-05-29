@@ -1,0 +1,1194 @@
+[
+    {
+        "genre_id": 0,
+        "name": "Unknown"
+    },
+    {
+        "genre_id": 1,
+        "name": "Young Adult"
+    },
+    {
+        "genre_id": 2,
+        "name": "Mystery"
+    },
+    {
+        "genre_id": 3,
+        "name": "Romance"
+    },
+    {
+        "genre_id": 4,
+        "name": "Christian Fiction"
+    },
+    {
+        "genre_id": 5,
+        "name": "Christian"
+    },
+    {
+        "genre_id": 6,
+        "name": "Fiction"
+    },
+    {
+        "genre_id": 7,
+        "name": "Thriller"
+    },
+    {
+        "genre_id": 8,
+        "name": "Horror"
+    },
+    {
+        "genre_id": 9,
+        "name": "Economics"
+    },
+    {
+        "genre_id": 10,
+        "name": "Nonfiction"
+    },
+    {
+        "genre_id": 11,
+        "name": "Business"
+    },
+    {
+        "genre_id": 12,
+        "name": "Finance"
+    },
+    {
+        "genre_id": 13,
+        "name": "Self Help"
+    },
+    {
+        "genre_id": 14,
+        "name": "Currency"
+    },
+    {
+        "genre_id": 15,
+        "name": "Audiobook"
+    },
+    {
+        "genre_id": 16,
+        "name": "Psychology"
+    },
+    {
+        "genre_id": 17,
+        "name": "Historical"
+    },
+    {
+        "genre_id": 18,
+        "name": "American"
+    },
+    {
+        "genre_id": 19,
+        "name": "Gothic"
+    },
+    {
+        "genre_id": 20,
+        "name": "Sequential Art"
+    },
+    {
+        "genre_id": 21,
+        "name": "Humor"
+    },
+    {
+        "genre_id": 22,
+        "name": "Cultural"
+    },
+    {
+        "genre_id": 23,
+        "name": "Poetry"
+    },
+    {
+        "genre_id": 24,
+        "name": "Childrens"
+    },
+    {
+        "genre_id": 25,
+        "name": "Classics"
+    },
+    {
+        "genre_id": 26,
+        "name": "Fantasy"
+    },
+    {
+        "genre_id": 27,
+        "name": "Science Fiction"
+    },
+    {
+        "genre_id": 28,
+        "name": "Adventure"
+    },
+    {
+        "genre_id": 29,
+        "name": "Science Fiction Fantasy"
+    },
+    {
+        "genre_id": 30,
+        "name": "Adult"
+    },
+    {
+        "genre_id": 31,
+        "name": "Suspense"
+    },
+    {
+        "genre_id": 32,
+        "name": "Art"
+    },
+    {
+        "genre_id": 33,
+        "name": "Autobiography"
+    },
+    {
+        "genre_id": 34,
+        "name": "Inspirational"
+    },
+    {
+        "genre_id": 35,
+        "name": "Language"
+    },
+    {
+        "genre_id": 36,
+        "name": "Science"
+    },
+    {
+        "genre_id": 37,
+        "name": "History"
+    },
+    {
+        "genre_id": 38,
+        "name": "Sexuality"
+    },
+    {
+        "genre_id": 39,
+        "name": "Anthropology"
+    },
+    {
+        "genre_id": 40,
+        "name": "Military"
+    },
+    {
+        "genre_id": 41,
+        "name": "War"
+    },
+    {
+        "genre_id": 42,
+        "name": "Womens Fiction"
+    },
+    {
+        "genre_id": 43,
+        "name": "Contemporary"
+    },
+    {
+        "genre_id": 44,
+        "name": "Adult Fiction"
+    },
+    {
+        "genre_id": 45,
+        "name": "European Literature"
+    },
+    {
+        "genre_id": 46,
+        "name": "World War II"
+    },
+    {
+        "genre_id": 47,
+        "name": "Shapeshifters"
+    },
+    {
+        "genre_id": 48,
+        "name": "Magical Realism"
+    },
+    {
+        "genre_id": 49,
+        "name": "Literature"
+    },
+    {
+        "genre_id": 50,
+        "name": "Crime"
+    },
+    {
+        "genre_id": 51,
+        "name": "Biography"
+    },
+    {
+        "genre_id": 52,
+        "name": "Paranormal"
+    },
+    {
+        "genre_id": 53,
+        "name": "Novels"
+    },
+    {
+        "genre_id": 54,
+        "name": "Eastern Africa"
+    },
+    {
+        "genre_id": 55,
+        "name": "Biography Memoir"
+    },
+    {
+        "genre_id": 56,
+        "name": "Academic"
+    },
+    {
+        "genre_id": 57,
+        "name": "Short Stories"
+    },
+    {
+        "genre_id": 58,
+        "name": "Plays"
+    },
+    {
+        "genre_id": 59,
+        "name": "Drama"
+    },
+    {
+        "genre_id": 60,
+        "name": "North American Hi..."
+    },
+    {
+        "genre_id": 61,
+        "name": "Military History"
+    },
+    {
+        "genre_id": 62,
+        "name": "Politics"
+    },
+    {
+        "genre_id": 63,
+        "name": "School Stories"
+    },
+    {
+        "genre_id": 64,
+        "name": "Realistic Fiction"
+    },
+    {
+        "genre_id": 65,
+        "name": "Animals"
+    },
+    {
+        "genre_id": 66,
+        "name": "Apocalyptic"
+    },
+    {
+        "genre_id": 67,
+        "name": "New Adult"
+    },
+    {
+        "genre_id": 68,
+        "name": "Music"
+    },
+    {
+        "genre_id": 69,
+        "name": "Religion"
+    },
+    {
+        "genre_id": 70,
+        "name": "Philosophy"
+    },
+    {
+        "genre_id": 71,
+        "name": "Spirituality"
+    },
+    {
+        "genre_id": 72,
+        "name": "Historical Romance"
+    },
+    {
+        "genre_id": 73,
+        "name": "Action"
+    },
+    {
+        "genre_id": 74,
+        "name": "Pseudoscience"
+    },
+    {
+        "genre_id": 75,
+        "name": "Northern Africa"
+    },
+    {
+        "genre_id": 76,
+        "name": "Fairies"
+    },
+    {
+        "genre_id": 77,
+        "name": "Anthologies"
+    },
+    {
+        "genre_id": 78,
+        "name": "Western Africa"
+    },
+    {
+        "genre_id": 79,
+        "name": "English History"
+    },
+    {
+        "genre_id": 80,
+        "name": "Comics"
+    },
+    {
+        "genre_id": 81,
+        "name": "Literary Fiction"
+    },
+    {
+        "genre_id": 82,
+        "name": "Leadership"
+    },
+    {
+        "genre_id": 83,
+        "name": "Buisness"
+    },
+    {
+        "genre_id": 84,
+        "name": "Law"
+    },
+    {
+        "genre_id": 85,
+        "name": "Feminism"
+    },
+    {
+        "genre_id": 86,
+        "name": "Womens"
+    },
+    {
+        "genre_id": 87,
+        "name": "Family"
+    },
+    {
+        "genre_id": 88,
+        "name": "Christianity"
+    },
+    {
+        "genre_id": 89,
+        "name": "Biblical Fiction"
+    },
+    {
+        "genre_id": 90,
+        "name": "Spy Thriller"
+    },
+    {
+        "genre_id": 91,
+        "name": "Erotica"
+    },
+    {
+        "genre_id": 92,
+        "name": "Sociology"
+    },
+    {
+        "genre_id": 93,
+        "name": "Relationships"
+    },
+    {
+        "genre_id": 94,
+        "name": "Holiday"
+    },
+    {
+        "genre_id": 95,
+        "name": "Kids"
+    },
+    {
+        "genre_id": 96,
+        "name": "Environment"
+    },
+    {
+        "genre_id": 97,
+        "name": "Book Club"
+    },
+    {
+        "genre_id": 98,
+        "name": "Reference"
+    },
+    {
+        "genre_id": 99,
+        "name": "European History"
+    },
+    {
+        "genre_id": 100,
+        "name": "Sports"
+    },
+    {
+        "genre_id": 101,
+        "name": "Writing"
+    },
+    {
+        "genre_id": 102,
+        "name": "American History"
+    },
+    {
+        "genre_id": 103,
+        "name": "Asian Literature"
+    },
+    {
+        "genre_id": 104,
+        "name": "Russian History"
+    },
+    {
+        "genre_id": 105,
+        "name": "LGBT"
+    },
+    {
+        "genre_id": 106,
+        "name": "Dark"
+    },
+    {
+        "genre_id": 107,
+        "name": "Travel"
+    },
+    {
+        "genre_id": 108,
+        "name": "Scandinavian Lite..."
+    },
+    {
+        "genre_id": 109,
+        "name": "Health"
+    },
+    {
+        "genre_id": 110,
+        "name": "GLBT"
+    },
+    {
+        "genre_id": 111,
+        "name": "The United States Of America"
+    },
+    {
+        "genre_id": 112,
+        "name": "Westerns"
+    },
+    {
+        "genre_id": 113,
+        "name": "Futuristic"
+    },
+    {
+        "genre_id": 114,
+        "name": "Speculative Fiction"
+    },
+    {
+        "genre_id": 115,
+        "name": "Crafts"
+    },
+    {
+        "genre_id": 116,
+        "name": "Artificial Intelligence"
+    },
+    {
+        "genre_id": 117,
+        "name": "Futurism"
+    },
+    {
+        "genre_id": 118,
+        "name": "Space"
+    },
+    {
+        "genre_id": 119,
+        "name": "Love"
+    },
+    {
+        "genre_id": 120,
+        "name": "Culture"
+    },
+    {
+        "genre_id": 121,
+        "name": "Parenting"
+    },
+    {
+        "genre_id": 122,
+        "name": "Graphic Novels Comics"
+    },
+    {
+        "genre_id": 123,
+        "name": "Food and Drink"
+    },
+    {
+        "genre_id": 124,
+        "name": "Menage"
+    },
+    {
+        "genre_id": 125,
+        "name": "Education"
+    },
+    {
+        "genre_id": 126,
+        "name": "Gender"
+    },
+    {
+        "genre_id": 127,
+        "name": "Lds"
+    },
+    {
+        "genre_id": 128,
+        "name": "Novella"
+    },
+    {
+        "genre_id": 129,
+        "name": "Modern"
+    },
+    {
+        "genre_id": 130,
+        "name": ""
+    },
+    {
+        "genre_id": 131,
+        "name": "Media Tie In"
+    },
+    {
+        "genre_id": 132,
+        "name": "Mythology"
+    },
+    {
+        "genre_id": 133,
+        "name": "Retellings"
+    },
+    {
+        "genre_id": 134,
+        "name": "Games"
+    },
+    {
+        "genre_id": 135,
+        "name": "Gay"
+    },
+    {
+        "genre_id": 136,
+        "name": "Combat"
+    },
+    {
+        "genre_id": 137,
+        "name": "Nature"
+    },
+    {
+        "genre_id": 138,
+        "name": "Race"
+    },
+    {
+        "genre_id": 139,
+        "name": "New York"
+    },
+    {
+        "genre_id": 140,
+        "name": "Social Issues"
+    },
+    {
+        "genre_id": 141,
+        "name": "Occult"
+    },
+    {
+        "genre_id": 142,
+        "name": "Contemporary Romance"
+    },
+    {
+        "genre_id": 143,
+        "name": "Harlequin"
+    },
+    {
+        "genre_id": 144,
+        "name": "Category Romance"
+    },
+    {
+        "genre_id": 145,
+        "name": "Computer Science"
+    },
+    {
+        "genre_id": 146,
+        "name": "Unfinished"
+    },
+    {
+        "genre_id": 147,
+        "name": "Football"
+    },
+    {
+        "genre_id": 148,
+        "name": "Roman"
+    },
+    {
+        "genre_id": 149,
+        "name": "Criticism"
+    },
+    {
+        "genre_id": 150,
+        "name": "Fairy Tales"
+    },
+    {
+        "genre_id": 151,
+        "name": "Productivity"
+    },
+    {
+        "genre_id": 152,
+        "name": "Mental Health"
+    },
+    {
+        "genre_id": 153,
+        "name": "Aviation"
+    },
+    {
+        "genre_id": 154,
+        "name": "Civil War"
+    },
+    {
+        "genre_id": 155,
+        "name": "Design"
+    },
+    {
+        "genre_id": 156,
+        "name": "Dungeons and Dragons"
+    },
+    {
+        "genre_id": 157,
+        "name": "Death"
+    },
+    {
+        "genre_id": 158,
+        "name": "Comics Manga"
+    },
+    {
+        "genre_id": 159,
+        "name": "Disability"
+    },
+    {
+        "genre_id": 160,
+        "name": "Social Science"
+    },
+    {
+        "genre_id": 161,
+        "name": "Superheroes"
+    },
+    {
+        "genre_id": 162,
+        "name": "Polyamory"
+    },
+    {
+        "genre_id": 163,
+        "name": "Manga"
+    },
+    {
+        "genre_id": 164,
+        "name": "40k"
+    },
+    {
+        "genre_id": 165,
+        "name": "Marriage"
+    },
+    {
+        "genre_id": 166,
+        "name": "Biology"
+    },
+    {
+        "genre_id": 167,
+        "name": "Own"
+    },
+    {
+        "genre_id": 168,
+        "name": "Heroic Fantasy"
+    },
+    {
+        "genre_id": 169,
+        "name": "Pulp"
+    },
+    {
+        "genre_id": 170,
+        "name": "Medical"
+    },
+    {
+        "genre_id": 171,
+        "name": "Pop Culture"
+    },
+    {
+        "genre_id": 172,
+        "name": "Romantic"
+    },
+    {
+        "genre_id": 173,
+        "name": "Love Inspired"
+    },
+    {
+        "genre_id": 174,
+        "name": "Humanities"
+    },
+    {
+        "genre_id": 175,
+        "name": "Prayer"
+    },
+    {
+        "genre_id": 176,
+        "name": "Mountaineering"
+    },
+    {
+        "genre_id": 177,
+        "name": "Medicine"
+    },
+    {
+        "genre_id": 178,
+        "name": "African Literature"
+    },
+    {
+        "genre_id": 179,
+        "name": "Urban"
+    },
+    {
+        "genre_id": 180,
+        "name": "Diary"
+    },
+    {
+        "genre_id": 181,
+        "name": "Polyamorous"
+    },
+    {
+        "genre_id": 182,
+        "name": "Presidents"
+    },
+    {
+        "genre_id": 183,
+        "name": "Historical Fiction"
+    },
+    {
+        "genre_id": 184,
+        "name": "How To"
+    },
+    {
+        "genre_id": 185,
+        "name": "Textbooks"
+    },
+    {
+        "genre_id": 186,
+        "name": "Southern Africa"
+    },
+    {
+        "genre_id": 187,
+        "name": "Nobel Prize"
+    },
+    {
+        "genre_id": 188,
+        "name": "Science Nature"
+    },
+    {
+        "genre_id": 189,
+        "name": "Weird Fiction"
+    },
+    {
+        "genre_id": 190,
+        "name": "Dc Comics"
+    },
+    {
+        "genre_id": 191,
+        "name": "Social Movements"
+    },
+    {
+        "genre_id": 192,
+        "name": "Sci Fi Fantasy"
+    },
+    {
+        "genre_id": 193,
+        "name": "Cryptids"
+    },
+    {
+        "genre_id": 194,
+        "name": "Folklore"
+    },
+    {
+        "genre_id": 195,
+        "name": "Yaoi"
+    },
+    {
+        "genre_id": 196,
+        "name": "Couture"
+    },
+    {
+        "genre_id": 197,
+        "name": "Epic"
+    },
+    {
+        "genre_id": 198,
+        "name": "True Story"
+    },
+    {
+        "genre_id": 199,
+        "name": "United States"
+    },
+    {
+        "genre_id": 200,
+        "name": "Amish"
+    },
+    {
+        "genre_id": 201,
+        "name": "Esoterica"
+    },
+    {
+        "genre_id": 202,
+        "name": "Lovecraftian"
+    },
+    {
+        "genre_id": 203,
+        "name": "Marvel"
+    },
+    {
+        "genre_id": 204,
+        "name": "Transport"
+    },
+    {
+        "genre_id": 205,
+        "name": "International Rel..."
+    },
+    {
+        "genre_id": 206,
+        "name": "Soccer"
+    },
+    {
+        "genre_id": 207,
+        "name": "Biblical"
+    },
+    {
+        "genre_id": 208,
+        "name": "World Of Warcraft"
+    },
+    {
+        "genre_id": 209,
+        "name": "Mmorpg"
+    },
+    {
+        "genre_id": 210,
+        "name": "Emergency Services"
+    },
+    {
+        "genre_id": 211,
+        "name": "Gardening"
+    },
+    {
+        "genre_id": 212,
+        "name": "Sports and Games"
+    },
+    {
+        "genre_id": 213,
+        "name": "Teaching"
+    },
+    {
+        "genre_id": 214,
+        "name": "American Revolution"
+    },
+    {
+        "genre_id": 215,
+        "name": "Illness"
+    },
+    {
+        "genre_id": 216,
+        "name": "Role Playing Games"
+    },
+    {
+        "genre_id": 217,
+        "name": "Family Law"
+    },
+    {
+        "genre_id": 218,
+        "name": "Mathematics"
+    },
+    {
+        "genre_id": 219,
+        "name": "Lesbian"
+    },
+    {
+        "genre_id": 220,
+        "name": "Buddhism"
+    },
+    {
+        "genre_id": 221,
+        "name": "Military Fiction"
+    },
+    {
+        "genre_id": 222,
+        "name": "Medievalism"
+    },
+    {
+        "genre_id": 223,
+        "name": "Art and Photography"
+    },
+    {
+        "genre_id": 224,
+        "name": "Social"
+    },
+    {
+        "genre_id": 225,
+        "name": "Folk Tales"
+    },
+    {
+        "genre_id": 226,
+        "name": "Church"
+    },
+    {
+        "genre_id": 227,
+        "name": "Graphic Novels Manga"
+    },
+    {
+        "genre_id": 228,
+        "name": "Anarchism"
+    },
+    {
+        "genre_id": 229,
+        "name": "Poetry Plays"
+    },
+    {
+        "genre_id": 230,
+        "name": "Female Authors"
+    },
+    {
+        "genre_id": 231,
+        "name": "Reportage"
+    },
+    {
+        "genre_id": 232,
+        "name": "Canon"
+    },
+    {
+        "genre_id": 233,
+        "name": "Labor"
+    },
+    {
+        "genre_id": 234,
+        "name": "Favorites"
+    },
+    {
+        "genre_id": 235,
+        "name": "Alcohol"
+    },
+    {
+        "genre_id": 236,
+        "name": "Museology"
+    },
+    {
+        "genre_id": 237,
+        "name": "Neuroscience"
+    },
+    {
+        "genre_id": 238,
+        "name": "Earth"
+    },
+    {
+        "genre_id": 239,
+        "name": "Political Science"
+    },
+    {
+        "genre_id": 240,
+        "name": "Architecture"
+    },
+    {
+        "genre_id": 241,
+        "name": "Stories"
+    },
+    {
+        "genre_id": 242,
+        "name": "Judaism"
+    },
+    {
+        "genre_id": 243,
+        "name": "Gay Romance"
+    },
+    {
+        "genre_id": 244,
+        "name": "M M Romance"
+    },
+    {
+        "genre_id": 245,
+        "name": "Tragedy"
+    },
+    {
+        "genre_id": 246,
+        "name": "Witchcraft"
+    },
+    {
+        "genre_id": 247,
+        "name": "International Dev..."
+    },
+    {
+        "genre_id": 248,
+        "name": "Computers"
+    },
+    {
+        "genre_id": 249,
+        "name": "Punk"
+    },
+    {
+        "genre_id": 250,
+        "name": "Hugo Awards"
+    },
+    {
+        "genre_id": 251,
+        "name": "Social Justice"
+    },
+    {
+        "genre_id": 252,
+        "name": "Fat"
+    },
+    {
+        "genre_id": 253,
+        "name": "Surreal"
+    },
+    {
+        "genre_id": 254,
+        "name": "Conservation"
+    },
+    {
+        "genre_id": 255,
+        "name": "Nurses"
+    },
+    {
+        "genre_id": 256,
+        "name": "Central Africa"
+    },
+    {
+        "genre_id": 257,
+        "name": "Science Fiction R..."
+    },
+    {
+        "genre_id": 258,
+        "name": "Engineering"
+    },
+    {
+        "genre_id": 259,
+        "name": "Native Americans"
+    },
+    {
+        "genre_id": 260,
+        "name": "Warfare"
+    },
+    {
+        "genre_id": 261,
+        "name": "Martial Arts"
+    },
+    {
+        "genre_id": 262,
+        "name": "Physics"
+    },
+    {
+        "genre_id": 263,
+        "name": "Geology"
+    },
+    {
+        "genre_id": 264,
+        "name": "German History"
+    },
+    {
+        "genre_id": 265,
+        "name": "Gender and Sexuality"
+    },
+    {
+        "genre_id": 266,
+        "name": "Doctors"
+    },
+    {
+        "genre_id": 267,
+        "name": "Russia"
+    },
+    {
+        "genre_id": 268,
+        "name": "Fan Fiction"
+    },
+    {
+        "genre_id": 269,
+        "name": "Star Trek"
+    },
+    {
+        "genre_id": 270,
+        "name": "Linguistics"
+    },
+    {
+        "genre_id": 271,
+        "name": "Geography"
+    },
+    {
+        "genre_id": 272,
+        "name": "Gamebooks"
+    },
+    {
+        "genre_id": 273,
+        "name": "Astronomy"
+    },
+    {
+        "genre_id": 274,
+        "name": "History and Politics"
+    },
+    {
+        "genre_id": 275,
+        "name": "Transgender"
+    },
+    {
+        "genre_id": 276,
+        "name": "Queer"
+    },
+    {
+        "genre_id": 277,
+        "name": "Comics Bd"
+    },
+    {
+        "genre_id": 278,
+        "name": "Vegetarian"
+    },
+    {
+        "genre_id": 279,
+        "name": "Number"
+    },
+    {
+        "genre_id": 280,
+        "name": "Mine"
+    },
+    {
+        "genre_id": 281,
+        "name": "Adolescence"
+    },
+    {
+        "genre_id": 282,
+        "name": "Jewellery"
+    },
+    {
+        "genre_id": 283,
+        "name": "Sex Work"
+    },
+    {
+        "genre_id": 284,
+        "name": "Plants"
+    },
+    {
+        "genre_id": 285,
+        "name": "Africa"
+    },
+    {
+        "genre_id": 286,
+        "name": "Colouring Books"
+    },
+    {
+        "genre_id": 287,
+        "name": "Cartography"
+    },
+    {
+        "genre_id": 288,
+        "name": "Cities"
+    },
+    {
+        "genre_id": 289,
+        "name": "Beer"
+    },
+    {
+        "genre_id": 290,
+        "name": "Aeroplanes"
+    },
+    {
+        "genre_id": 291,
+        "name": "Dark Fantasy"
+    },
+    {
+        "genre_id": 292,
+        "name": "Library Science"
+    },
+    {
+        "genre_id": 293,
+        "name": "Rock N Roll"
+    },
+    {
+        "genre_id": 294,
+        "name": "Pornography"
+    },
+    {
+        "genre_id": 295,
+        "name": "Subways"
+    },
+    {
+        "genre_id": 296,
+        "name": "Satanism"
+    },
+    {
+        "genre_id": 297,
+        "name": "Outdoors"
+    }
+]

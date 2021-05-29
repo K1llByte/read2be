@@ -66,110 +66,115 @@ let users = [];
 
 // Goodreads Books Dataset
 
-function populate_books()
+async function populate_books()
 {
-    let i = 0;
-
-    fs.createReadStream('db/goodreads_books.csv')
-    .pipe(csv())
-    .on('data', (row) => {
     
-        try
-        {
-            row.publisher = utf8.decode(row.publisher);
-            row.author = utf8.decode(row.author);
-            row.title = utf8.decode(row.title);
-    
-            if(row.isbn != "" && row.isbn != undefined)
+    return new Promise((resolve, reject) => {
+        
+        let i = 0;
+        fs.createReadStream('db/goodreads_books.csv')
+        .pipe(csv())
+        .on('data', (row) => {
+        
+            try
             {
-                // GENRES
-                const splited_genres = row.genre_and_votes.split(", ");
-                let genres_ids = [];
-                splited_genres.forEach(genre => {
-                    genre = genre.replace(/(-.*)|( \d+)|(user)/g,"");
-                    genre = genre.replace(/( $)/g,"");
-    
-                    const genre_idx = genres.findIndex((e) => genre === e.name);
-                    // let genre_data = genres.find((e) => genre == e.name);
-                    if(genre_idx === -1)
-                    {
-                        genres_ids.push(genres.length);
-                        genres.push({
-                            "genre_id": genres.length,
-                            "name": genre
-                        });
-                    }
-                    else
-                        genres_ids.push(genre_idx);
-                    
-                });
+                row.publisher = utf8.decode(row.publisher);
+                row.author = utf8.decode(row.author);
+                row.title = utf8.decode(row.title);
         
-                // PUBLISHER
-                let publisher_data = publishers.find((e) => row.publisher == e.name);
-                if(publisher_data == undefined)
+                if(row.isbn != "" && row.isbn != undefined)
                 {
-                    publishers.push({
-                        "name": row.publisher,
-                        "books": [row.isbn]
-                    });
-                }
-                else
-                    publisher_data.books.push(row.isbn);
-                
+                    // GENRES
+                    const splited_genres = row.genre_and_votes.split(", ");
+                    let genres_ids = [];
+                    splited_genres.forEach(genre => {
+                        genre = genre.replace(/(-.*)|( \d+)|(user)/g,"");
+                        genre = genre.replace(/( $)/g,"");
         
-                // AUTHORS
-                const splited_authors = row.author.split(', ');
-                splited_authors.forEach(author => {
-                    let author_data = authors.find((e) => author == e.name);
-                    if(author_data == undefined)
+                        const genre_idx = genres.findIndex((e) => genre === e.name);
+                        // let genre_data = genres.find((e) => genre == e.name);
+                        if(genre_idx === -1)
+                        {
+                            genres_ids.push(genres.length);
+                            genres.push({
+                                "genre_id": genres.length,
+                                "name": genre
+                            });
+                        }
+                        else
+                            genres_ids.push(genre_idx);
+                    });
+            
+                    // PUBLISHER
+                    let publisher_data = publishers.find((e) => row.publisher == e.name);
+                    if(publisher_data == undefined)
                     {
-                        authors.push({
-                            "name": author,
+                        publishers.push({
+                            "name": row.publisher,
                             "books": [row.isbn]
                         });
                     }
                     else
-                        author_data.books.push(row.isbn);
+                        publisher_data.books.push(row.isbn);
                     
-                });
-        
-                // BOOK
-                let book = {
-                    "isbn": row.isbn,
-                    "title": row.original_title,
-                    "authors": splited_authors,
-                    "publisher": row.publisher,
-                    "genre": genres_ids[0],
-                    "language": 1,
-                    "rate": {
-                        "num_rates": 0,
-                        "current_rate": 0
-                    },
-                    "reviews": [],
-                    "cover_url": row.cover_link
-                };
-                books.push(book);
+            
+                    // AUTHORS
+                    const splited_authors = row.author.split(', ');
+                    splited_authors.forEach(author => {
+                        let author_data = authors.find((e) => author == e.name);
+                        if(author_data == undefined)
+                        {
+                            authors.push({
+                                "name": author,
+                                "books": [row.isbn]
+                            });
+                        }
+                        else
+                            author_data.books.push(row.isbn); 
+                    });
+            
+                    // BOOK
+                    let book = {
+                        "isbn": row.isbn,
+                        "title": row.original_title,
+                        "authors": splited_authors,
+                        "publisher": row.publisher,
+                        "genres": genres_ids,
+                        "language": 1,
+                        "description": row.description,
+                        "rate": {
+                            "num_rates": 0,
+                            "current_rate": 0
+                        },
+                        "reviews": [],
+                        "cover_url": row.cover_link
+                    };
+                    books.push(book);
+                }
+                ++i;
             }
-            ++i;
-        }
-        catch(e) { }
+            catch(e) { }
+            
+            // title, cover_link, author,
+            // publisher, genre_and_votes,
+            // isbn, isbn13
+            // description
+        })
+        .on('end', () => {
+            // console.log(JSON.stringify(genres, null, 4));
+            // console.log(JSON.stringify(publishers, null, 4));
+            // console.log(JSON.stringify(authors, null, 4));
+            // console.log(JSON.stringify(books, null, 4));
         
-        // title, cover_link, author,
-        // publisher, genre_and_votes,
-        // isbn, isbn13
-        // description
-    })
-    .on('end', () => {
-        // console.log(JSON.stringify(genres, null, 4));
-        // console.log(JSON.stringify(publishers, null, 4));
-        // console.log(JSON.stringify(authors, null, 4));
-        // console.log(JSON.stringify(books, null, 4));
-    
-        //fs.writeFile('db/newdata/genres.json', JSON.stringify(genres, null, 4), (err) => {} );
-        //fs.writeFile('db/newdata/publishers.json', JSON.stringify(publishers, null, 4), (err) => {} );
-        //fs.writeFile('db/newdata/authors.json', JSON.stringify(authors, null, 4), (err) => {} );
-        //fs.writeFile('db/newdata/books.json', JSON.stringify(books, null, 4), (err) => {} );
+            fs.writeFile('db/newdata/genres.json', JSON.stringify(genres, null, 4), (err) => {} );
+            fs.writeFile('db/newdata/publishers.json', JSON.stringify(publishers, null, 4), (err) => {} );
+            fs.writeFile('db/newdata/authors.json', JSON.stringify(authors, null, 4), (err) => {} );
+            fs.writeFile('db/newdata/books.json', JSON.stringify(books, null, 4), (err) => {} );
+            resolve();
+        });
     });
+
+    // console.log("Out books");
 }
 
 
@@ -308,13 +313,14 @@ async function populate_users()
             }
         }
     }
-    
+
     users = users.concat(mandatory);
-    // console.log(users.find(u => u.books !== []));
 
     fs.writeFile('db/newdata/users.json', JSON.stringify(users, null, 4), (err) => {} );
-
 }
 
-populate_books();
-populate_users();
+
+populate_books()
+.then(() => {
+    populate_users();
+});

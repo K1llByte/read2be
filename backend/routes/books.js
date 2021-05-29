@@ -167,18 +167,20 @@ router.post('/books', auth.authenticate(Permissions.Admin), upload.single('cover
         "title": req.body.title,
         "authors": req.body.authors,
         "publisher": req.body.publisher,
-        "genre": req.body.genre,
+        "genres": req.body.genres,
         "language": req.body.language,
+        "description": req.body.description,
         "cover_url": req.body.cover_url,
     };
 
     // TODO: Input validation (and type checking)
-    if( book.isbn      == undefined ||
-        book.title     == undefined ||
-        book.authors   == undefined ||
-        book.publisher == undefined ||
-        book.genre     == undefined ||
-        book.language  == undefined )
+    if( book.isbn        == undefined ||
+        book.title       == undefined ||
+        book.authors     == undefined ||
+        book.publisher   == undefined ||
+        book.genres      == undefined ||
+        book.language    == undefined ||
+        book.description == undefined)
     {
         delete_file(req.file);
         res.status(400).json({ "error": "Invalid book parameters" });
@@ -290,8 +292,9 @@ router.patch('/books/:isbn', auth.authenticate(Permissions.Admin), upload.single
         "title": req.body.title,
         "authors": req.body.authors,
         "publisher": req.body.publisher,
-        "genre": req.body.genre,
+        "genres": req.body.genres,
         "language": req.body.language,
+        "description": req.body.description,
         "cover_url": req.body.cover_url
     };
 

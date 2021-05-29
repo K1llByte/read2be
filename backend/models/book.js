@@ -24,7 +24,7 @@ const book_schema = new mongoose.Schema({
     title:       String,
     authors:     [String],
     publisher:   String,
-    genre:       Number,
+    genre:       [Number],
     language:    Number,
     description: String,
     rate:        rate_schema,
