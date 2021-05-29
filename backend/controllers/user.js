@@ -45,27 +45,18 @@ module.exports.get = async (username, options={}) => {
         }
     };
 
-    const NO_PWD_PROJECTION = {
-        "$project": {
-            _id:0,
-            password_hash:0,
-            "books._id": 0,
-            "books.reviews": 0,
-            
-            "friends._id": 0,
-            "friends.friends": 0,
-            "friends.pending": 0,
-            "friends.password_hash": 0,
-            "friends.email": 0,
-            "friends.role": 0,
-            "friends.books": 0,
-            "friends.collections": 0,
+    const PENDING_LOOKUP = {
+        "$lookup": {
+            "from": "users",
+            "localField": "pending",
+            "foreignField": "user_id",
+            "as": "pending"
         }
     };
-
+    
     const PROJECTION = {
         "$project": {
-            _id:0,
+            "_id":0,
             "books._id": 0,
             "books.reviews": 0,
 
@@ -77,15 +68,48 @@ module.exports.get = async (username, options={}) => {
             "friends.role": 0,
             "friends.books": 0,
             "friends.collections": 0,
+
+            "pending._id": 0,
+            "pending.friends": 0,
+            "pending.pending": 0,
+            "pending.password_hash": 0,
+            "pending.email": 0,
+            "pending.role": 0,
+            "pending.books": 0,
+            "pending.collections": 0,
         }
     };
+
+    let NO_PWD_PROJECTION = PROJECTION;
+    NO_PWD_PROJECTION["$project"]["password_hash"] = 0;
+    
+    // TODO: Remove dead code
+    // const NO_PWD_PROJECTION = {
+    //     "$project": {
+    //         "_id":0,
+    //         "password_hash":0,
+    //         "books._id": 0,
+    //         "books.reviews": 0,
+            
+    //         "friends._id": 0,
+    //         "friends.friends": 0,
+    //         "friends.pending": 0,
+    //         "friends.password_hash": 0,
+    //         "friends.email": 0,
+    //         "friends.role": 0,
+    //         "friends.books": 0,
+    //         "friends.collections": 0,
+    //     }
+    // };
+
 
     let pipeline = [];
     if(options.inline_books == 1)
         pipeline.push(BOOK_LOOKUP);
     pipeline.push(FRIENDS_LOOKUP);
+    pipeline.push(PENDING_LOOKUP);
     pipeline.push({ "$match": { username: username } });
-    console.log("options.no_password",options.no_password);
+    // console.log("options.no_password",options.no_password);
     pipeline.push((options.with_password) ? PROJECTION : NO_PWD_PROJECTION);
     
     const tmp = await User.aggregate(pipeline);

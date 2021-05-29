@@ -1,0 +1,320 @@
+#!/usr/bin/env node
+const csv = require('csv-parser');
+const fs = require('fs');
+const utf8 = require('utf8');
+const { gen_password_hash } = require('./gen_hash');
+const axios = require('axios');
+const mongoose = require('mongoose');
+
+
+let authors = [];
+let books = [];
+let genres = [{
+    "genre_id": 0,
+	"name": "Unknown"
+}];
+let publishers = [];
+let users = [];
+
+
+// Small Books Dataset
+
+// fs.createReadStream('db/books.csv')
+// .pipe(csv())
+// .on('data', (row) => {
+//     if(row.isbn != "" && row.isbn != undefined)
+//     {
+//         const splited_authors = row.authors.split(', ');
+//         splited_authors.forEach(author => {
+//             let author_data = authors.find((e) => author == e.name);
+//             if(author_data == undefined)
+//             {
+//                 authors.push({
+//                     "name": author,
+//                     "books": [row.isbn]
+//                 });
+//             }
+//             else
+//             {
+//                 author_data.books.push(row.isbn);
+//             }
+//         });
+    
+//         let book = {
+//             "isbn": row.isbn,
+//             "title": row.original_title,
+//             "authors": splited_authors,
+//             "publisher": "",
+//             "genre": 0,
+//             "language": 1,
+//             "rate": {
+//                 "num_rates": 0,
+//                 "current_rate": 0
+//             },
+//             "reviews": [],
+//             "cover_url": row.image_url
+//         }
+//         books.push(book);
+//         ++i;
+//     }
+// })
+// .on('end', () => {
+//     //console.log(JSON.stringify(authors,null,4));
+//     console.log(books.length);
+// });
+
+
+// Goodreads Books Dataset
+
+function populate_books()
+{
+    let i = 0;
+
+    fs.createReadStream('db/goodreads_books.csv')
+    .pipe(csv())
+    .on('data', (row) => {
+    
+        try
+        {
+            row.publisher = utf8.decode(row.publisher);
+            row.author = utf8.decode(row.author);
+            row.title = utf8.decode(row.title);
+    
+            if(row.isbn != "" && row.isbn != undefined)
+            {
+                // GENRES
+                const splited_genres = row.genre_and_votes.split(", ");
+                let genres_ids = [];
+                splited_genres.forEach(genre => {
+                    genre = genre.replace(/(-.*)|( \d+)|(user)/g,"");
+                    genre = genre.replace(/( $)/g,"");
+    
+                    const genre_idx = genres.findIndex((e) => genre === e.name);
+                    // let genre_data = genres.find((e) => genre == e.name);
+                    if(genre_idx === -1)
+                    {
+                        genres_ids.push(genres.length);
+                        genres.push({
+                            "genre_id": genres.length,
+                            "name": genre
+                        });
+                    }
+                    else
+                        genres_ids.push(genre_idx);
+                    
+                });
+        
+                // PUBLISHER
+                let publisher_data = publishers.find((e) => row.publisher == e.name);
+                if(publisher_data == undefined)
+                {
+                    publishers.push({
+                        "name": row.publisher,
+                        "books": [row.isbn]
+                    });
+                }
+                else
+                    publisher_data.books.push(row.isbn);
+                
+        
+                // AUTHORS
+                const splited_authors = row.author.split(', ');
+                splited_authors.forEach(author => {
+                    let author_data = authors.find((e) => author == e.name);
+                    if(author_data == undefined)
+                    {
+                        authors.push({
+                            "name": author,
+                            "books": [row.isbn]
+                        });
+                    }
+                    else
+                        author_data.books.push(row.isbn);
+                    
+                });
+        
+                // BOOK
+                let book = {
+                    "isbn": row.isbn,
+                    "title": row.original_title,
+                    "authors": splited_authors,
+                    "publisher": row.publisher,
+                    "genre": genres_ids[0],
+                    "language": 1,
+                    "rate": {
+                        "num_rates": 0,
+                        "current_rate": 0
+                    },
+                    "reviews": [],
+                    "cover_url": row.cover_link
+                };
+                books.push(book);
+            }
+            ++i;
+        }
+        catch(e) { }
+        
+        // title, cover_link, author,
+        // publisher, genre_and_votes,
+        // isbn, isbn13
+        // description
+    })
+    .on('end', () => {
+        // console.log(JSON.stringify(genres, null, 4));
+        // console.log(JSON.stringify(publishers, null, 4));
+        // console.log(JSON.stringify(authors, null, 4));
+        // console.log(JSON.stringify(books, null, 4));
+    
+        //fs.writeFile('db/newdata/genres.json', JSON.stringify(genres, null, 4), (err) => {} );
+        //fs.writeFile('db/newdata/publishers.json', JSON.stringify(publishers, null, 4), (err) => {} );
+        //fs.writeFile('db/newdata/authors.json', JSON.stringify(authors, null, 4), (err) => {} );
+        //fs.writeFile('db/newdata/books.json', JSON.stringify(books, null, 4), (err) => {} );
+    });
+}
+
+
+async function populate_users()
+{
+    // ADD MANDATORY USERS
+
+    const id = mongoose.Types.ObjectId().toString('hex');
+    let mandatory = [
+        {
+            "_id": {
+                "$oid": "6044da5949805a4477fdcd2e"
+            },
+            "friends": [],
+            "pending": [],
+            "user_id": "6044da5949805a4477fdcd2e",
+            "username": "a85171",
+            "nickname": "",
+            "password_hash": "sha256:TBbpwuxZb0qx:Q4tvhMtSbmEXE67f/4vp8ArtRy9vD+uydGibj741loA=",
+            "email": "a85171@alunos.uminho.pt",
+            "role": 128,
+            "avatar_url": "http://localhost:8080/storage/users/default.png",
+            "books": [],
+            "collections": []
+        },
+        {
+            "_id": {
+                "$oid": "6043f84b6e6652f395f6dc79"
+            },
+            "friends": ["6044da5949805a4477fdcd2e"],
+            "pending": [],
+            "user_id": "6043f84b6e6652f395f6dc79",
+            "username": "a85272",
+            "nickname": "",
+            "password_hash": "sha256:cKvRUClMSdol:AhU/RFep1ob+OdezMkxXMmzJCvm4vKjefaQLLCZJPOE=",
+            "email": "a85272@alunos.uminho.pt",
+            "role": 128,
+            "avatar_url": "http://localhost:8080/storage/users/default.png",
+            "books": [],
+            "collections": []
+        },
+        {
+            "_id": {
+                "$oid": id
+            },
+            "friends": [],
+            "pending": [],
+            "user_id": id,
+            "username": "a83840",
+            "nickname": "",
+            "password_hash": await gen_password_hash("a_password"),
+            "email": "a83840@alunos.uminho.pt",
+            "role": 128,
+            "avatar_url": "http://localhost:8080/storage/users/default.png",
+            "books": [],
+            "collections": []
+        }
+    ];
+
+    // MAKE RANDOM USERS
+    const res = await axios.get("https://randomuser.me/api/?results=1000")
+
+    for(const userdata of res.data.results)
+    {
+        const id = mongoose.Types.ObjectId().toString('hex');
+        const username = userdata.login.username;
+        const email = userdata.email;
+        const avatar_url = userdata.picture.large;
+        const nickname = `${userdata.name.first} ${userdata.name.last}`;
+        const hash = await gen_password_hash("a_password");
+
+        users.push({
+            "_id": {
+                "$oid": id
+            },
+            "friends": [],
+            "pending": [],
+            "user_id": id,
+            "username": username,
+            "nickname": nickname,
+            "password_hash": hash,
+            "email": email,
+            "role": 1,
+            "avatar_url": avatar_url,
+            "books": [],
+            "collections": []
+        });
+    }
+
+
+    // ADD RANDOM RELATIONSHIPS
+
+    const rnd_choice = (choices) => {
+        let index = Math.floor(Math.random() * choices.length);
+        return choices[index];
+    };
+
+    for(let i = 0 ; i < 2000 ; ++i)
+    {
+        let rnd_user1 = rnd_choice(users);
+        let rnd_user2 = rnd_choice(users);
+        if(    rnd_user1.user_id === rnd_user2.user_id
+            || rnd_user1.friends.find(e => e === rnd_user2.user_id) != undefined)
+        {
+            --i;
+        }
+        else
+        {
+            rnd_user1.friends.push(rnd_user2.user_id);
+            rnd_user2.friends.push(rnd_user1.user_id);
+        }
+    }
+    
+    
+    // ADD RANDOM BOOKS & RATES
+    if(books !== [])
+    {
+        for(let i = 0 ; i < 10000 ; ++i)
+        {
+            let rnd_user = rnd_choice(users);
+            let rnd_book = rnd_choice(books);
+            
+            const rnd_status = Math.floor(Math.random() * 4) + 1;
+            const rnd_rate = Math.floor(Math.random() * 11);
+            const date = new Date().toISOString();
+            if(rnd_user.books.find(b => b.isbn === rnd_book.isbn) === undefined)
+            {
+                rnd_user.books.push({
+                    "isbn": rnd_book.isbn,
+                    "status": rnd_status,
+                    "rate": rnd_rate,
+                    "date_registered": {
+                        "$date": date
+                    }
+                });
+            }
+        }
+    }
+    
+    users = users.concat(mandatory);
+    // console.log(users.find(u => u.books !== []));
+
+    fs.writeFile('db/newdata/users.json', JSON.stringify(users, null, 4), (err) => {} );
+
+}
+
+populate_books();
+populate_users();
