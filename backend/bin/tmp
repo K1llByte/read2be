@@ -1,4 +1,17 @@
 #!/usr/bin/env node
 
-let val = false;
-val && console.log(val)
+const axios = require('axios');
+
+axios({
+    method: 'post',
+    url: '/login',
+    data: {
+        isbn : "123456",
+        title : "Ola Mundo Cruel",
+        authors : "Eu :,)",
+        publisher : "Uma Qualquer sei la",
+        genre : 1,
+        language : 1,
+        cover_url : ""
+    }
+});

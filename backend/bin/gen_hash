@@ -12,5 +12,7 @@ async function gen_password_hash(password)
     return `sha256:${salt_bytes}:${passwd_hash}`;
 }
 
-gen_password_hash("a_password")
-.then(hash => console.log(hash));
+// gen_password_hash("a_password")
+// .then(hash => console.log(hash));
+
+module.exports.gen_password_hash = gen_password_hash

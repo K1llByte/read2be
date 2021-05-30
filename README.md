@@ -32,34 +32,36 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [x] Manage User book data
 >     - [x] Manage User defined book collections
 >     - [x] Manage User friends
->     - [ ] Book library search engine
->     - [ ] Upgrade server configurability
->     - [ ] Populate system's database 
->     - [ ] Branding
->     - [ ] Make deployable build
+>     - [x] (Incomplete) Book library search engine
+>     - [ ] (Repopulate) Populate system's database 
 >
 > - FrontEnd
 >     - [ ] UI: Authors/Publisher (Optional)
 >     - [ ] UI: User with list
->     - [ ] UI: Book library with search
->     - [ ] UI: Login
->     - [ ] UI: Register
+>     - [x] UI: Book library with search
+>     - [x] UI: Login
+>     - [x] UI: Register
 >     - [ ] Port non administrive backend funcionalities to webapp
 >
 > - Recommender
+>     - [x] Content Filtering based on title data
 >     - [ ] Collaborative Filtering based on user's classification on books
 
 > <ins>**Upgrade 1**</ins>
 > 
 > - BackEnd
 >     - [ ] Automaticly build server (Docker Image)
+>     - [ ] Upgrade server configurability
+>     - [ ] Make deployable build
 > 
 > - FrontEnd
 >     - [ ] Automaticly build server (Docker Image)
+>     - [ ] Make deployable build
 >     
 > - Recommender
 >     - [ ] Automaticly build server (Docker Image)
 >     - [ ] Testing automation with github CI
+>     - [ ] Make deployable build
 
 
 <!--

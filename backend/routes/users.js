@@ -5,6 +5,7 @@ const Book = require('../controllers/book');
 const { Permissions, CPermissions } = require('../controllers/user');
 const auth = require('../controllers/auth');
 const { Regex } = require('../controllers/validation');
+const { upload, save_avatar, delete_file } = require('../controllers/storage');
 
 const router = express.Router();
 
@@ -142,11 +143,16 @@ router.get('/users/:username', auth.authenticate(CPermissions.amm), (req, res) =
  *      '401':
  *        description: Forbidden
  */
-router.patch('/users/:username', auth.authenticate(CPermissions.amm), async (req, res) => {
+router.patch('/users/:username', auth.authenticate(CPermissions.amm), upload.single('avatar'), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
-        // TODO: change avatar
+        if(!req.valid_file && req.file !== undefined)
+        {
+            res.status(400).json({ "error": "Invalid avatar file" });
+            return;
+        }
+
         let userdata = {};
         let any = false
 
@@ -159,6 +165,7 @@ router.patch('/users/:username', auth.authenticate(CPermissions.amm), async (req
             }
             else
             {
+                delete_file(req.file);
                 res.status(400).json({ "error": "Invalid nickname" });
                 return;
             }
@@ -173,6 +180,7 @@ router.patch('/users/:username', auth.authenticate(CPermissions.amm), async (req
             }
             else
             {
+                delete_file(req.file);
                 res.status(400).json({ "error": "Invalid email" });
                 return;
             }
@@ -185,6 +193,7 @@ router.patch('/users/:username', auth.authenticate(CPermissions.amm), async (req
                 try {
                     userdata.password_hash = await User.gen_password_hash(req.body.password);
                 } catch(err) {
+                    delete_file(req.file);
                     res.status(500).json({ "error": err.message });
                     return;
                 }
@@ -192,28 +201,36 @@ router.patch('/users/:username', auth.authenticate(CPermissions.amm), async (req
             }
             else
             {
+                delete_file(req.file);
                 res.status(400).json({ "error": "Invalid password" });
                 return;
             }
         }
 
-        if(any)
+        if(req.file)
+            userdata.avatar_url = `http://localhost:8080/storage/users/${target_username}/avatar.${req.file.ext}`
+
+        if(any || req.file !== undefined)
         {
             User.set(target_username,userdata)
             .then(data => {
+                save_avatar(target_username,req.file);
                 res.json({ "success": "User updated" });
             })
             .catch(err => {
+                delete_file(req.file);
                 res.status(500).json({ "error": err.message });
             });
         }
         else
         {
+            delete_file(req.file);
             res.status(400).json({ "error": "No user data to update" });
         }
     }
     else
     {
+        delete_file(req.file);
         res.status(401).json({ "error": "Forbidden" });
     }
 });
