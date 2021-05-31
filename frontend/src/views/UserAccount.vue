@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="armwrestler x-large dark my-4">My Account</h1>
-        <ConsultAccount :idu="$route.params.username" />
+        <ConsultAccount :idu="this.$username" />
     </div>
 </template>
 
