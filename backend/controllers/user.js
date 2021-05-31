@@ -190,6 +190,8 @@ module.exports.exists = async (username) => {
     let val = await User
         .countDocuments({ username: username })
         .exec()
+
+    console.log(val);
     return val > 0;
 }
 
