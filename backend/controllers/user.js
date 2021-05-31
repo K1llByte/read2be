@@ -83,9 +83,9 @@ module.exports.get = async (username, options={}) => {
     const NO_PWD_PROJECTION = {
         "$project": {
             "_id":0,
+            "password_hash":0,
             "books._id": 0,
             "books.reviews": 0,
-            "password_hash":0,
 
             "friends._id": 0,
             "friends.friends": 0,

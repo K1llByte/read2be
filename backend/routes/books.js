@@ -91,6 +91,16 @@ router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
     {
         options.order = -1;
     }
+
+    if(req.query.genre != undefined)
+    {
+        options.genre = Number(req.query.genre);
+        if(!Number.isInteger(options.genre))
+        {
+            res.status(400).json({'error': "Invalid genre"});
+            return;
+        }
+    }
     
     // If the 'search' parameter is set, then its a search,
     // otherwise, is just a listing of all books.

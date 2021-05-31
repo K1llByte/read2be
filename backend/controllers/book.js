@@ -65,21 +65,24 @@ module.exports.list_all = (options={}) => {
         ? options.page_num : 0 ;
     
     const pipeline = [];
+    const match = { "$match": {} }
 
-    if (options.search_query != undefined)
+    if(options.search_query != undefined)
     {
         // Split the search query string and
         // turn it into a regex to match in the 
         // database.
-        let seach_rgx = RegExp(`((${options.search_query.replace(" ",")|(")}))+`,"gi")
+        let search_rgx = RegExp(`((${options.search_query.replace(" ",")|(")}))+`,"gi")
         
-        pipeline.push({
-            "$match": {
-                "title": { "$regex": RegExp(seach_rgx,"gi") }
-            }
-        });
+        match["$match"]["title"] = { "$regex": RegExp(search_rgx,"gi") };
     }
 
+    if(options.genre != undefined)
+    {   
+        match["$match"]["genres"] = options.genre;
+    }
+
+    pipeline.push(match);
     
     pipeline.concat([
         GENRES_LOOKUP,
@@ -88,6 +91,16 @@ module.exports.list_all = (options={}) => {
     ]);
     
     if (options.sort_by != undefined)
+    {
+        let tmp = {
+            "$sort": {}
+        };
+        tmp["$sort"][options.sort_by] = options.order;
+
+        pipeline.push(tmp);
+    }
+
+    if (options.genre != undefined)
     {
         let tmp = {
             "$sort": {}
