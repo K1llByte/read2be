@@ -67,7 +67,7 @@
                   class="pt-2 mb-2"
                   :key="u.user_id"
                >
-                  <Notification :info="u" @click="goTo('/users/' + u.username)" />
+                  <Notification :info="u" />
                </v-list-item>
             </v-list>
             <v-list v-else>

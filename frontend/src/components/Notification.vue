@@ -28,7 +28,8 @@
             >
                <strong v-if="info.nickname">{{info.nickname}}</strong>
                <strong class="grey--text" v-else>[No name]</strong>
-               <p class="blue--text">{{info.username}}</p>
+               
+               <router-link :to="`/users/${info.username}`" exact reload><p class="blue--text">{{info.username}}</p></router-link>
             </v-col>
          </v-row>
       </v-container>

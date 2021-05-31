@@ -40,7 +40,7 @@
             <v-row>
                <v-col
                   v-for="b in books"
-                  :key="b.title"
+                  :key="b.isbn"
                   cols="2"
                >
                   <Book :b="b" />
@@ -79,16 +79,17 @@ export default {
          .get('/read2be/api/users/' + this.idu, this.$getOptions())
          .then(res => {
             this.user = res.data;
-         })
-         .catch(e => console.log('Erro no GET dos books do user: ' + e));
-
-      // TEMPORARIO
-      axios
-         .get('/read2be/api/authors/Jane Austen?inline_books=1', this.$getOptions())
-         .then(res => {
             this.books = res.data.books;
          })
          .catch(e => console.log('Erro no GET dos books do user: ' + e));
+
+      // // TEMPORARIO
+      // axios
+      //    .get('/read2be/api/authors/Jane Austen?inline_books=1', this.$getOptions())
+      //    .then(res => {
+      //       this.books = res.data.books;
+      //    })
+      //    .catch(e => console.log('Erro no GET dos books do user: ' + e));
 
    },
 

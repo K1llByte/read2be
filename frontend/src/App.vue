@@ -7,7 +7,7 @@
 
       <v-main>
          <v-container fluid>
-            <router-view />
+            <router-view :key="$route.path" />
          </v-container>
       </v-main>
 

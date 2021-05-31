@@ -5,11 +5,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'StartPage',
-    component:  () => import('../views/StartPage.vue')
-  },
-  {
     path: '/home',
     name: 'Home',
     component:  () => import('../views/Home.vue')
@@ -20,19 +15,14 @@ const routes = [
     component:  () => import('../views/UserAccount.vue')
   },
   {
-    path: '/users',
-    name: 'Users',
-    component: () => import('../views/Users.vue')
-  },
-  {
     path: '/users/:username',
     name: 'User',
     component: () => import('../views/User.vue')
   },
   {
-    path: '/authors',
-    name: 'Authors',
-    component: () => import('../views/Authors.vue')
+    path: '/users',
+    name: 'Users',
+    component: () => import('../views/Users.vue')
   },
   {
     path: '/authors/:name',
@@ -40,9 +30,19 @@ const routes = [
     component: () => import('../views/Author.vue')
   },
   {
+    path: '/authors',
+    name: 'Authors',
+    component: () => import('../views/Authors.vue')
+  },
+  {
     path: '/friends',
     name: 'Friends',
     component: () => import('../views/Friends.vue')
+  },
+  {
+    path: '/books/:isbn',
+    name: 'BookInfo',
+    component: () => import('../views/BookInfo.vue')
   },
   {
     path: '/books',
@@ -50,9 +50,9 @@ const routes = [
     component: () => import('../views/ShowBooks.vue')
   },
   {
-    path: '/books/:isbn',
-    name: 'BookInfo',
-    component: () => import('../views/BookInfo.vue')
+    path: '/',
+    name: 'StartPage',
+    component:  () => import('../views/StartPage.vue')
   }
 ]
 
