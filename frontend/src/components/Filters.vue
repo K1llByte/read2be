@@ -7,7 +7,7 @@
       width="1300"
    >
       <v-container fluid>
-         <v-row class="mx-3">
+         <v-row class="mx-3 mr-n10">
             <v-col>
                <template>
                   <v-container fluid>
@@ -90,11 +90,13 @@
                   </v-container>
                </template>
             </v-col>
+
+            
             <v-col>
                <v-btn
                   height="40"
                   width="120"
-                  class="mt-4 ml-n16 grey lighten-4"
+                  class="mt-4 ml-16 grey lighten-4"
                   @click="submitSearch()"
                >
                   Search
@@ -104,7 +106,7 @@
                <v-btn
                   height="40"
                   width="120"
-                  class="mt-4 mx-n16 grey lighten-4"
+                  class="mt-4 ml-n16 grey lighten-4"
                   @click="resetSearch()"
                >
                   Reset

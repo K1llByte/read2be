@@ -13,8 +13,16 @@
                :src=user.avatar_url
                height="150"
                width="150"
-               :class="{'on-hover px-16 py-10' : hover}"
+               class="rounded-circle"
             >
+            </v-img>
+
+            <v-overlay
+               v-if="hover"
+               color="#036358"
+               absolute
+            >
+               
                <!-- Change Avatar -->
                <v-file-input
                   v-model="file"
@@ -24,11 +32,9 @@
                   hide-input
                   prepend-icon="mdi-camera"
                   accept="image/png, image/jpeg, image/bmp"
-                  :class="{ 'show-btns': hover }"
-                  :color="transparent"
                   icon
                ></v-file-input>
-            </v-img>
+            </v-overlay>
          </v-card>
       </v-hover>
       <v-btn
@@ -204,10 +210,8 @@ export default {
       height: 150px;
       width: 150px;
    }
-   .show-btns {
-      color: rgba(255, 255, 255, 1) !important;
-   }
-   .on-hover {
-      opacity: 0.6;
+   .v-file-input {
+      margin-left: 10px;
+      margin-bottom: 8px;
    }
 </style>
