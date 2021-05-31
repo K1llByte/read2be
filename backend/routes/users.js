@@ -51,7 +51,7 @@ router.get('/users', auth.authenticate(CPermissions.amm), (req, res) => {
 
     User.list_all(options)
     .then(usersdata => {
-        res.json({ "users": usersdata });
+        res.json(usersdata);
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });

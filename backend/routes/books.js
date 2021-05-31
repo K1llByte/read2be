@@ -1,5 +1,6 @@
 const express = require('express');
 const Book = require('../controllers/book');
+const Genre = require('../controllers/genre');
 const { Permissions, CPermissions } = require('../controllers/user');
 const auth = require('../controllers/auth');
 const { upload, save_cover, delete_file, delete_book_storage } = require('../controllers/storage');
@@ -39,7 +40,7 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
+router.get('/books', auth.authenticate(CPermissions.amm), async (req, res) => {
     // TODO: Input validation on 'search'
     let options = {};
 
@@ -94,19 +95,21 @@ router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
 
     if(req.query.genre != undefined)
     {
-        options.genre = Number(req.query.genre);
-        if(!Number.isInteger(options.genre))
+        options.genre = await Genre.get_id(req.query.genre);
+        if(options.genre === null)
         {
             res.status(400).json({'error': "Invalid genre"});
             return;
         }
+        else
+            options.genre = options.genre["genre_id"]
     }
     
-    // If the 'search' parameter is set, then its a search,
+    // If the 'search_query' parameter is set, then its a search,
     // otherwise, is just a listing of all books.
     Book.list_all(options)
     .then(booksdata => {
-        res.json({ "books": booksdata });
+        res.json(booksdata);
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });

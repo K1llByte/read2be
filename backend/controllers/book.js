@@ -58,7 +58,7 @@ module.exports.insert = async (bookdata) => {
 }
 
 // List & Search books
-module.exports.list_all = (options={}) => {
+module.exports.list_all = async (options={}) => {
     const page_limit = (options.page_limit != undefined) 
         ? options.page_limit : 20 ;
     const page_num = (options.page_num != undefined) 
@@ -92,28 +92,28 @@ module.exports.list_all = (options={}) => {
     
     if (options.sort_by != undefined)
     {
-        let tmp = {
+        let sorting = {
             "$sort": {}
         };
-        tmp["$sort"][options.sort_by] = options.order;
+        sorting["$sort"][options.sort_by] = options.order;
 
-        pipeline.push(tmp);
+        pipeline.push(sorting);
     }
 
-    if (options.genre != undefined)
-    {
-        let tmp = {
-            "$sort": {}
-        };
-        tmp["$sort"][options.sort_by] = options.order;
+    pipeline.push({ "$group": { 
+        "_id": null,
+        "num_pages": { "$sum": 1 }, 
+        "books": { "$push": "$$ROOT"  }
+    }});
 
-        pipeline.push(tmp);
-    }
+    pipeline.push({ "$project": { 
+        "_id":0,
+        "num_pages": {"$ceil":{ "$divide": [ "$num_pages", page_limit ] }},
+        "books": { "$slice": [ "$books", (page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0), page_limit ] }
+    } });
 
-    return Book.aggregate(pipeline)
-        .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
-        .limit(page_limit)
-        .exec();
+    let res = await Book.aggregate(pipeline).exec();
+    return res[0];
 }
 
 // Get a book by isbn
@@ -160,32 +160,6 @@ module.exports.delete = (isbn) => {
 }
 
 // =========================== // Book specific methods
-
-// Search books
-// module.exports.search = (query, options={}) => {
-//     const page_limit = (options.page_limit != undefined)
-//         ? options.page_limit : 20 ;
-//     const page_num = (options.page_num != undefined)
-//         ? options.page_num : 0 ;
-    
-//     // Split the search query string and
-//     // turn it into a regex to match in the 
-//     // database.
-//     let seach_rgx = RegExp(`((${query.replace(" ",")|(")}))+`,"gi")
-
-//     return Book.aggregate([
-//             { "$match": {
-//                     "title": { "$regex": RegExp(seach_rgx,"gi") }
-//                 }
-//             },
-//             GENRES_LOOKUP,
-//             LANGUAGE_LOOKUP,
-//             { "$project": BOOK_PROJECTION }
-//         ])
-//         .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
-//         .limit(page_limit)
-//         .exec();
-// }
 
 // Add book rate
 module.exports.add_rate = async (isbn, rate) => {
