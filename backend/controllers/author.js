@@ -10,17 +10,27 @@ module.exports.insert = (authordata) => {
 }
 
 // List all authors
-module.exports.list_all = (options = {}) => {
+module.exports.list_all = async (options = {}) => {
     const page_limit = (options.page_limit != undefined)
         ? options.page_limit : 20;
     const page_num = (options.page_num != undefined)
         ? options.page_num : 0;
 
-    return Author
-        .find({}, { _id: 0 })
-        .skip(page_num > 0 ? ((page_num - 1) * page_limit) : 0)
-        .limit(page_limit)
-        .exec();
+    return (await Author.aggregate([
+        { "$project": {"_id":0} },
+        { "$group": { 
+                "_id": null,
+                "num_pages": { "$sum": 1 }, 
+                "authors": { "$push": "$$ROOT"  }
+            }
+        },
+        { "$project": { 
+                "_id":0,
+                "num_pages": {"$ceil":{ "$divide": [ "$num_pages", page_limit ] }},
+                "authors": { "$slice": [ "$authors", (page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0), page_limit ] }
+            }
+        }
+    ]).exec())[0]
 }
 
 // Get an author by name

@@ -18,26 +18,21 @@ module.exports.list_all = async (options={}) => {
     const page_num = (options.page_num != undefined) 
         ? options.page_num : 0 ;
     
-    let pipeline = [];
-    pipeline.push({ "$project": {"_id":0,password_hash:0} });
-    pipeline.push({ "$group": { 
-        "_id": null,
-        "num_pages": { "$sum": 1 }, 
-        "users": { "$push": "$$ROOT"  }
-    }});
-
-    pipeline.push({ "$project": { 
-        "_id":0,
-        "num_pages": {"$ceil":{ "$divide": [ "$num_pages", page_limit ] }},
-        "users": { "$slice": [ "$users", (page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0), page_limit ] }
-    } });
-
-    
-    return (await User.aggregate(pipeline).exec())[0]
-        //.find({},{_id:0,password_hash:0})
-        //.skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
-        //.limit(page_limit)
-        //.exec();
+    return (await User.aggregate([
+        { "$project": {"_id":0,password_hash:0} },
+        { "$group": { 
+                "_id": null,
+                "num_pages": { "$sum": 1 }, 
+                "users": { "$push": "$$ROOT"  }
+            }
+        },
+        { "$project": { 
+                "_id":0,
+                "num_pages": {"$ceil":{ "$divide": [ "$num_pages", page_limit ] }},
+                "users": { "$slice": [ "$users", (page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0), page_limit ] }
+            }
+        }
+    ]).exec())[0]
 }
 
 // Get a user by id
