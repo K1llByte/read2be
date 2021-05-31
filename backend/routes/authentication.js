@@ -147,7 +147,7 @@ router.post('/register', async (req,res) => {
                 nickname: "",
                 password_hash: await pass_hash_p,
                 email: req.body.email,
-                role: User.CPermissions.amm,
+                role: User.Permissions.Member,
                 avatar_url: "",
                 books: [],
                 friends: [],

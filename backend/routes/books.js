@@ -40,12 +40,7 @@ const router = express.Router();
  *        description: Successful
  */
 router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
-    
-    // If the 'search' parameter is set, then its a search,
-    // otherwise, is just a listing of all books.
     // TODO: Input validation on 'search'
-    const search_query = req.query.search;
-    
     let options = {};
 
     if(req.query.page_num != undefined)
@@ -68,26 +63,44 @@ router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
         }
     }
 
-    if(search_query != undefined)
+    if(req.query.q != undefined)
     {
-        Book.search(search_query,options)
-        .then(booksdata => {
-            res.json({ "books": booksdata });
-        })
-        .catch(err => {
-            res.status(500).json({ "error": err.message });
-        });
+        options.search_query = req.query.q;
+    }
+
+    if(req.query.sort_by != undefined)
+    {
+        options.sort_by = req.query.sort_by;
+        if(!["published_year","title"].includes(options.sort_by))
+        {
+            res.status(400).json({'error': "Invalid sort_by"});
+            return;
+        }
+    }
+
+    if(req.query.order != undefined)
+    {
+        options.order = Number(req.query.order);
+        if(!Number.isInteger(options.order) || !(options.order in [-1,1] ))
+        {
+            res.status(400).json({'error': "Invalid order"});
+            return;
+        }
     }
     else
     {
-        Book.list_all(options)
-        .then(booksdata => {
-            res.json({ "books": booksdata });
-        })
-        .catch(err => {
-            res.status(500).json({ "error": err.message });
-        });
+        options.order = -1;
     }
+    
+    // If the 'search' parameter is set, then its a search,
+    // otherwise, is just a listing of all books.
+    Book.list_all(options)
+    .then(booksdata => {
+        res.json({ "books": booksdata });
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
 });
 
 
@@ -170,6 +183,7 @@ router.post('/books', auth.authenticate(Permissions.Admin), upload.single('cover
         "genres": req.body.genres,
         "language": req.body.language,
         "description": req.body.description,
+        "published_year": req.body.published_year,
         "cover_url": req.body.cover_url,
     };
 
@@ -181,6 +195,7 @@ router.post('/books', auth.authenticate(Permissions.Admin), upload.single('cover
         book.genres      == undefined ||
         book.language    == undefined ||
         book.description == undefined)
+        // published_year can be absent
     {
         delete_file(req.file);
         res.status(400).json({ "error": "Invalid book parameters" });
