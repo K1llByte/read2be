@@ -4,6 +4,7 @@
 //    "nickname": "Maria Silva",
 //    "avatar_url": ""
 // },
+//template @click="goTo('/users/' + info.username)">
 
 <template>
    <v-card color="#f9f2f2" class="mx-auto w3-hover-pale-red" width="100%" height="65">

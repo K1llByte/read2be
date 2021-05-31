@@ -1,7 +1,7 @@
 <template>
    <v-card class="mx-auto pt-5 pb-3 mt-6" color="rgb(255, 0, 0, 0.2)"  width="1300px">
       <v-container>
-         <v-row :key="books">
+         <v-row>
             <v-col
                v-for="b in books"
                :key="b.name"

@@ -60,18 +60,14 @@
                </v-btn>
             </template>
 
-            <v-list
-               v-if="user.pending.length"
-            >
+            <!-- Notifications List -->
+            <v-list v-if="user.pending.length">
                <v-list-item
                   v-for="u in user.pending"
                   class="pt-2 mb-2"
-                  :key="u"
+                  :key="u.user_id"
                >
-                  <!-- <Notification :idu=u /> -->
-
-                  <Notification :info="u" />
-
+                  <Notification :info="u" @click="goTo('/users/' + u.username)" />
                </v-list-item>
             </v-list>
             <v-list v-else>
