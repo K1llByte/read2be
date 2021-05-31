@@ -1,7 +1,7 @@
 <template>
 	<v-container grid-list-md text-xs-center>
 		<v-card width="600px" class="mx-auto mt-5 pb-2" color="#f8d4d4">
-			<v-card-title class="mb-n2 pt-5">
+			<v-card-title class="pt-6">
 				<h1 class="armwrestler">Register</h1>
 			</v-card-title>
 			<v-spacer></v-spacer>
@@ -10,33 +10,7 @@
 					ref="form"
 					v-model="valid"
 					lazy-validation
-				>
-					<v-layout row wrap>
-						<v-flex xs6>
-							<v-text-field
-                        background-color="#F6EAEA"
-								v-model="firstName"
-								:rules="nameRules"
-								label="First Name"
-								required
-								solo
-							></v-text-field>
-						</v-flex>
-						
-						<v-spacer></v-spacer>
-						
-						<v-flex xs6>
-							<v-text-field
-                        background-color="#F6EAEA"
-								v-model="lastName"
-								:rules="nameRules"
-								label="Last Name"
-								required
-								solo
-							></v-text-field>
-						</v-flex>
-					</v-layout>
-					
+				>					
 					<v-text-field
                   background-color="#F6EAEA"
 						v-model="user"
@@ -72,9 +46,17 @@
 					></v-text-field>
 					
 					<v-btn
-						:disabled="!valid"
+						v-if="valid"
 						dark
 						color="#f07977"
+						class="mr-3 mb-2"
+						@click="submit"
+					>
+						Register
+					</v-btn>
+					<v-btn
+						v-else
+						disabled
 						class="mr-3 mb-2"
 						@click="submit"
 					>
@@ -105,28 +87,21 @@ export default {
 	data: () => ({
 		showPassword: false,
 		valid: true,
-      firstName: '',
-      lastName: '',
-		nameRules: [
-			v => !!v || 'Name is required',
-			v => (v && v.length <= 15) || 'Name must be less than 15 characters',
-		],
 		user: '',
 		userRules: [
 			v => !!v || 'Username is required',
-			v => (v && v.length >= 6) || 'Username must be more than 8 characters',
-			v => (v && v.length <= 20) || 'Username must be less than 20 characters',
+			v => /^(\w|-){1,32}$/.test(v) || 'Username is not valid',
 		],
 		password: '',
 		passwordRules: [
 			v => !!v || 'Password is required',
-			v => (v && v.length >= 10) || 'Password must be more than 10 characters',
-			v => (v && v.length <= 20) || 'Password must be less than 30 characters',
+			v => (v && v.length >= 8) || 'Password must be more than 8 characters',
+			v => (v && v.length <= 32) || 'Password must be less than 32 characters',
 		],
 		email: '',
 		emailRules: [
 			v => !!v || 'E-mail is required',
-			v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+			v => /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v) || 'E-mail must be valid',
 		],
 	}),
 
@@ -146,57 +121,43 @@ export default {
          if (this.$refs.form.validate()) {
 
             var form = {
-               nickname: this.firstName + ' ' + this.lastName,
                username: this.user,
                password: this.password,
                email: this.email
             };
-
-				// CÓDIGO AINDA POR TESTAR
             
             axios
                .post('/read2be/api/register', form)
-               .then(res => {
-                  this.$token = res.data.token;
+               .then(aux => {
+						aux.data = null; // tem de se usar o aux senão dá erro
+						// se nao existir aux de todo, tanto o then como o cath correm
 						axios
-							.post('/read2be/api/login', form, this.$getOptions())
+							.post('/read2be/api/login', form)
 							.then(res => {
 								this.$login(res.data.TOKEN, form.username);
+								alert("Success!\nRegistered and Logged In! :)");
 							})
 							.catch(e => {
 								console.log('Erro no login do user: ' + e);
 								if (e.response.status == 400) {
 									alert("Error: Not Logged In");
 								} else if (e.response.status == 401) {
-									alert("Token Already Revoked");
+									alert("Incorrect Credentials");
+								} else {
+									alert(e.response.data.error);
 								}
-							});
-                  alert("Success!\nRegistered and Logged In! :)");
-               })
+							})
+					})
                .catch(e => {
 						console.log('Erro no register do user: ' + e);
 						if (e.response.status == 400) {
 							alert("Invalid Input");
 						} else if (e.response.status == 406) {
 							alert("User Already Exists");
+						} else {
+							alert(e.response.data.error);
 						}
-						// console.log('user:' + form.username + ', pass: ' + form.password);
 					});
-            
-            // axios
-            //    .patch('/read2be/ mudar o nickname', form)
-            //    .then(res => {
-            //       this.$token = res.data.token;
-            //       alert("Success!");
-            //    })
-            //    .catch(e => {
-				// 		console.log('Erro no register do user: ' + e);
-				// 		if (e.response.status == 400) {
-				// 			alert("Invalid Input");
-				// 		} else if (e.response.status == 406) {
-				// 			alert("User Already Exists");
-				// 		}
-				// 	});
          } else {
             this.$refs.form.reset();
             this.$refs.form.resetValidation();

@@ -1,13 +1,13 @@
 <template>
 
    <v-card
-      class="mx-auto d-flex justify-space-around mt-2"
+      class="mx-auto mt-2"
       color="rgba(255,0,0,0.1)"
       height="95"
       width="1300"
    >
       <v-container fluid>
-         <v-row class="ml-3">
+         <v-row class="mx-3">
             <v-col>
                <template>
                   <v-container fluid>
@@ -94,8 +94,18 @@
                <v-btn
                   height="40"
                   width="120"
-                  class="mt-4 grey lighten-4"
-                  @click="resetData()"
+                  class="mt-4 ml-n16 grey lighten-4"
+                  @click="submitSearch()"
+               >
+                  Search
+               </v-btn>
+            </v-col>
+            <v-col>
+               <v-btn
+                  height="40"
+                  width="120"
+                  class="mt-4 mx-n16 grey lighten-4"
+                  @click="resetSearch()"
                >
                   Reset
                </v-btn>

@@ -65,10 +65,13 @@
             >
                <v-list-item
                   v-for="u in user.pending"
+                  class="pt-2 mb-2"
                   :key="u"
                >
-               <!-- <Notification :idu=u /> -->
-                  <v-list-item-title>{{ u }}</v-list-item-title>
+                  <!-- <Notification :idu=u /> -->
+
+                  <Notification :info="u" />
+
                </v-list-item>
             </v-list>
             <v-list v-else>
@@ -176,22 +179,28 @@
 
 <script>
 import axios from 'axios'
+import Notification from "@/components/Notification.vue"
 
 export default {
-   name: 'MenuBar',
+   name: 'MenuBarLoggedIn',
 
    data: () => ({
       drawer: false,
+      pending: null,
       messages: 0,
       user: null,
       items: [
-        { title: 'Click Me' },
+         { title: 'Click Me' },
         { title: 'Click Me' },
         { title: 'Click Me' },
         { title: 'Click Me 2' },
       ],
       menu: false,
    }),
+
+   components: {
+      Notification,
+   },
 
    methods: {
       currentDateFormatted: function() {
@@ -218,9 +227,18 @@ export default {
          .get('/read2be/api/users/' + this.$user, this.$getOptions())
          .then(res => {
             this.user = res.data;
+            this.pending = this.user.pending;
             this.messages = this.user.pending.length;
          })
-         .catch(e => console.log('Erro no GET da info do user (MenuBar): ' + e));
+         .catch(e => {
+            if (e.response.status == 400) {
+					alert("Error: Not Logged Out");
+				} else if (e.response.status == 401) {
+					alert("Token Already Revoked");
+				} else {
+               console.log('Erro no GET da info do user (MenuBar): ' + e);
+            }
+         });
    },
 
    

@@ -2,7 +2,7 @@
     <div>
         <h3>Author: {{ida}}</h3>
         <h4>{{books.length}} books</h4>
-        <v-card class="mx-auto pt-5 pb-3 mt-5" color="rgb(255, 0, 0, 0.2)"  width="1300px">
+        <v-card class="mx-auto" color="rgb(255, 0, 0, 0.2)"  width="1300px">
             <v-container>
                 <v-row>
                     <v-col

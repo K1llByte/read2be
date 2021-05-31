@@ -76,14 +76,13 @@ export default {
 		user: '',
 		userRules: [
 			v => !!v || 'Username is required',
-			v => (v && v.length >= 6) || 'Username must be more than 8 characters',
-			v => (v && v.length <= 20) || 'Username must be less than 20 characters',
+			v => /^[\w\- .]{1,32}$/.test(v) || 'Username is not valid',
 		],
 		password: '',
 		passwordRules: [
 			v => !!v || 'Password is required',
-			v => (v && v.length >= 10) || 'Password must be more than 10 characters',
-			v => (v && v.length <= 20) || 'Password must be less than 30 characters',
+			v => (v && v.length >= 8) || 'Password must be more than 8 characters',
+			v => (v && v.length <= 32) || 'Password must be less than 32 characters',
 		],
 	}),
 
@@ -108,7 +107,7 @@ export default {
 						if (e.response.status == 400) {
 							alert("Error: Not Logged In");
 						} else if (e.response.status == 401) {
-							alert("Token Already Revoked");
+							alert("Incorrect credentials");
 						}
 					});
          } else {

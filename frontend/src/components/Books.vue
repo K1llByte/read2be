@@ -1,13 +1,13 @@
 <template>
    <v-card class="mx-auto pt-5 pb-3 mt-6" color="rgb(255, 0, 0, 0.2)"  width="1300px">
       <v-container>
-         <v-row>
+         <v-row :key="books">
             <v-col
                v-for="b in books"
                :key="b.name"
                cols="2"
             >
-               <Book :b="b" />
+               <Book :b="b"/>
             </v-col>
          </v-row>
          <v-row class="mt-4">
@@ -17,7 +17,8 @@
                      color="teal lighten-1"
                      v-model="page"
                      :length="10"
-                     :total-visible="5"
+                     :total-visible="7"
+                     @input="changePage"
                   ></v-pagination>
                </div>
             </v-col>
@@ -42,20 +43,33 @@ export default {
       data: () => ({
          books: [],
          page: 1,
+         updated: false,
       }),
 
-      created: function() {
+      methods: {
+         changePage: function() {
+            // get books' name and image
+            axios
+               .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+               .then(res => {
+                  this.books = res.data.books;
+                  // console.log(res.data.books);
+                  // this.$forceUpdate();
+               })
+               .catch(e => console.log('Erro no GET dos books do author: ' + e));
+         },
+      },
 
-         // getbooks' name and image
+      created: function() {
+         // get books' name and image
          axios
-            .get('/read2be/api/books/', this.$getOptions())
+            .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
             .then(res => {
                this.books = res.data.books;
+               // alert(this.$route.query.page_num);
             })
             .catch(e => console.log('Erro no GET dos books do author: ' + e));
-
-
-    },
+      },
 };
 
 </script>
