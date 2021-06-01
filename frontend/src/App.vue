@@ -64,6 +64,11 @@ export default {
       margin:auto;
       color:#fff7f6;
    }
+   .armwrestler.medium {
+      font-family: 'ArmWrestler', bold;
+      font-size: 280%;
+      margin:auto;
+   }
    .armwrestler.large {
       font-family: 'ArmWrestler', bold;
       font-size: 330%;
