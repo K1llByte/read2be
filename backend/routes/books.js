@@ -4,6 +4,7 @@ const Genre = require('../controllers/genre');
 const { Permissions, CPermissions } = require('../controllers/user');
 const auth = require('../controllers/auth');
 const { upload, save_cover, delete_file, delete_book_storage } = require('../controllers/storage');
+const axios = require('axios');
 //const { Regex } = require('../controllers/validation');
 
 const router = express.Router();
@@ -381,7 +382,7 @@ router.patch('/books/:isbn', auth.authenticate(Permissions.Admin), upload.single
  *      '404':
  *        description: Book not found
  */
-router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res) => {
+ router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res) => {
     Book.get(req.params.isbn)
     .then(bookdata => {
         if(bookdata != null)
@@ -399,6 +400,26 @@ router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res)
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });
+    });
+});
+
+
+router.get('/books/:isbn/recommendations', auth.authenticate(CPermissions.amm), (req, res) => {
+
+    axios.get(`http://localhost:5000/recommender/${req.params.isbn}`)
+    .then(res2 => {
+        res.status(200).json(res2.data)
+    })
+    .catch(err => {
+        
+        if(err.response.status == 404)
+        {
+            res.status(404).json(err.response.data);
+        }
+        else
+        {
+            res.status(500).json({ "error": err.message });
+        }
     });
 });
 

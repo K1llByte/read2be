@@ -14,10 +14,11 @@ class Recommender(Resource):
         
         # Check if isbn of target book doesn't exist on database
         if not any(filter(lambda b: b["isbn"] == isbn ,books)):
-            return { "error": f"ISBN '{isbn}' doesn't exist" } 
+            return { "error": f"ISBN '{isbn}' doesn't exist" } , 404
 
         # Train model if it isn't already
         if not self.recommender.is_trained():
+            print("Training Model")
             self.recommender.fit(books)
 
         # Get book recommendations
@@ -27,4 +28,4 @@ class Recommender(Resource):
 api.add_resource(Recommender, '/recommender/<string:isbn>')
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1',port="5000",debug=True)
+    app.run(host='0.0.0.0',port="5000",debug=True)

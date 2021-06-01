@@ -11,7 +11,11 @@ class ContentFiltering:
         self.booksdata_series = None
 
     def fit(self, booksdata):
-        self.booksdata = booksdata
+        self.booksdata = []
+        for b in booksdata:
+            del b['_id']
+            self.booksdata.append(b)
+        self.booksdata_series = pd.Series(self.booksdata)
         self.books_titles = [ b["title"] for b in booksdata ]
         self.books_titles_series = pd.Series(self.books_titles)
         self.books_isbns = [ b["isbn"] for b in booksdata ]
@@ -30,7 +34,8 @@ class ContentFiltering:
             top_n_indexes = list(final.drop(index=idx).iloc[:top_n].index)
 
             if DEBUG:
-                return zip(self.books_isbns_series[top_n_indexes],self.books_titles_series[top_n_indexes])
+                return self.booksdata_series[top_n_indexes]
+                #return zip(self.books_isbns_series[top_n_indexes],self.books_titles_series[top_n_indexes])
             else:
                 return self.books_isbns_series[top_n_indexes]
         else:
