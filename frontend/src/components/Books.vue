@@ -53,8 +53,6 @@ export default {
                .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
                .then(res => {
                   this.books = res.data.books;
-                  // console.log(res.data.books);
-                  // this.$forceUpdate();
                })
                .catch(e => console.log('Erro no GET dos books do author: ' + e));
          },
@@ -62,11 +60,11 @@ export default {
 
       created: function() {
          // get books' name and image
+         // existe maneira de usar aqui o changePage para não repetir?
          axios
             .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
             .then(res => {
                this.books = res.data.books;
-               // alert(this.$route.query.page_num);
             })
             .catch(e => console.log('Erro no GET dos books do author: ' + e));
       },
