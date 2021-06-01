@@ -37,12 +37,6 @@
 
 export default {
    name: 'Friends',
-   
-   data: function() {
-      return {
-         transparent: 'rgba(255, 255, 255, 0)',
-      };
-   },
 
    props: ["friends"],
 

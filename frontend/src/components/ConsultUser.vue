@@ -14,65 +14,7 @@
       <h2 class="main-color"><strong>@{{user.username}}</strong></h2>
       
       <!-- Friend status/Add friend -->
-
-      <!-- Remove Friend -->
-      <v-btn
-         dark
-         v-if="status == 1"
-         color="#f07977"
-         class="mb-5"
-         width=180
-         @click="removeFriend"
-      >
-         Remove
-         <v-icon right dense>
-            mdi-account-remove-outline
-         </v-icon>
-      </v-btn>
-      
-      <!-- Remove pending request -->
-      <v-btn
-         dark
-         v-else-if="status == 0"
-         color="grey"
-         class="mb-5"
-         width=180
-         @click="removePending"
-      >
-         Cancel
-         <v-icon right dense>
-            mdi-account-question-outline
-         </v-icon>
-      </v-btn>
-
-      <!-- Add friend request -->
-      <v-btn
-         v-else-if="status == -1"
-         dark
-         color="#f07977"
-         class="mb-5"
-         width=180
-         @click="friendRequest"
-      >
-         Add Friend
-         <v-icon right dense>
-            mdi-account-plus-outline
-         </v-icon>
-      </v-btn>
-
-      <!-- TEMPORARIO SO PARA TESTES -->
-      <v-btn
-         dark
-         color="teal"
-         class="ml-5 mb-5"
-         width=180
-         @click="acceptRequest"
-      >
-         Accept
-         <v-icon right dense>
-            mdi-check
-         </v-icon>
-      </v-btn>
+      <FriendStatus v-if="user.username != this.$user" />
 
       <v-divider class="mx-16"></v-divider>
       
@@ -108,6 +50,7 @@
 import axios from "axios";
 import Book from "@/components/Book.vue";
 import ConsultFriends from "@/components/ConsultFriends.vue";
+import FriendStatus from "@/components/FriendStatus.vue";
 
 export default {
     
@@ -118,29 +61,14 @@ export default {
    components: {
       Book,
       ConsultFriends,
+      FriendStatus,
    },
 
    data() {
       return {
          user: [],
          books: [],
-         status: -1,
       };
-   },
-
-   methods: {
-      removeFriend: function() {
-         this.status = -1;
-      },
-      removePending: function() {
-         this.status = -1;
-      },
-      friendRequest: function() {
-         this.status = 0;
-      },
-      acceptRequest: function() {
-         this.status = 1;
-      }
    },
 
    created: function() {

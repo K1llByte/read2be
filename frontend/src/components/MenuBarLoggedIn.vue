@@ -89,12 +89,26 @@
 
          <!-- User Basic Info -->
          <v-list>
-            <v-list-item class="d-flex justify-center ml-4 mt-2">
-               <v-list-item-avatar
-                  size=80
-               >
-                  <v-img v-if="user" :src=user.avatar_url></v-img>
-               </v-list-item-avatar>
+            <v-list-item
+               class="d-flex justify-center ml-4 mt-2"
+            >
+               <v-hover v-slot="{ hover }">
+                  <v-list-item-avatar
+                     size=80
+                     @click="goTo(`/users/${user.username}`)"
+                  >
+                        <v-card
+                           height="80px"
+                           width="80px"
+                           :class="hover ? 'aux rounded-circle' : 'rounded-circle'"
+                        >
+                           <v-img
+                              v-if="user"
+                              :src=user.avatar_url
+                           ></v-img>
+                        </v-card>
+                  </v-list-item-avatar>
+               </v-hover>
             </v-list-item>
 
             <v-list-item class="mt-n1 mb-n3">
@@ -240,3 +254,9 @@ export default {
    
 };
 </script>
+
+<style scoped>
+   .aux {
+      opacity: 0.6;
+   }
+</style>
