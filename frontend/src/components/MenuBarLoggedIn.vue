@@ -89,7 +89,7 @@
 
          <!-- User Basic Info -->
          <v-list>
-            <v-list-item class="d-flex justify-center mt-2">
+            <v-list-item class="d-flex justify-center ml-4 mt-2">
                <v-list-item-avatar
                   size=80
                >
@@ -120,27 +120,27 @@
          >
             <v-list-item-group>
                <v-list-item link class="d-flex justify-center" @click="goTo('/home')">
-                  <strong>Home</strong>
+                  <strong><p style="font-size: 16px;"> Home</p></strong>
                </v-list-item>
 
                <v-list-item link class="d-flex justify-center" @click="goTo('/authors')">
-                  <strong>Authors</strong>
+                  <strong><p style="font-size: 16px;"> Authors</p></strong>
                </v-list-item>
 
                <v-list-item link class="d-flex justify-center" @click="goTo('/books')">
-                  <strong>Books</strong>
+                  <strong><p style="font-size: 16px;"> Books</p></strong>
                </v-list-item>
 
                <v-list-item link class="d-flex justify-center" @click="goTo('/users')">
-                  <strong>Users</strong>
+                  <strong><p style="font-size: 16px;"> Users</p></strong>
                </v-list-item>
 
                <v-list-item link class="d-flex justify-center" @click="goTo('/reviews')">
-                  <strong>Reviews</strong>
+                  <strong><p style="font-size: 16px;"> Reviews</p></strong>
                </v-list-item>
 
                <v-list-item link class="d-flex justify-center" @click="goTo('/friends')">
-                  <strong>Friends</strong>
+                  <strong><p style="font-size: 16px;"> Friends</p></strong>
                </v-list-item>
 
             </v-list-item-group>
