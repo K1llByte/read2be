@@ -1,60 +1,39 @@
 <template>
-   <div class="w3-container">
+   <div>
       <h1 class="armwrestler x-large dark my-5">My Friends</h1>
-
-      <v-card class="mx-auto mt-12" color="rgb(255, 0, 0, 0.2)"  width="1200px">
-         <v-row
-            class="ml-5"
-         >
-            <v-col
-               v-for="f in friends"
-               :key="f.username"
-               cols="1"
-               class="ma-3"
-            >
-               <v-avatar
-                  @click="goUser(f.username)"
-                  class="w3-hover-pale-red"
-                  size="80"
-               >
-                  <img
-                     :src=f.avatar_url
-                  >
-               </v-avatar>
-               <p class="mt-3 mb-n1"><strong>{{f.username}}</strong></p>
-            </v-col>
-         </v-row>
-      </v-card>
-    </div>
+      <ConsultFriends :friends="friends" />
+   </div>
 </template>
 
+
 <script>
-import axios from 'axios'
+import axios from "axios";
+import ConsultFriends from "@/components/ConsultFriends.vue";
 
 export default {
-    name: 'Friends',
     
-    data: function() {
-        return {
-            friends: null,
-        };
-    },
+   name: 'Friends',
 
-    created: function() {
+   components: {
+      ConsultFriends,
+   },
 
-        // get authors
-        axios
-            .get('/read2be/api/users/' + this.$user, this.$getOptions())
-            .then(res => {
-                this.friends = res.data.friends;
-            })
-            .catch(e => console.log('Erro no GET dos authors: ' + e))
-    },
+   data() {
+      return {
+         friends: [],
+      };
+   },
 
-    methods: {
-        goUser: function(name){
-            this.$goTo('/users/' + name);
-        }
-    }
+   created: function() {
+
+      // get author's books' name and image
+      axios
+         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .then(res => {
+            this.friends = res.data.friends;
+         })
+         .catch(e => console.log('Erro no GET dos friends do user: ' + e));
+   },
+
 }
 </script>
