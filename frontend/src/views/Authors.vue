@@ -39,7 +39,7 @@ export default {
         axios
             .get('/read2be/api/authors/', this.$getOptions())
             .then(res => {
-                this.authors = res.data.authors;
+                this.authors = res.data.authors.authors;
             })
             .catch(e => console.log('Erro no GET dos authors: ' + e))
     },

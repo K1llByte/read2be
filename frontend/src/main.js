@@ -15,6 +15,14 @@ Vue.prototype.$getOptions = function(){
 	};
 };
 
+Vue.prototype.$getOptionsParams = function(p){
+	return {
+		crossdomain: true,
+		headers: { Authorization: `Bearer ${Vue.prototype.$token}` },
+		params: p
+	};
+};
+
 Vue.prototype.$login = function(t, u) {
 	Vue.prototype.$token = t;
 	Vue.prototype.$logged = true;

@@ -33,50 +33,20 @@
             height="95"
             width="1300"
          >
-            <v-container fluid>
-               <v-row class="mx-3 mr-n10">
-                  <v-col
-                     v-for="(t, i) in teste"
-                     :key="i"
+            <div class="d-flex justify-space-around pt-6">
+               <v-btn-toggle v-model="toggle" borderless style="background-color: transparent;">
+                  <v-btn
+                     v-for="t in teste"
+                     :key=t.title
+                     :value=t.value
+                     color="red lighten-5"
+                     class="ml-16 mr-8"
                   >
-                     <v-container fluid>
-                        <v-select
-                           v-model="t.value"
-                           :items="t.items"
-                           :label="t.title"
-                           solo
-                        >
-                           <template v-slot:selection="{ item }">
-                              <v-chip>
-                                 <span>{{ item }}</span>
-                              </v-chip>
-                           </template>
-                        </v-select>
-                     </v-container>
-                  </v-col>
-
-                  <v-col>
-                     <v-btn
-                        height="40"
-                        width="120"
-                        class="mt-4 ml-16 grey lighten-4"
-                        @click="sendSearch"
-                     >
-                        Search
-                     </v-btn>
-                  </v-col>
-                  <v-col>
-                     <v-btn
-                        height="40"
-                        width="120"
-                        class="mt-4 ml-n16 grey lighten-4"
-                        @click="resetFilter"
-                     >
-                        Reset
-                     </v-btn>
-                  </v-col>
-               </v-row>
-            </v-container>
+                     {{t.title}}
+                  </v-btn>
+               </v-btn-toggle>
+               <v-btn :disabled="!toggle && !search" large elevation="1" class=" ml-n16 mr-10" @click="sendSearch">Search</v-btn>
+            </div>
          </v-card>
 
          <!-- Books -->
@@ -99,7 +69,7 @@
                            v-model="page"
                            :length="10"
                            :total-visible="7"
-                           @input="changePage"
+                           @input="sendSearch"
                         ></v-pagination>
                      </div>
                   </v-col>
@@ -126,54 +96,59 @@ export default {
       updated: false,
       teste: [
          {
-            title: 'Genre',
-            items: ['Fantasy', 'Mystery', 'Romance', 'Biography', 'Non-Fiction', 'Sci-Fi'],
-            value: [],
+            title: 'Title (A-Z)',
+            value: {
+               param: 'title',
+               order: '1'
+            },
          },
          {
-            title: 'Unread',
-            items: ['Unread', 'Read'],
-            value: [],
+            title: 'Title (Z-A)',
+            value: {
+               param: 'title',
+               order: '-1'
+            },
          },
          {
-            title: 'Year',
-            items: ['1980', '1990', '2000', '2010', '2020'],
-            value: [],
+            title: 'Most Recent',
+            value: {
+               param: 'published_year',
+               order: '1'
+            },
          },
          {
-            title: 'Sort By',
-            items: ['Title (A-Z)', 'Title (Z-A)', 'Most Recent', 'Less Recent'],
-            sortby: ['title', 'title', 'published_year', 'published_year'],
-            orders: [-1, 1, -1, 1],
-            value: [],
+            title: 'Less Recent',
+            value: {
+               param: 'published_year',
+               order: '-1'
+            },
          },
       ],
-      params: new URLSearchParams(), 
+      toggle: null,
    }),
 
    methods: {
-      changePage: function() {
-         // get books' name and image
-         axios
-            .get('/read2be/api/books?q=' + this.search + '&page_num=' + this.page + '&page_limit=12', this.$getOptions())
-            .then(res => {
-               this.books = res.data.books;
-            })
-            .catch(e => console.log('Erro no GET dos books do author: ' + e));
-      },
+
       sendSearch: function() {
-         // get books' by search
-         alert(this.params);
-         // axios
-         //    .get('/read2be/api/books?q=' + this.search + "&" + this.page + '&page_limit=12', this.$getOptions())
-         //    .then(res => {
-         //       this.books = res.data.books;
-         //    })
-         //    .catch(e => console.log('Erro no GET dos books do author: ' + e));
-      },
-      resetFilter: function() {
-         for(var i = 0; i < this.teste.length; i++) {
-            this.teste[i].value = [];
+         if (this.search || this.toggle) {
+            // get books' by search
+            const params = new URLSearchParams();
+            if (this.search) {
+               params.append('q', this.search);
+            }
+            if (this.toggle) {
+               params.append('sort_by', this.toggle.param);
+               params.append('order', this.toggle.order);
+            }
+            params.append('page_num', this.page);
+            params.append('page_limit', 12);
+            
+            axios
+               .get('/read2be/api/books', this.$getOptionsParams(params))
+               .then(res => {
+                  this.books = res.data.books;
+               })
+               .catch(e => console.log('Erro no GET dos books do author: ' + e));
          }
       },
    },
