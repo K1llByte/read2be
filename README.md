@@ -33,7 +33,7 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [x] Manage User defined book collections
 >     - [x] Manage User friends
 >     - [x] (Incomplete) Book library search engine
->     - [ ] (Repopulate) Populate system's database 
+>     - [x] (Repopulate) Populate system's database 
 >
 > - FrontEnd
 >     - [ ] UI: Authors/Publisher (Optional)
@@ -47,7 +47,7 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [x] Content Filtering based on title data
 >     - [ ] Collaborative Filtering based on user's classification on books
 
-> <ins>**Upgrade 1**</ins>
+> <ins>**Provising & Deployment**</ins>
 > 
 > - BackEnd
 >     - [ ] Automaticly build server (Docker Image)

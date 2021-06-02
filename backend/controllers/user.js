@@ -42,7 +42,7 @@ module.exports.get = async (username, options={}) => {
             "from": "books",
             "localField": "books.isbn",
             "foreignField": "isbn",
-            "as": "books"
+            "as": "full_books"
         }
     };
 
@@ -64,11 +64,11 @@ module.exports.get = async (username, options={}) => {
         }
     };
     
-    const PROJECTION = {
+    let PROJECTION = {
         "$project": {
             "_id":0,
-            "books._id": 0,
-            "books.reviews": 0,
+            "full_books._id": 0,
+            "full_books.reviews": 0,
 
             "friends._id": 0,
             "friends.friends": 0,
@@ -90,46 +90,50 @@ module.exports.get = async (username, options={}) => {
         }
     };
 
-    const NO_PWD_PROJECTION = {
-        "$project": {
-            "_id":0,
-            "password_hash":0,
-            "books._id": 0,
-            "books.reviews": 0,
+    // let NO_PWD_PROJECTION = {
+    //     "$project": {
+    //         "_id":0,
+    //         "password_hash":0,
+    //         "full_books._id": 0,
+    //         "full_books.reviews": 0,
 
-            "friends._id": 0,
-            "friends.friends": 0,
-            "friends.pending": 0,
-            "friends.password_hash": 0,
-            "friends.email": 0,
-            "friends.role": 0,
-            "friends.books": 0,
-            "friends.collections": 0,
+    //         "friends._id": 0,
+    //         "friends.friends": 0,
+    //         "friends.pending": 0,
+    //         "friends.password_hash": 0,
+    //         "friends.email": 0,
+    //         "friends.role": 0,
+    //         "friends.books": 0,
+    //         "friends.collections": 0,
 
-            "pending._id": 0,
-            "pending.friends": 0,
-            "pending.pending": 0,
-            "pending.password_hash": 0,
-            "pending.email": 0,
-            "pending.role": 0,
-            "pending.books": 0,
-            "pending.collections": 0,
-        }
-    };
-
+    //         "pending._id": 0,
+    //         "pending.friends": 0,
+    //         "pending.pending": 0,
+    //         "pending.password_hash": 0,
+    //         "pending.email": 0,
+    //         "pending.role": 0,
+    //         "pending.books": 0,
+    //         "pending.collections": 0,
+    //     }
+    // };
+    // let PROJECTION_2 = { "$project": {} }
 
     let pipeline = [];
     if(options.inline_books == 1)
+    {
         pipeline.push(BOOK_LOOKUP);
+    }
 
     pipeline.push(FRIENDS_LOOKUP);
     pipeline.push(PENDING_LOOKUP);
     pipeline.push({ "$match": { username: username } });
-    pipeline.push((options.with_password) ? PROJECTION : NO_PWD_PROJECTION);
+    if(options.with_password)
+        PROJECTION['$project']['password_hash'] = 0;
+
+    pipeline.push(PROJECTION);
     
     const tmp = await User.aggregate(pipeline);
-    console.log("tmp[0]",tmp[0])
-;    return tmp[0];
+    return tmp[0];
 }
 
 // Update user data
