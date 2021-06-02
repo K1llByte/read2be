@@ -1,5 +1,5 @@
 <template>   
-   <v-card class="mx-auto mt-12" color="rgb(255, 0, 0, 0.2)"  width="1300px">
+   <v-card class="mx-auto mt-10" color="rgb(255, 0, 0, 0.2)"  width="1300px">
       <v-row
          class="d-flex justify-space-around"
       >

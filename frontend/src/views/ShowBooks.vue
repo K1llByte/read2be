@@ -171,7 +171,6 @@ export default {
 			for(var i = 0; i < this.teste.length; i++) {
 				this.teste[i].value = [];
 			}
-
 		},
 	},
 

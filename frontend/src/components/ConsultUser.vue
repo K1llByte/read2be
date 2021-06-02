@@ -80,7 +80,10 @@ export default {
             this.user = res.data;
             this.books = res.data.books;
          })
-         .catch(e => console.log('Erro no GET dos books do user: ' + e));
+         .catch(e => {
+            console.log('Erro no GET dos books do user: ' + e);
+            
+         });
    },
 
 }
