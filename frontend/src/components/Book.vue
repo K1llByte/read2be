@@ -26,7 +26,7 @@
                 </template>
             </v-hover>
         </v-container>
-        <v-container>
+        <v-container id="title">
             <v-flex align-self-end>
                 {{b.title}}
             </v-flex>
@@ -55,3 +55,14 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+    #title {
+        overflow: hidden;
+        max-height: 7ch;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
