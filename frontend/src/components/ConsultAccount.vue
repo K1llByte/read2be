@@ -1,7 +1,6 @@
 <template>
     <div>
       <!-- Avatar -->
-      <!-- :src=user.avatar_url -->
       <v-hover v-slot="{ hover }">
          <v-card
             height="150"
@@ -10,7 +9,7 @@
          >
                <!-- src="https://cdn.discordapp.com/attachments/630820905228173347/845052368545513553/Fotor-marble-ink-background-image-1.png" -->
             <v-img
-               :src=user.avatar_url
+               :src=avatar
                height="150"
                width="150"
                class="rounded-circle"
@@ -143,6 +142,7 @@ export default {
          user: [],
          file: null,
          valid: true,
+         avatar: null,
          username: '',
          nickname: '',
          nameRules: [
@@ -177,13 +177,17 @@ export default {
          // change user's avatar
          axios
             .patch('/read2be/api/users/' + this.idu, formData, this.$getOptions())
-            .then(this.file = null)
+            .then(res => {
+               console.log(res);
+               this.file = null;
+            })
             .catch(e => console.log('Erro no PATCH do avatar do user: ' + e));
+
       }
    },
 
    created: function() {
-
+      
       // get user's info
       axios
          .get('/read2be/api/users/' + this.$user, this.$getOptions())
@@ -192,9 +196,11 @@ export default {
             this.nickname = this.user.nickname;
             this.username = this.user.username;
             this.email = this.user.email;
+            this.avatar = this.user.avatar_url;
          })
          .catch(e => console.log('Erro no GET das infos do user: ' + e));
    },
+
 
 }
 </script>
