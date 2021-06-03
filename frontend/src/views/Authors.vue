@@ -1,7 +1,11 @@
 <template>
     <div class="w3-container">
         <h1 class="armwrestler x-large dark my-5">Authors</h1>
-        <table class="w3-table-all">
+
+        <!-- Search author -->
+        <SearchAuthor />
+        
+        <table class="w3-table-all mt-8">
             <thead>
                 <tr>
                     <th>Author</th>
@@ -23,6 +27,7 @@
 
 <script>
 import axios from 'axios'
+import SearchAuthor from "@/components/SearchAuthor.vue";
 
 export default {
     name: 'Authors',
@@ -33,6 +38,10 @@ export default {
         };
     },
 
+    components: {
+        SearchAuthor,
+    },
+    
     created: function() {
 
         // get authors

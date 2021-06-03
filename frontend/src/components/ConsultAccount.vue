@@ -46,7 +46,7 @@
       </v-btn>
 
       <!-- Change User Info -->
-      <v-card class="mx-auto mt-12 pr-16 py-6" color="rgb(255, 0, 0, 0.1)"  width="850px">
+      <v-card class="mx-auto mt-12 py-6" color="rgb(255, 0, 0, 0.1)"  width="850px">
          <v-form
             ref="form"
             v-model="valid"
@@ -59,7 +59,7 @@
                <v-col>
                   <v-text-field
                      background-color="#f9f2f2"
-                     class="aux mr-16 mt-3 v-input__slot"
+                     class="aux mr-6 mt-2 v-input__slot"
                      :value=user.username
                      disabled
                      filled
@@ -75,7 +75,7 @@
                <v-col>
                   <v-text-field
                      background-color="#f9f2f2"
-                     class="aux mr-16 mt-3 v-input__slot"
+                     class="aux mr-6 mt-2 v-input__slot"
                      v-model="nickname"
                      :counter="20"
                      :rules="nameRules"
@@ -96,7 +96,7 @@
                <v-col>
                   <v-text-field
                      background-color="#f9f2f2"
-                     class="aux mr-16 mt-3 v-input__slot"
+                     class="aux mr-6 mt-2 v-input__slot"
                      v-model="email"
                      :rules="emailRules"
                      :label=user.email
