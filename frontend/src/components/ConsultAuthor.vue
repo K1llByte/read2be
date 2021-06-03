@@ -1,8 +1,9 @@
 <template>
     <div>
-        <h3>Author: {{ida}}</h3>
-        <h4>{{books.length}} books</h4>
-        <v-card class="mx-auto" color="rgb(255, 0, 0, 0.2)"  width="1300px">
+        <!-- <h3>Author: {{ida}}</h3> -->
+        <h1 class="main-color large my-4"><strong>{{ida}}'s Books</strong></h1>
+        <h3 class="brown--text">{{books.length}} books</h3>
+        <v-card class="mx-auto mt-6" color="rgb(255, 0, 0, 0.2)"  width="1300px">
             <v-container>
                 <v-row>
                     <v-col
