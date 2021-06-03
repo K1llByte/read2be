@@ -82,8 +82,12 @@ router.get('/books', auth.authenticate(CPermissions.amm), async (req, res) => {
 
     if(req.query.order != undefined)
     {
-        options.order = Number(req.query.order);
-        if(!Number.isInteger(options.order) || !(options.order in [-1,1] ))
+        options.order = req.query.order;
+        if(options.order === 'A')
+            options.order = 1;
+        else if(options.order === 'D')
+            options.order = -1;
+        else
         {
             res.status(400).json({'error': "Invalid order"});
             return;
