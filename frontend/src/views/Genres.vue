@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import SearchGenre from "@/components/SearchGenre.vue";
 
 export default {
@@ -45,17 +45,17 @@ export default {
     created: function() {
 
         // get genres
-        // axios
-        //     .get('/read2be/api/authors/', this.$getOptions())
-        //     .then(res => {
-        //         this.authors = res.data.authors.authors;
-        //     })
-        //     .catch(e => console.log('Erro no GET dos authors: ' + e))
+        axios
+            .get('/read2be/api/genres/', this.$getOptions())
+            .then(res => {
+                this.genres = res.data.genres;
+            })
+            .catch(e => console.log('Erro no GET dos genres: ' + e))
     },
 
     methods: {
         goGenre: function(genre){
-            this.$goTo('/books?genre=' + genre);
+            this.$goTo('/genres/' + genre);
         }
     }
 }

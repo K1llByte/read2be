@@ -99,28 +99,28 @@ export default {
             title: 'Title (A-Z)',
             value: {
                param: 'title',
-               order: '1'
+               order: 'A'
             },
          },
          {
             title: 'Title (Z-A)',
             value: {
                param: 'title',
-               order: '-1'
+               order: 'D'
             },
          },
          {
             title: 'Most Recent',
             value: {
                param: 'published_year',
-               order: '1'
+               order: 'A'
             },
          },
          {
             title: 'Less Recent',
             value: {
                param: 'published_year',
-               order: '-1'
+               order: 'D'
             },
          },
       ],

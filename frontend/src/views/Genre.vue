@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ConsultGenre :ida="$route.params.name" />
+        <ConsultGenre :idg="$route.params.genre" />
     </div>
 </template>
 

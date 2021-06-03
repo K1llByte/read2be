@@ -40,7 +40,7 @@ export default {
 			axios
 				.get('/read2be/api/books?genre=' + this.search, this.$getOptions())
 				.then(res => {
-					this.$goTo('/books?genre=' + this.search);
+					this.$goTo('/genres/' + this.search);
                console.log(res);
 				})
 				.catch(e => {
