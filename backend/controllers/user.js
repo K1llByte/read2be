@@ -127,9 +127,9 @@ module.exports.get = async (username, options={}) => {
     pipeline.push(FRIENDS_LOOKUP);
     pipeline.push(PENDING_LOOKUP);
     pipeline.push({ "$match": { username: username } });
-    if(options.with_password)
+    if(!options.with_password)
         PROJECTION['$project']['password_hash'] = 0;
-
+    console.log(PROJECTION);
     pipeline.push(PROJECTION);
     
     const tmp = await User.aggregate(pipeline);
