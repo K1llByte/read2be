@@ -64,26 +64,34 @@ export default {
       margin:auto;
       color:#fff7f6;
    }
+   .armwrestler.x-small {
+      font-family: 'ArmWrestler', bold;
+      font-size: 130% !important;
+   }
+   .armwrestler.small {
+      font-family: 'ArmWrestler', bold;
+      font-size: 200% !important;
+   }
    .armwrestler.medium {
       font-family: 'ArmWrestler', bold;
-      font-size: 280%;
+      font-size: 280% !important;
       margin:auto;
    }
    .armwrestler.large {
       font-family: 'ArmWrestler', bold;
-      font-size: 330%;
+      font-size: 330% !important;
       margin:auto;
    }
    .armwrestler.x-large {
       font-family: 'ArmWrestler', bold;
-      font-size: 430%;
+      font-size: 430% !important;
       margin:auto;
    }
    .armwrestler.dark {
       font-family: 'ArmWrestler', bold;
       font-size: 430%;
       margin:auto;
-      color:#936464;
+      color:#936464 !important;
    }
    .armwrestler.cadet {
       font-family: 'ArmWrestler', bold;

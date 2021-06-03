@@ -12,19 +12,11 @@
          >
       </v-avatar>
       <h2 class="main-color"><strong>@{{user.username}}</strong></h2>
-      
+
       <!-- Friend status/Add friend -->
       <FriendStatus v-if="user.username != this.$user" />
 
       <v-divider class="mx-16"></v-divider>
-      
-      <!-- User's info -->
-      <!-- Idk não consigo que isto pareça bem -->
-      <!-- <v-card class="mx-auto pt-5 pb-3 mt-5" color="rgb(255, 0, 0, 0.1)"  width="300px">
-         <h3 v-if="user.nickname"><strong style="color:#a57474">Name: </strong>{{user.nickname}}</h3>
-         <h3 v-else><strong style="color:#a57474">Name: </strong>{{"  -  "}}</h3>
-         <h4>{{user.books.length}} books</h4>
-      </v-card> -->
 
       <!-- User's books -->
       <h2 class="mt-5 armwrestler medium main-color"><strong>Books</strong></h2>
