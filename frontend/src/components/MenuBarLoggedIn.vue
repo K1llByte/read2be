@@ -149,8 +149,8 @@
                   <strong><p style="font-size: 16px;"> Users</p></strong>
                </v-list-item>
 
-               <v-list-item link class="d-flex justify-center" @click="goTo('/reviews')">
-                  <strong><p style="font-size: 16px;"> Reviews</p></strong>
+               <v-list-item link class="d-flex justify-center" @click="goTo('/genres')">
+                  <strong><p style="font-size: 16px;"> Genres</p></strong>
                </v-list-item>
 
                <v-list-item link class="d-flex justify-center" @click="goTo('/friends')">

@@ -26,7 +26,7 @@
 import axios from 'axios'
 
 export default {
-   name: 'SearchAuthor',
+   name: 'SearchUser',
    
    data: function() {
       return {
@@ -38,16 +38,16 @@ export default {
 		sendSearch: function() {
 			// check if user exists
 			axios
-				.get('/read2be/api/authors/' + this.search, this.$getOptions())
+				.get('/read2be/api/books?genre=' + this.search, this.$getOptions())
 				.then(res => {
-					this.$goTo('/authors/' + this.search);
+					this.$goTo('/books?genre=' + this.search);
                console.log(res);
 				})
 				.catch(e => {
                if (e.response.status == 404) {
-                  alert("Author doesn't exist");
+                  alert("Genre doesn't exist");
                } else {
-                  console.log('Erro na procura do author: ' + e);
+                  console.log('Erro na procura do genre: ' + e);
                }
             });
 		},

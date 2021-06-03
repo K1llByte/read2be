@@ -35,6 +35,16 @@ const routes = [
     component: () => import('../views/Authors.vue')
   },
   {
+    path: '/genres/:genre',
+    name: 'Genre',
+    component: () => import('../views/Genre.vue')
+  },
+  {
+    path: '/genres',
+    name: 'Genres',
+    component: () => import('../views/Genres.vue')
+  },
+  {
     path: '/friends',
     name: 'Friends',
     component: () => import('../views/Friends.vue')

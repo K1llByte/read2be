@@ -35,9 +35,6 @@ export default {
    },
 
    methods: {
-      goUser: function(){
-         
-      },
 		sendSearch: function() {
 			// check if user exists
 			axios
