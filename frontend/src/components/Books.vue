@@ -54,7 +54,7 @@ export default {
                .then(res => {
                   this.books = res.data.books;
                })
-               .catch(e => console.log('Erro no GET dos books do author: ' + e));
+               .catch(e => console.log('Erro no GET dos books da home: ' + e));
          },
       },
 
@@ -66,7 +66,7 @@ export default {
             .then(res => {
                this.books = res.data.books;
             })
-            .catch(e => console.log('Erro no GET dos books do author: ' + e));
+            .catch(e => console.log('Erro no GET dos books da home: ' + e));
       },
 };
 

@@ -130,26 +130,27 @@ export default {
    methods: {
 
       sendSearch: function() {
-         if (this.search || this.toggle) {
-            // get books' by search
-            const params = new URLSearchParams();
-            if (this.search) {
-               params.append('q', this.search);
-            }
-            if (this.toggle) {
-               params.append('sort_by', this.toggle.param);
-               params.append('order', this.toggle.order);
-            }
-            params.append('page_num', this.page);
-            params.append('page_limit', 12);
-            
-            axios
-               .get('/read2be/api/books', this.$getOptionsParams(params))
-               .then(res => {
-                  this.books = res.data.books;
-               })
-               .catch(e => console.log('Erro no GET dos books do author: ' + e));
+         const params = new URLSearchParams();
+         
+         // get books' by search
+         if (this.search) {
+            params.append('q', this.search);
          }
+         if (this.toggle) {
+            params.append('sort_by', this.toggle.param);
+            params.append('order', this.toggle.order);
+         }
+
+         params.append('page_num', this.page);
+         params.append('page_limit', 12);
+         
+         axios
+            .get('/read2be/api/books', this.$getOptionsParams(params))
+            .then(res => {
+               this.books = res.data.books;
+            })
+            .catch(e => console.log('Erro no GET dos books da search: ' + e));
+
       },
    },
 
