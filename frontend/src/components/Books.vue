@@ -16,7 +16,7 @@
                   <v-pagination
                      color="teal lighten-1"
                      v-model="page"
-                     :length="10"
+                     :length="num_pages"
                      :total-visible="7"
                      @input="changePage"
                   ></v-pagination>
@@ -51,6 +51,7 @@ export default {
             axios
                .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
                .then(res => {
+                  this.num_pages = res.data.num_pages;
                   this.books = res.data.books;
                })
                .catch(e => console.log('Erro no GET dos books da home: ' + e));
@@ -63,6 +64,7 @@ export default {
          axios
             .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
             .then(res => {
+               this.num_pages = res.data.num_pages;
                this.books = res.data.books;
             })
             .catch(e => console.log('Erro no GET dos books da home: ' + e));
