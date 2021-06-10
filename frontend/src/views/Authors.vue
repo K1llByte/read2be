@@ -22,6 +22,15 @@
                 </tr>
             </tbody>
         </table>
+        <div class="text-center mt-5">
+            <v-pagination
+                color="teal lighten-1"
+                v-model="page"
+                :length="num_pages"
+                :total-visible="7"
+                @input="changePage"
+            ></v-pagination>
+        </div>
     </div>
 </template>
 
@@ -35,6 +44,8 @@ export default {
     data: function() {
         return {
             authors: null,
+            num_pages: null,
+            page: 1
         };
     },
 
@@ -46,8 +57,9 @@ export default {
 
         // get authors
         axios
-            .get('/read2be/api/authors/', this.$getOptions())
+            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$getOptions())
             .then(res => {
+                this.num_pages = res.data.authors.num_pages;
                 this.authors = res.data.authors.authors;
             })
             .catch(e => console.log('Erro no GET dos authors: ' + e))
@@ -56,7 +68,18 @@ export default {
     methods: {
         goAuthor: function(name){
             this.$goTo('/authors/' + name);
-        }
+        },
+
+        changePage: function() {
+        // get books' name and image
+        axios
+            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+            .then(res => {
+                this.num_pages = res.data.authors.num_pages;
+                this.authors = res.data.authors.authors;
+            })
+            .catch(e => console.log('Erro no GET dos authors: ' + e));
+        },
     }
 }
 </script>
