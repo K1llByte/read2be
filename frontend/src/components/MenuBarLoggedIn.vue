@@ -145,7 +145,7 @@
                   <strong><p style="font-size: 16px;"> Books</p></strong>
                </v-list-item>
 
-               <v-list-item link class="d-flex justify-center" @click="goTo('/users')">
+               <v-list-item v-if="user.role == 128" link class="d-flex justify-center" @click="goTo('/users')">
                   <strong><p style="font-size: 16px;"> Users</p></strong>
                </v-list-item>
 
