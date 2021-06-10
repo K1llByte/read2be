@@ -43,7 +43,6 @@ export default {
       data: () => ({
          books: [],
          page: 1,
-         updated: false,
       }),
 
       methods: {
