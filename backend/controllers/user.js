@@ -2,6 +2,9 @@ const User = require('../models/user');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const Book = require('../controllers/book');
+const Status = require('../controllers/status');
+
+all_status = undefined;
 
 // =========================== // User CRUD operations
 
@@ -46,6 +49,16 @@ module.exports.get = async (username, options={}) => {
         }
     };
 
+    const STATUS_LOOKUP = {
+        "$lookup": {
+            "from": "status",
+            "localField": "books.status",
+            "foreignField": "status_id",
+            "as": "status"
+        }
+    };
+    
+
     const FRIENDS_LOOKUP = {
         "$lookup": {
             "from": "users",
@@ -63,6 +76,7 @@ module.exports.get = async (username, options={}) => {
             "as": "pending"
         }
     };
+
     
     let PROJECTION = {
         "$project": {
@@ -118,21 +132,37 @@ module.exports.get = async (username, options={}) => {
     // };
     // let PROJECTION_2 = { "$project": {} }
 
+    if(all_status === undefined)
+    {
+        let status = await Status.list_all();
+        all_status = [];
+        for(let i = 0 ; i < status.length ; ++i)
+        {
+            status[i].status_id
+        }
+    }
+
+
     let pipeline = [];
     if(options.inline_books == 1)
-    {
         pipeline.push(BOOK_LOOKUP);
-    }
+    
 
     pipeline.push(FRIENDS_LOOKUP);
     pipeline.push(PENDING_LOOKUP);
+    pipeline.push(STATUS_LOOKUP);
     pipeline.push({ "$match": { username: username } });
     if(!options.with_password)
         PROJECTION['$project']['password_hash'] = 0;
-    console.log(PROJECTION);
     pipeline.push(PROJECTION);
     
     const tmp = await User.aggregate(pipeline);
+
+    for(let i = 0 ; i < tmp.books.length ; ++i)
+    tmp.books.forEach(b => {
+
+    });
+
     return tmp[0];
 }
 
