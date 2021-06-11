@@ -51,12 +51,32 @@
                            <v-col>
                               <v-card
                                  height="90"
-                                 width="360"
+                                 width="390"
                                  color="red lighten-4"
                                  elevation="0"
-                                 class="py-7"
+                                 class="py-4 pr-5 pl-6"
                               >
-                                 <BookStatus :idb="idb" />
+                                 <v-select
+                                    v-if="added"
+                                    outlined
+                                    :items="values_s"
+                                    v-model="status"
+                                    item-color= "red"
+                                    color='#e09393'
+                                    :menu-props="{
+                                       bottom: true,
+                                       offsetY: true,
+                                       'max-width': 305,
+                                       'nudge-right': 4,
+                                       class: purple
+                                    }"
+                                    append-outer-icon="mdi-trash-can-outline"
+                                    @click:append-outer="test1"
+                                 ></v-select>
+                                 <v-btn
+                                    v-else
+                                    @click="addBook"
+                                 >Add Book</v-btn>
                               </v-card>
                            </v-col>
                         </v-row>
@@ -68,7 +88,7 @@
                            <v-col>
                               <v-card
                                  height="145"
-                                 width="360"
+                                 width="390"
                                  color="red lighten-4"
                                  elevation="0"
                               >
@@ -88,28 +108,59 @@
                         </v-row>
                      </v-col>
                      
-                     <!-- v-col 4.2 - authors -->
+                     <!-- v-col 4.2 -->
                      <v-col>
-                        <v-card
-                           :height="info.title.length < 50 ? 265 : 259"
-                           width="450"
-                           color="red lighten-4"
-                           elevation="0"
-                        >
-                           <p class="main-color pt-5" style="font-size:130%; margin-bottom:2px;">
-                              <strong class="armwrestler dark x-small">Authors: </strong>
-                           </p>
-                           <p
-                              id="clickable"
-                              class="armwrestler main-color"
-                              style="font-size:150%; margin-bottom:4px;"
-                              v-for="a in info.authors"
-                              :key=a
-                              @click="goAuthor(a)"
-                           >
-                              {{a}}
-                           </p>
-                        </v-card>
+                        
+                        <!-- rating -->
+                        <v-row>
+                           <v-col>
+                              <v-card
+                                 height="90"
+                                 width="430"
+                                 color="red lighten-4"
+                                 elevation="0"
+                                 class="py-6"
+                              >
+                                 <v-rating
+                                    v-model="rating"
+                                    background-color="grey"
+                                    color="red darken-3"
+                                    empty-icon="mdi-heart-outline"
+                                    full-icon="mdi-heart"
+                                    hover
+                                    length="10"
+                                    size="25"
+                                    value="0"
+                                 ></v-rating>
+                              </v-card>
+                           </v-col>
+                        </v-row>
+                        
+                        <!-- authors -->
+                        <v-row>
+                           <v-col>
+                              <v-card
+                                 :height="info.title.length < 50 ? 145 : 130"
+                                 width="430"
+                                 color="red lighten-4"
+                                 elevation="0"
+                              >
+                                 <p class="main-color pt-5" style="font-size:130%; margin-bottom:2px;">
+                                    <strong class="armwrestler dark x-small">Authors: </strong>
+                                 </p>
+                                 <p
+                                    id="clickable"
+                                    class="armwrestler main-color"
+                                    style="font-size:150%; margin-bottom:4px;"
+                                    v-for="a in info.authors"
+                                    :key=a
+                                    @click="goAuthor(a)"
+                                 >
+                                    {{a}}
+                                 </p>
+                              </v-card>
+                           </v-col>
+                        </v-row>
                      </v-col>
                   </v-row>
                </v-col>
@@ -153,6 +204,7 @@
                      elevation="0"
                   >
                      <v-textarea
+                        class="desc"
                         background-color="red lighten-4"
                         disabled
                         rounded
@@ -189,7 +241,6 @@
 <script>
 import axios from "axios";
 import Book from "@/components/Book.vue";
-import BookStatus from "@/components/BookStatus.vue";
 
 export default {
    
@@ -197,12 +248,17 @@ export default {
 
    props: ["idb"],
 
-   components: { Book, BookStatus },
+   components: { Book },
 
    data() {
       return {
          info: null,
          books: [],
+         user_books: [],
+         added: false,
+         values_s: ['Plan To Read', 'Reading', 'Finished', 'Dropped'],
+         status: 'Plan To Read',
+         rating: 0,
       };
    },
 
@@ -212,7 +268,10 @@ export default {
       },
       goGenre: function(genre){
          this.$goTo('/genres/' + genre);
-      }
+      },
+      test1: function(){
+         alert(this.info.status + '\n' + this.info.rate);
+      },
    },
 
    created: function() {
@@ -233,6 +292,19 @@ export default {
          })
          .catch(e => console.log('Erro no GET das recommendations: ' + e));
 
+      // get user's books
+      axios
+         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .then(res => {
+            this.user_books = res.data.books;
+            this.added = this.user_books.some(b => b.isbn === this.idb);
+            if (this.added){
+               var aux = this.user_books.filter(b => b.isbn === this.idb)[0];
+               this.rating = aux.rate;
+               // this.status = aux.status;
+            }
+         })
+         .catch(e => console.log('Erro no GET dos books do user: ' + e));
 
    },
 
@@ -240,11 +312,22 @@ export default {
 </script>
 
 <style scoped>
-   .v-input {
+   .v-input.desc {
       font-size: 20px;
       line-height: 30px;
    }
    #clickable:hover {
       color: #fbe9e9;
+      cursor: pointer;
+   }
+   .theme--light.v-application{
+   background-color: #f09c9c;
+   }
+
+   .theme--light.v-list{
+   background: #ffcaca;
+   }
+   .theme--light.v-list-item:hover:before {
+      opacity: 0
    }
 </style>

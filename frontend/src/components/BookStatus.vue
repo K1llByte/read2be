@@ -1,18 +1,26 @@
 <template>
    <div>
-      <!-- v-col 4.2 -add book / status-->
-      <!-- Status dos livros: -->
-      <!-- 1 - Reading -->
-      <!-- 2 - Finished -->
-      <!-- 3 - Plan to Read -->
-      <!-- 4 - Dropped -->
-      <v-btn
+      <v-select
          v-if="added"
-         @click="test1()"
-      >Status</v-btn>
-      
+         outlined
+         :items="values_s"
+         v-model="status"
+         item-color= "red"
+         color='#e09393'
+         :menu-props="{
+            bottom: true,
+            offsetY: true,
+            'max-width': 305,
+            'nudge-right': 4,
+            class: purple
+         }"
+         class='purple_bg'
+         append-outer-icon="mdi-heart"
+         @click:append-outer="test1"
+      ></v-select>
       <v-btn
          v-else
+         @click="addBook"
       >Add Book</v-btn>
    </div>
 </template>
@@ -31,6 +39,8 @@ export default {
          books: [],
          added: false,
          info: null,
+         values_s: ['Plan To Read', 'Reading', 'Finished', 'Dropped'],
+         status: 'Plan To Read',
       };
    },
 
@@ -57,3 +67,16 @@ export default {
 
 }
 </script>
+
+<style scoped>
+   .theme--light.v-application{
+   background-color: #f09c9c;
+   }
+
+   .theme--light.v-list{
+   background: #ffcaca;
+   }
+   .theme--light.v-list-item:hover:before {
+      opacity: 0.14;
+   }
+</style>
