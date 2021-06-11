@@ -34,7 +34,10 @@
          </v-container>
       </v-card>
       <h2 class="mt-5 mb-n6 armwrestler medium main-color"><strong>Friends</strong></h2>
-      <ConsultFriends :friends="user.friends"/>
+      <ConsultFriends v-if="user.friends.length" :friends="user.friends"/>
+      <v-card v-else class="mx-auto mt-12 py-16" color="rgb(255, 0, 0, 0.2)"  width="1300px"  height="180px">
+         <p class="armwrestler main-color">User has no friends yet</p>
+      </v-card>
     </div>
 </template>
 
@@ -59,7 +62,7 @@ export default {
    data() {
       return {
          user: [],
-         books_status: [],
+         // books_status: [],
          full_books: [],
       };
    },
@@ -71,7 +74,7 @@ export default {
          .get('/read2be/api/users/' + this.idu + '?inline_books=1', this.$getOptions())
          .then(res => {
             this.user = res.data;
-            this.books_status = res.data.books;
+            // this.books_status = res.data.books;
             this.full_books = res.data.full_books;
          })
          .catch(e => {
