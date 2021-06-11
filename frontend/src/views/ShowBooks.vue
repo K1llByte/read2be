@@ -114,14 +114,14 @@ export default {
             title: 'Most Recent',
             value: {
                param: 'published_year',
-               order: 'A'
+               order: 'D'
             },
          },
          {
             title: 'Less Recent',
             value: {
                param: 'published_year',
-               order: 'D'
+               order: 'A'
             },
          },
       ],
