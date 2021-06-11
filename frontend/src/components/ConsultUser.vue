@@ -24,7 +24,7 @@
          <v-container>
             <v-row>
                <v-col
-                  v-for="b in books"
+                  v-for="b in full_books"
                   :key="b.isbn"
                   cols="2"
                >
@@ -59,7 +59,8 @@ export default {
    data() {
       return {
          user: [],
-         books: [],
+         books_status: [],
+         full_books: [],
       };
    },
 
@@ -70,7 +71,8 @@ export default {
          .get('/read2be/api/users/' + this.idu + '?inline_books=1', this.$getOptions())
          .then(res => {
             this.user = res.data;
-            this.books = res.data.books;
+            this.books_status = res.data.books;
+            this.full_books = res.data.full_books;
          })
          .catch(e => {
             console.log('Erro no GET dos books do user: ' + e);
