@@ -125,6 +125,28 @@
             </div>
          </v-form>
       </v-card>
+
+      <!-- Snackbar for alerts -->
+      <v-snackbar
+         v-model="snackbar"
+         timeout="2500"
+         color="#221D45"
+         right
+         class="mb-16 mr-5"
+      >
+         <strong>{{ text }}</strong>
+
+         <template v-slot:action="{ attrs }">
+         <v-btn
+            color="#f7a8a8"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+         >
+            Close
+         </v-btn>
+         </template>
+      </v-snackbar>
     </div>
 </template>
 
@@ -156,14 +178,27 @@ export default {
          ],
          overlay: false,
          transparent: 'rgba(255, 255, 255, 0)',
+         snackbar: false,
+         text: '',
       };
    },
 
    methods: {
       submit () {
          if (this.$refs.form.validate()) {
+            var form = {
+               nickname: this.nickname,
+               email: this.email
+            };
             // Código para alterar as infos (patch)
-            alert("Hello");
+            axios
+               .patch('/read2be/api/users/' + this.idu, form, this.$getOptions())
+               .then(res => {
+                  console.log(res);
+                  this.text = 'Info updated!';
+                  this.snackbar = true;
+               })
+               .catch(e => console.log('Erro no PATCH do avatar do user: ' + e));
          }
       },
       reset () {
@@ -180,6 +215,8 @@ export default {
             .then(res => {
                console.log(res);
                this.file = null;
+               this.text = 'Avatar updated!';
+               this.snackbar = true;
             })
             .catch(e => console.log('Erro no PATCH do avatar do user: ' + e));
 
