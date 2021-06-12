@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
+import * as VueCookies from 'vue-cookies';
 import router from './router'
 
 // global variables
@@ -54,8 +55,15 @@ Vue.prototype.$goTo = function(route) {
 
 Vue.config.productionTip = false;
 
+Vue.use(VueCookies);
+
 new Vue({
 	vuetify,
+	VueCookies,
+	// vuecookies,
 	router,
 	render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
+
+Vue.$cookies.config('7d');
+Vue.$cookies.set('teste','hello!');
