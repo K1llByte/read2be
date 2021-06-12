@@ -249,7 +249,7 @@ export default {
       },
       logout: function() {
          axios
-            .post('/read2be/api/logout', {} , this.$getOptions())
+            .post('/read2be/api/logout', {} , this.$cookies.get('options'))
             .then(res => {
                console.log(res);
                this.$logout();
@@ -262,7 +262,7 @@ export default {
 
    created: function() {
       axios
-         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$cookies.get('options'))
          .then(res => {
             this.user = res.data;
             this.pending = this.user.pending;

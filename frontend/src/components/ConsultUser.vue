@@ -74,7 +74,7 @@ export default {
 
       // get author's books' name and image
       axios
-         .get('/read2be/api/users/' + this.idu + '?inline_books=1', this.$getOptions())
+         .get('/read2be/api/users/' + this.idu + '?inline_books=1', this.$cookies.get('options'))
          .then(res => {
             this.user = res.data;
             // this.books_status = res.data.books;

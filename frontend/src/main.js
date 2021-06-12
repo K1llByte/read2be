@@ -26,19 +26,10 @@ Vue.$cookies.config('7d');
 
 // Vue.prototype.$user = null;
 
-Vue.prototype.$getOptions = function(){
-	return {
-		crossdomain: true,
-		headers: { Authorization: `Bearer ${Vue.$cookies.get('token')}` }
-		// headers: { Authorization: `Bearer ${Vue.prototype.$token}` }
-	};
-};
-
 Vue.prototype.$getOptionsParams = function(p){
 	return {
 		crossdomain: true,
 		headers: { Authorization: `Bearer ${Vue.$cookies.get('token')}` },
-		// headers: { Authorization: `Bearer ${Vue.prototype.$token}` },
 		params: p
 	};
 };
@@ -46,6 +37,11 @@ Vue.prototype.$getOptionsParams = function(p){
 Vue.prototype.$login = function(t, u) {
 	Vue.$cookies.set('token', t);
 	Vue.$cookies.set('user', u);
+	const options = {
+		crossdomain: true,
+		headers: { Authorization: `Bearer ${Vue.$cookies.get('token')}` },
+	}
+	Vue.$cookies.set('options', options);
 	this.$router.push('/home');
 };
 

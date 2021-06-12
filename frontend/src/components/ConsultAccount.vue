@@ -192,7 +192,7 @@ export default {
             };
             // Código para alterar as infos (patch)
             axios
-               .patch('/read2be/api/users/' + this.idu, form, this.$getOptions())
+               .patch('/read2be/api/users/' + this.idu, form, this.$cookies.get('options'))
                .then(res => {
                   console.log(res);
                   this.text = 'Info updated!';
@@ -211,7 +211,7 @@ export default {
 
          // change user's avatar
          axios
-            .patch('/read2be/api/users/' + this.idu, formData, this.$getOptions())
+            .patch('/read2be/api/users/' + this.idu, formData, this.$cookies.get('options'))
             .then(res => {
                console.log(res);
                this.file = null;
@@ -227,7 +227,7 @@ export default {
       
       // get user's info
       axios
-         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$cookies.get('options'))
          .then(res => {
             this.user = res.data;
             this.nickname = this.user.nickname;

@@ -124,7 +124,7 @@ export default {
             };
             
             axios
-               .post('/read2be/api/login', form, this.$getOptions())
+               .post('/read2be/api/login', form, this.$cookies.get('options'))
                .then(res => {
 						this.$login(res.data.TOKEN, form.username);
                })

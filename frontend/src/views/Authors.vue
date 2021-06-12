@@ -57,7 +57,7 @@ export default {
 
         // get authors
         axios
-            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
             .then(res => {
                 this.num_pages = res.data.authors.num_pages;
                 this.authors = res.data.authors.authors;
@@ -73,7 +73,7 @@ export default {
         changePage: function() {
         // get books' name and image
         axios
-            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
             .then(res => {
                 this.num_pages = res.data.authors.num_pages;
                 this.authors = res.data.authors.authors;

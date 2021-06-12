@@ -47,7 +47,7 @@ export default {
 
         // get users
         axios
-            .get('/read2be/api/users?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+            .get('/read2be/api/users?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
             .then(res => {
                 this.num_pages = res.data.num_pages;
                 this.users = res.data.users;
@@ -64,7 +64,7 @@ export default {
         changePage: function() {
         // get books' name and image
         axios
-            .get('/read2be/api/users?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+            .get('/read2be/api/users?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
             .then(res => {
                 this.num_pages = res.data.num_pages;
                 this.users = res.data.users;

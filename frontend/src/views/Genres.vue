@@ -46,7 +46,7 @@ export default {
 
         // get genres
         axios
-            .get('/read2be/api/genres/', this.$getOptions())
+            .get('/read2be/api/genres/', this.$cookies.get('options'))
             .then(res => {
                 this.genres = res.data.genres;
             })

@@ -43,7 +43,7 @@ export default {
 
         // get author's books' name and image
         axios
-            .get('/read2be/api/authors/' + this.ida + '?inline_books=1', this.$getOptions())
+            .get('/read2be/api/authors/' + this.ida + '?inline_books=1', this.$cookies.get('options'))
             .then(res => {
                 this.books = res.data.books;
             })

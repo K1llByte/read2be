@@ -41,7 +41,7 @@ export default {
 
         // get genre's books' name and image
         axios
-            .get('/read2be/api/books?genre=' + this.idg, this.$getOptions())
+            .get('/read2be/api/books?genre=' + this.idg, this.$cookies.get('options'))
             .then(res => {
                 this.books = res.data.books;
             })

@@ -49,7 +49,7 @@ export default {
          changePage: function() {
             // get books' name and image
             axios
-               .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+               .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
                .then(res => {
                   this.num_pages = res.data.num_pages;
                   this.books = res.data.books;
@@ -62,7 +62,7 @@ export default {
          // get books' name and image
          // existe maneira de usar aqui o changePage para não repetir?
          axios
-            .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$getOptions())
+            .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
             .then(res => {
                this.num_pages = res.data.num_pages;
                this.books = res.data.books;

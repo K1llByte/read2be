@@ -83,7 +83,7 @@
 
       <v-snackbar
          v-model="snackbar"
-         timeout="5500"
+         timeout="2500"
          color="#221D45"
          right
          class="mb-16 mr-5"
@@ -124,9 +124,9 @@ export default {
 
    methods: {
       addFriend: function() {
-         // alert(this.$getOptions().headers.Authorization);
+         // alert(this.$cookies.get('options').headers.Authorization);
          axios
-            .post('/read2be/api/users/' + this.idu + '/requests', {}, this.$getOptions())
+            .post('/read2be/api/users/' + this.idu + '/requests', {}, this.$cookies.get('options'))
             .then(res => {
                console.log(res.status);
                this.sent = true;
@@ -159,7 +159,7 @@ export default {
 
       // check if user is user's friend
       axios
-         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$cookies.get('options'))
          .then(res => {
             this.isFriend = res.data.friends.some(f => f.username === this.idu);
          })

@@ -64,7 +64,7 @@ export default {
 		sendSearch: function() {
 			// check if user exists
 			axios
-				.get('/read2be/api/authors/' + this.search, this.$getOptions())
+				.get('/read2be/api/authors/' + this.search, this.$cookies.get('options'))
 				.then(res => {
 					this.$goTo('/authors/' + this.search);
                console.log(res);
