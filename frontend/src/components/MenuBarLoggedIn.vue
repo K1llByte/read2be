@@ -95,6 +95,7 @@
                <v-hover v-slot="{ hover }">
                   <v-list-item-avatar
                      size=80
+                     id="clickable"
                      @click="goTo(`/users/${user.username}`)"
                   >
                         <v-card
@@ -258,5 +259,8 @@ export default {
 <style scoped>
    .aux {
       opacity: 0.6;
+   }
+   #clickable:hover {
+      cursor: pointer;
    }
 </style>
