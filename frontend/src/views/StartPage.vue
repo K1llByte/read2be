@@ -38,8 +38,8 @@ import Register from '../components/Register.vue';
 
 export default {
    data: () => ({
-      login: false,
-      register: true,
+      login: true,
+      register: false,
    }),
 
    components: {

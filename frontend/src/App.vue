@@ -36,9 +36,6 @@ export default {
       if (!this.$cookies.isKey('token')) {
          this.$router.push('/');
       }
-      else if (this.$cookies.isKey('token') && this.$route.path == '/') {
-         this.$router.push('/home');
-      }
    },
 
 };
