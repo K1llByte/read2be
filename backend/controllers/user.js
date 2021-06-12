@@ -132,15 +132,15 @@ module.exports.get = async (username, options={}) => {
     // };
     // let PROJECTION_2 = { "$project": {} }
 
-    if(all_status === undefined)
-    {
-        let status = await Status.list_all();
-        all_status = [];
-        for(let i = 0 ; i < status.length ; ++i)
-        {
-            status[i].status_id
-        }
-    }
+    // if(all_status === undefined)
+    // {
+    //     let status = await Status.list_all();
+    //     all_status = [];
+    //     for(let i = 0 ; i < status.length ; ++i)
+    //     {
+    //         status[i].status_id
+    //     }
+    // }
 
 
     let pipeline = [];
@@ -150,7 +150,7 @@ module.exports.get = async (username, options={}) => {
 
     pipeline.push(FRIENDS_LOOKUP);
     pipeline.push(PENDING_LOOKUP);
-    pipeline.push(STATUS_LOOKUP);
+    // pipeline.push(STATUS_LOOKUP);
     pipeline.push({ "$match": { username: username } });
     if(!options.with_password)
         PROJECTION['$project']['password_hash'] = 0;
@@ -158,10 +158,10 @@ module.exports.get = async (username, options={}) => {
     
     const tmp = await User.aggregate(pipeline);
 
-    for(let i = 0 ; i < tmp.books.length ; ++i)
-    tmp.books.forEach(b => {
+    // for(let i = 0 ; i < tmp.books.length ; ++i)
+    // tmp.books.forEach(b => {
 
-    });
+    // });
 
     return tmp[0];
 }
