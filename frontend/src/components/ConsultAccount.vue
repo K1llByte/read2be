@@ -8,8 +8,12 @@
             class="mx-auto rounded-circle"
          >
                <!-- src="https://cdn.discordapp.com/attachments/630820905228173347/845052368545513553/Fotor-marble-ink-background-image-1.png" -->
+               <!-- :src=avatar
+               :key=avatar -->
             <v-img
+               id="myImg"
                :src=avatar
+               :key=avatar
                height="150"
                width="150"
                class="rounded-circle"
@@ -26,24 +30,24 @@
                <v-file-input
                   v-model="file"
                   v-if="hover"
-                  :rules="rules"
                   dark
                   hide-input
                   prepend-icon="mdi-camera"
                   accept="image/png, image/jpeg, image/bmp"
                   icon
+                  @change="change"
                ></v-file-input>
             </v-overlay>
          </v-card>
       </v-hover>
-      <v-btn
+      <!-- <v-btn
          v-if="file"
          class="mt-5 mb-n3"
          color="#f07977"
          @click="change"
       >
          Confirm
-      </v-btn>
+      </v-btn> -->
 
       <!-- Change User Info -->
       <v-card class="mx-auto mt-12 py-6" color="rgb(255, 0, 0, 0.1)"  width="850px">
@@ -84,9 +88,6 @@
                   ></v-text-field>
                </v-col>
             </v-row>
-
-            <!-- Change password (primeiro é preciso haver forma de confirmar a atual) -->
-            <!--  -->
 
             <!-- Change email -->
             <v-row>
@@ -162,9 +163,9 @@ export default {
    data() {
       return {
          user: [],
+         avatar: null,
          file: null,
          valid: true,
-         avatar: null,
          username: '',
          nickname: '',
          nameRules: [
@@ -194,11 +195,11 @@ export default {
             axios
                .patch('/read2be/api/users/' + this.idu, form, this.$cookies.get('options'))
                .then(res => {
-                  console.log(res);
+                  res = null;
                   this.text = 'Info updated!';
                   this.snackbar = true;
                })
-               .catch(e => console.log('Erro no PATCH do avatar do user: ' + e));
+               .catch(e => console.log('Erro no PATCH das infos do user: ' + e));
          }
       },
       reset () {
@@ -211,15 +212,14 @@ export default {
 
          // change user's avatar
          axios
-            .patch('/read2be/api/users/' + this.idu, formData, this.$cookies.get('options'))
+            .patch('/read2be/api/users/' + this.$cookies.get('user'), formData, this.$cookies.get('options'))
             .then(res => {
-               console.log(res);
+               res.data = null;
                this.file = null;
                this.text = 'Avatar updated!';
                this.snackbar = true;
             })
             .catch(e => console.log('Erro no PATCH do avatar do user: ' + e));
-
       }
    },
 
