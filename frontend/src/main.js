@@ -19,13 +19,6 @@ new Vue({
 
 Vue.$cookies.config('7d');
 
-// global variables
-// Vue.prototype.$token = '';
-
-// Vue.prototype.$logged = false;
-
-// Vue.prototype.$user = null;
-
 Vue.prototype.$getOptionsParams = function(p){
 	return {
 		crossdomain: true,
@@ -47,14 +40,11 @@ Vue.prototype.$login = function(t, u) {
 
 Vue.prototype.$logout = function() {
 	this.$cookies.keys().forEach(cookie => this.$cookies.remove(cookie));
-	// Vue.prototype.$token = '';
-	// Vue.prototype.$logged = false;
 	this.$router.push('/');
 };
 
 Vue.prototype.$goTo = function(route) {
 	
-	// if (this.$logged)
 	if (this.$cookies.isKey('token'))
 	{
 		this.$router.push(route);
