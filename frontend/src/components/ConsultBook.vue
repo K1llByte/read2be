@@ -60,6 +60,8 @@
                                     v-if="added"
                                     outlined
                                     :items="values_s"
+                                    item-text="label"
+                                    item-value="value"
                                     v-model="status"
                                     item-color= "red"
                                     color='#e09393'
@@ -71,12 +73,23 @@
                                        class: purple
                                     }"
                                     append-outer-icon="mdi-trash-can-outline"
-                                    @click:append-outer="test1"
+                                    @click:append-outer="addBook"
                                  ></v-select>
                                  <v-btn
                                     v-else
+                                    dark
+                                    color="#f07977"
+                                    class="mt-1"
+                                    width=280
+                                    height=45
+                                    large
                                     @click="addBook"
-                                 >Add Book</v-btn>
+                                 >
+                                    Add Book
+                                    <v-icon right>
+                                       mdi-bookmark-outline
+                                    </v-icon>
+                                 </v-btn>
                               </v-card>
                            </v-col>
                         </v-row>
@@ -131,6 +144,7 @@
                                     length="10"
                                     size="25"
                                     value="0"
+                                    :readonly="added ? false : true"
                                  ></v-rating>
                               </v-card>
                            </v-col>
@@ -256,8 +270,25 @@ export default {
          books: [],
          user_books: [],
          added: false,
-         values_s: ['Plan To Read', 'Reading', 'Finished', 'Dropped'],
-         status: 'Plan To Read',
+         // values_s: ['Plan To Read', 'Reading', 'Finished', 'Dropped'],
+         values_s: [
+            {
+               label: 'Plan To Read',
+               value: 3
+            }, 
+            {
+               label: 'Reading',
+               value: 1
+            }, 
+            {
+               label: 'Finished',
+               value: 2
+            }, 
+            {
+               label: 'Dropped',
+               value: 4
+            }],
+         status: 3,
          rating: 0,
       };
    },
@@ -268,6 +299,23 @@ export default {
       },
       goGenre: function(genre){
          this.$goTo('/genres/' + genre);
+      },
+      addBook: function(){
+         var form = {
+            isbn: this.idb,
+            status: this.status,
+            rate: this.rating
+         };
+         alert(form.isbn + '\n' + form.status + '\n' + form.rate);
+         // add book to user's books
+         // axios
+         //    .post('/read2be/api/users/' + this.$user, form, this.$getOptions())
+         //    .then(res => {
+         //       console.log(res);
+         //       this.added = true;
+         //    })
+         //    .catch(e => console.log('Erro no POST do book: ' + e));
+
       },
       test1: function(){
          alert(this.info.status + '\n' + this.info.rate);
