@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <!-- <div> -->
       <v-card v-if="!this.done" color="#f9f2f2" class="mx-auto w3-hover-pale-red" width="100%" height="65">
          <v-container>
             <v-row>
@@ -32,7 +32,7 @@
                      min-width="15"
                      width="16"
                      height="26"
-                     @click="accept(true)"
+                     @click="accept(1)"
                   >
                      <v-icon>
                         mdi-check
@@ -45,7 +45,7 @@
                      min-width="15"
                      width="16"
                      height="26"
-                     @click="accept(false)"
+                     @click="accept(0)"
                   >
                      <v-icon>
                         mdi-close
@@ -57,12 +57,12 @@
       </v-card>
    
       <!-- Snackbar for alerts -->
-      <v-snackbar
+      <!-- <v-snackbar
          v-model="snackbar"
          timeout="2500"
          color="#221D45"
          right
-         class="mb-16 mr-5"
+         class="ml-10"
       >
          <strong>{{ text }}</strong>
 
@@ -76,8 +76,8 @@
             Close
          </v-btn>
          </template>
-      </v-snackbar>
-   </div>
+      </v-snackbar> -->
+   <!-- </div> -->
 </template>
 
 <script>
@@ -90,8 +90,8 @@ export default {
 
    data: () => ({
       done: false,
-		snackbar: false,
-		text: '',
+		// snackbar: false,
+		// text: '',
    }),
 
    methods: {

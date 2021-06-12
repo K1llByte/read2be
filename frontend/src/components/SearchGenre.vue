@@ -70,7 +70,7 @@ export default {
                console.log(res);
 				})
 				.catch(e => {
-               if (e.response.status == 404) {
+               if (e.response.status == 400) {
                   this.text = 'Genre doesn\'t exist!';
                   this.snackbar = true;
                } else {

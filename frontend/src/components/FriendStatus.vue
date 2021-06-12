@@ -80,10 +80,13 @@
       >
          Friend request sent!
       </p>
-      
+
       <v-snackbar
          v-model="snackbar"
-         timeout="2000"
+         timeout="5500"
+         color="#221D45"
+         right
+         class="mb-16 mr-5"
       >
          {{ text }}
 
@@ -121,15 +124,22 @@ export default {
 
    methods: {
       addFriend: function() {
+         // alert(this.$getOptions().headers.Authorization);
          axios
-            .post('/read2be/api/users/' + this.idu + '/requests', this.$getOptions())
+            .post('/read2be/api/users/' + this.idu + '/requests', {}, this.$getOptions())
             .then(res => {
-               console.log(res);
+               console.log(res.status);
                this.sent = true;
                this.text = 'Friend request sent!';
                this.snackbar = true;
             })
-            .catch(e => console.log('Erro no POST do friend request: ' + e));
+            .catch(e => {
+               console.log('Erro no POST do friend request: ' + e);
+               if (e.response.status == 400) {
+                  this.text = 'Friend request already sent';
+                  this.snackbar = true;
+               }
+            });
       },
       // removeFriend: function() {
       //    this.status = -1;
