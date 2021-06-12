@@ -185,6 +185,28 @@
             </div>
          </template>
       </v-navigation-drawer>
+	
+      <!-- Snackbar for alerts -->
+      <v-snackbar
+         v-model="snackbar"
+         timeout="2500"
+         color="#221D45"
+         right
+         class="mb-16 mr-5"
+      >
+         <strong>{{ text }}</strong>
+
+         <template v-slot:action="{ attrs }">
+         <v-btn
+            color="#f7a8a8"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+         >
+            Close
+         </v-btn>
+         </template>
+      </v-snackbar>
    </div>
 </template>
 
@@ -207,6 +229,8 @@ export default {
         { title: 'Click Me 2' },
       ],
       menu: false,
+		snackbar: false,
+		text: '',
    }),
 
    components: {
@@ -226,7 +250,10 @@ export default {
       logout: function() {
          axios
             .post('/read2be/api/logout', {} , this.$getOptions())
-            .then(this.$logout())
+            .then(res => {
+               console.log(res);
+               this.$logout();
+            })
             .catch(e => {
                console.log('Erro no logout do user: ' + e);
             });
@@ -243,9 +270,11 @@ export default {
          })
          .catch(e => {
             if (e.response.status == 400) {
-					alert("Error: Not Logged Out");
+               this.text = 'Error: Not Logged Out';
+               this.snackbar = true;
 				} else if (e.response.status == 401) {
-					alert("Token Already Revoked");
+               this.text = 'Token Already Revoked';
+               this.snackbar = true;
 				} else {
                console.log('Erro no GET da info do user (MenuBar): ' + e);
             }

@@ -251,6 +251,28 @@
             </v-row>
          </v-container>
       </v-card>
+
+      <!-- Snackbar for alerts -->
+      <v-snackbar
+         v-model="snackbar"
+         timeout="2500"
+         color="#221D45"
+         right
+         class="mb-16 mr-5"
+      >
+         <strong>{{ text }}</strong>
+
+         <template v-slot:action="{ attrs }">
+         <v-btn
+            color="#f7a8a8"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+         >
+            Close
+         </v-btn>
+         </template>
+      </v-snackbar>
    </div>
 </template>
 
@@ -292,6 +314,8 @@ export default {
             }],
          status: 3,
          rating: 0,
+         snackbar: false,
+         text: '',
       };
    },
 
@@ -315,7 +339,8 @@ export default {
             .then(res => {
                console.log(res);
                this.added = true;
-               alert("Book added with success!")
+               this.text = "Book added with success!";
+               this.snackbar = true;
             })
             .catch(e => console.log('Erro no POST do book: ' + e));
 
@@ -327,12 +352,15 @@ export default {
          };
 
          alert(form.status + '\n' + form.rate);
+         this.text = "Book edited with success!";
+         this.snackbar = true;
          // edit book status from user's books
          axios
             .patch('/read2be/api/users/' + this.$user + '/books/' + this.idb, form, this.$getOptions())
             .then(res => {
                console.log(res);
-               alert("Book edited with success!")
+               this.text = "Book edited with success!";
+               this.snackbar = true;
             })
             .catch(e => console.log('Erro no PATCH do book: ' + e));
 
@@ -345,13 +373,11 @@ export default {
             .then(res => {
                console.log(res);
                this.added = false;
-               alert("Book removed with success!")
+               this.text = "Book removed with success!";
+               this.snackbar = true;
             })
             .catch(e => console.log('Erro no DELETE do book: ' + e));
 
-      },
-      test1: function(){
-         alert(this.info.status + '\n' + this.info.rate);
       },
    },
 
