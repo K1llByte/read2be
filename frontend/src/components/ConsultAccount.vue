@@ -227,7 +227,7 @@ export default {
       
       // get user's info
       axios
-         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
          .then(res => {
             this.user = res.data;
             this.nickname = this.user.nickname;

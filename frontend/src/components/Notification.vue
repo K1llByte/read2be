@@ -100,7 +100,7 @@ export default {
             accept: accepted
          };
          axios
-            .patch('/read2be/api/users/' + this.$user + '/requests/' + this.info.user_id, form, this.$getOptions())
+            .patch('/read2be/api/users/' + this.$cookies.get('user') + '/requests/' + this.info.user_id, form, this.$getOptions())
             .then(res => {
                console.log(res);
                if (accepted) {

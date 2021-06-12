@@ -159,7 +159,7 @@ export default {
 
       // check if user is user's friend
       axios
-         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
          .then(res => {
             this.isFriend = res.data.friends.some(f => f.username === this.idu);
          })

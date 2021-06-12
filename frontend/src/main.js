@@ -4,54 +4,6 @@ import vuetify from './plugins/vuetify'
 import * as VueCookies from 'vue-cookies';
 import router from './router'
 
-// global variables
-Vue.prototype.$token = '';
-Vue.prototype.$logged = false;
-Vue.prototype.$user = null;
-
-Vue.prototype.$getOptions = function(){
-	return {
-		crossdomain: true,
-		headers: { Authorization: `Bearer ${Vue.prototype.$token}` }
-	};
-};
-
-Vue.prototype.$getOptionsParams = function(p){
-	return {
-		crossdomain: true,
-		headers: { Authorization: `Bearer ${Vue.prototype.$token}` },
-		params: p
-	};
-};
-
-Vue.prototype.$login = function(t, u) {
-	Vue.prototype.$token = t;
-	Vue.prototype.$logged = true;
-	Vue.prototype.$user = u;
-	this.$router.push('/home');
-};
-
-Vue.prototype.$logout = function() {
-	Vue.prototype.$token = '';
-	Vue.prototype.$logged = false;
-	this.$router.push('/');
-};
-
-Vue.prototype.$goTo = function(route) {
-	
-	if (this.$logged)
-	{
-		this.$router.push(route);
-	}
-	else {
-		if (route != '/') {
-			this.$router.push('/');
-		}
-		else {
-			this.$router.push(route);
-		}
-	}
-}
 
 Vue.config.productionTip = false;
 
@@ -66,4 +18,57 @@ new Vue({
 }).$mount('#app');
 
 Vue.$cookies.config('7d');
-Vue.$cookies.set('teste','hello!');
+
+// global variables
+// Vue.prototype.$token = '';
+
+// Vue.prototype.$logged = false;
+
+// Vue.prototype.$user = null;
+
+Vue.prototype.$getOptions = function(){
+	return {
+		crossdomain: true,
+		headers: { Authorization: `Bearer ${Vue.$cookies.get('token')}` }
+		// headers: { Authorization: `Bearer ${Vue.prototype.$token}` }
+	};
+};
+
+Vue.prototype.$getOptionsParams = function(p){
+	return {
+		crossdomain: true,
+		headers: { Authorization: `Bearer ${Vue.$cookies.get('token')}` },
+		// headers: { Authorization: `Bearer ${Vue.prototype.$token}` },
+		params: p
+	};
+};
+
+Vue.prototype.$login = function(t, u) {
+	Vue.$cookies.set('token', t);
+	Vue.$cookies.set('user', u);
+	this.$router.push('/home');
+};
+
+Vue.prototype.$logout = function() {
+	this.$cookies.keys().forEach(cookie => this.$cookies.remove(cookie));
+	// Vue.prototype.$token = '';
+	// Vue.prototype.$logged = false;
+	this.$router.push('/');
+};
+
+Vue.prototype.$goTo = function(route) {
+	
+	// if (this.$logged)
+	if (this.$cookies.isKey('token'))
+	{
+		this.$router.push(route);
+	}
+	else {
+		if (route != '/') {
+			this.$router.push('/');
+		}
+		else {
+			this.$router.push(route);
+		}
+	}
+}

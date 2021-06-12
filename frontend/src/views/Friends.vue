@@ -38,7 +38,7 @@ export default {
 
       // get author's books' name and image
       axios
-         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
          .then(res => {
             this.friends = res.data.friends;
          })

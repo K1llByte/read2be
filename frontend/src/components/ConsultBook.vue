@@ -335,7 +335,7 @@ export default {
 
          // add book to user's books
          axios
-            .post('/read2be/api/users/' + this.$user + '/books', form, this.$getOptions())
+            .post('/read2be/api/users/' + this.$cookies.get('user') + '/books', form, this.$getOptions())
             .then(res => {
                console.log(res);
                this.added = true;
@@ -356,7 +356,7 @@ export default {
          this.snackbar = true;
          // edit book status from user's books
          axios
-            .patch('/read2be/api/users/' + this.$user + '/books/' + this.idb, form, this.$getOptions())
+            .patch('/read2be/api/users/' + this.$cookies.get('user') + '/books/' + this.idb, form, this.$getOptions())
             .then(res => {
                console.log(res);
                this.text = "Book edited with success!";
@@ -369,7 +369,7 @@ export default {
          
          // remove book from user's books
          axios
-            .delete('/read2be/api/users/' + this.$user + '/books/' + this.idb, this.$getOptions())
+            .delete('/read2be/api/users/' + this.$cookies.get('user') + '/books/' + this.idb, this.$getOptions())
             .then(res => {
                console.log(res);
                this.added = false;
@@ -401,7 +401,7 @@ export default {
 
       // get user's books
       axios
-         .get('/read2be/api/users/' + this.$user, this.$getOptions())
+         .get('/read2be/api/users/' + this.$cookies.get('user'), this.$getOptions())
          .then(res => {
             this.user_books = res.data.books;
             this.added = this.user_books.some(b => b.isbn === this.idb);

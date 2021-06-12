@@ -2,7 +2,7 @@
 
    <v-app>
 
-      <MenuBarLoggedIn v-if="this.$logged" />
+      <MenuBarLoggedIn v-if="this.$cookies.isKey('token')" />
       <MenuBar v-else />
 
       <v-main>
@@ -33,10 +33,10 @@ export default {
    }),
 
    beforeCreate: function() {
-      if (!this.$logged) {
+      if (!this.$cookies.isKey('token')) {
          this.$router.push('/');
       }
-      else if (this.$logged && this.$route.path == '/') {
+      else if (this.$cookies.isKey('token') && this.$route.path == '/') {
          this.$router.push('/home');
       }
    },
