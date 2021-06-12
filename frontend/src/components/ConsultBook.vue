@@ -73,7 +73,8 @@
                                        class: purple
                                     }"
                                     append-outer-icon="mdi-trash-can-outline"
-                                    @click:append-outer="addBook"
+                                    @click:append-outer="removeBook"
+                                    @input="editBook"
                                  ></v-select>
                                  <v-btn
                                     v-else
@@ -144,6 +145,7 @@
                                     length="10"
                                     size="25"
                                     value="0"
+                                    @input="editBook"
                                     :readonly="added ? false : true"
                                  ></v-rating>
                               </v-card>
@@ -306,15 +308,46 @@ export default {
             status: this.status,
             rate: this.rating
          };
-         alert(form.isbn + '\n' + form.status + '\n' + form.rate);
+
          // add book to user's books
-         // axios
-         //    .post('/read2be/api/users/' + this.$user, form, this.$getOptions())
-         //    .then(res => {
-         //       console.log(res);
-         //       this.added = true;
-         //    })
-         //    .catch(e => console.log('Erro no POST do book: ' + e));
+         axios
+            .post('/read2be/api/users/' + this.$user + '/books', form, this.$getOptions())
+            .then(res => {
+               console.log(res);
+               this.added = true;
+               alert("Book added with success!")
+            })
+            .catch(e => console.log('Erro no POST do book: ' + e));
+
+      },
+      editBook: function(){
+         var form = {
+            status: this.status,
+            rate: this.rating
+         };
+
+         alert(form.status + '\n' + form.rate);
+         // edit book status from user's books
+         axios
+            .patch('/read2be/api/users/' + this.$user + '/books/' + this.idb, form, this.$getOptions())
+            .then(res => {
+               console.log(res);
+               alert("Book edited with success!")
+            })
+            .catch(e => console.log('Erro no PATCH do book: ' + e));
+
+      },
+      removeBook: function(){
+         
+         // remove book from user's books
+         axios
+            .delete('/read2be/api/users/' + this.$user + '/books/' + this.idb, this.$getOptions())
+            .then(res => {
+               console.log(res);
+               this.added = false;
+               alert("Book removed with success!")
+            })
+            .catch(e => console.log('Erro no DELETE do book: ' + e));
 
       },
       test1: function(){
