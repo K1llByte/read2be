@@ -132,16 +132,6 @@ module.exports.get = async (username, options={}) => {
     // };
     // let PROJECTION_2 = { "$project": {} }
 
-    // if(all_status === undefined)
-    // {
-    //     let status = await Status.list_all();
-    //     all_status = [];
-    //     for(let i = 0 ; i < status.length ; ++i)
-    //     {
-    //         status[i].status_id
-    //     }
-    // }
-
 
     let pipeline = [];
     if(options.inline_books == 1)
@@ -157,11 +147,6 @@ module.exports.get = async (username, options={}) => {
     pipeline.push(PROJECTION);
     
     const tmp = await User.aggregate(pipeline);
-
-    // for(let i = 0 ; i < tmp.books.length ; ++i)
-    // tmp.books.forEach(b => {
-
-    // });
 
     return tmp[0];
 }
@@ -213,7 +198,6 @@ module.exports.verify_password = async (username, in_password) => {
     let userdata = await this.get(username,{ with_password: true })
     if(userdata != null)
     {
-        //console.log("userdata.password_hash",userdata.password_hash);
         const passwd_obj = this.parse_password_hash(userdata.password_hash);
         const in_pass_hash = crypto.createHash(passwd_obj.hash_algorithm)
             .update(passwd_obj.salt + in_password)
