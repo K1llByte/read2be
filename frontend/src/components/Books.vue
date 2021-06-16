@@ -43,6 +43,7 @@ export default {
       data: () => ({
          books: [],
          page: 1,
+         num_pages: 10,
       }),
 
       methods: {

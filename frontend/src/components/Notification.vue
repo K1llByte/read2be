@@ -32,7 +32,7 @@
                      min-width="15"
                      width="16"
                      height="26"
-                     @click="accept(true)"
+                     @click="accept('true')"
                   >
                      <v-icon>
                         mdi-check
@@ -45,7 +45,7 @@
                      min-width="15"
                      width="16"
                      height="26"
-                     @click="accept(false)"
+                     @click="accept('false')"
                   >
                      <v-icon>
                         mdi-close
@@ -103,14 +103,14 @@ export default {
             .patch('/read2be/api/users/' + this.$cookies.get('user') + '/requests/' + this.info.user_id, form, this.$cookies.get('options'))
             .then(res => {
                console.log(res);
-               if (accepted) {
-                  this.text = 'Accepted friend request!';
-                  this.snackbar = true;
-               }
-               else {
-                  this.text = 'Declined friend request!';
-                  this.snackbar = true;
-               }
+               // if (accepted) {
+               //    this.text = 'Accepted friend request!';
+               //    this.snackbar = true;
+               // }
+               // else {
+               //    this.text = 'Declined friend request!';
+               //    this.snackbar = true;
+               // }
                this.done = true;
                this.$forceUpdate();
             })

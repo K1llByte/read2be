@@ -70,7 +70,6 @@
                                        offsetY: true,
                                        'max-width': 305,
                                        'nudge-right': 4,
-                                       class: purple
                                     }"
                                     append-outer-icon="mdi-trash-can-outline"
                                     @click:append-outer="removeBook"
@@ -351,14 +350,11 @@ export default {
             rate: this.rating
          };
 
-         alert(form.status + '\n' + form.rate);
-         this.text = "Book edited with success!";
-         this.snackbar = true;
          // edit book status from user's books
          axios
             .patch('/read2be/api/users/' + this.$cookies.get('user') + '/books/' + this.idb, form, this.$cookies.get('options'))
             .then(res => {
-               console.log(res);
+               res.data = null;
                this.text = "Book edited with success!";
                this.snackbar = true;
             })
@@ -371,7 +367,7 @@ export default {
          axios
             .delete('/read2be/api/users/' + this.$cookies.get('user') + '/books/' + this.idb, this.$cookies.get('options'))
             .then(res => {
-               console.log(res);
+               res.data = null;
                this.added = false;
                this.text = "Book removed with success!";
                this.snackbar = true;
@@ -408,7 +404,7 @@ export default {
             if (this.added){
                var aux = this.user_books.filter(b => b.isbn === this.idb)[0];
                this.rating = aux.rate;
-               // this.status = aux.status;
+               this.status = aux.status;
             }
          })
          .catch(e => console.log('Erro no GET dos books do user: ' + e));
