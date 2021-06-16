@@ -265,8 +265,9 @@ module.exports.update_book = async (username, isbn, bookdata) => {
 
     let tmp = await User.findOne(
         {username:username},
-        {"books":{"$elemMatch":{"isbn":"439023483"}}}
+        {"books":{"$elemMatch":{"isbn":isbn}}}
     ).exec();
+
     let old_rate = tmp.books[0].rate;
 
     Book.update_rate(isbn, bookdata.rate, old_rate);
@@ -342,7 +343,6 @@ module.exports.update_request = async (username, user_id, friend_user_id, accept
     
     // Remove request from User1's pending 
     // requests list
-    console.log(`username: ${username} , friend_user_id: ${friend_user_id}`)
     let info = await User.updateOne(
         { username: username },
         { $pull: { pending: friend_user_id } }
@@ -371,6 +371,29 @@ module.exports.update_request = async (username, user_id, friend_user_id, accept
         let u1_add_u2 = (await u1_add_u2_p);
         let u2_add_u1 = (await u2_add_u1_p);
     }
+}
+
+// End friendship
+module.exports.delete_friend = async (username, user_id, friend_user_id) => {
+    // User1 - User who wants to end relationship :(
+    // User2 - Target user
+    
+    // Remove User2 from User1's friends 
+    let info1 = await User.updateOne(
+        { username: username },
+        { $pull: { friends: friend_user_id } }
+    ).exec();
+
+    if(info1.nModified !== 1)
+    {
+        throw Error("No friend for that 'friend_user_id'");
+    }
+
+    // Remove User2 from User1's friends 
+    let info2 = await User.updateOne(
+        { user_id: friend_user_id },
+        { $pull: { friends: user_id } }
+    ).exec();
 }
 
 // =========================== // User collections methods
