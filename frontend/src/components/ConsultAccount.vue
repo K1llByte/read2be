@@ -195,7 +195,7 @@ export default {
             axios
                .patch('/read2be/api/users/' + this.idu, form, this.$cookies.get('options'))
                .then(res => {
-                  res = null;
+                  res.data = null;
                   this.text = 'Info updated!';
                   this.snackbar = true;
                })

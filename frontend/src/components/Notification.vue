@@ -32,7 +32,7 @@
                      min-width="15"
                      width="16"
                      height="26"
-                     @click="accept(1)"
+                     @click="accept(true)"
                   >
                      <v-icon>
                         mdi-check
@@ -45,7 +45,7 @@
                      min-width="15"
                      width="16"
                      height="26"
-                     @click="accept(0)"
+                     @click="accept(false)"
                   >
                      <v-icon>
                         mdi-close
