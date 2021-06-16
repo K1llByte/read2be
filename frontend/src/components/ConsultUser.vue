@@ -13,7 +13,7 @@
       </v-avatar>
       <h2 class="main-color"><strong>@{{user.username}}</strong></h2>
 
-      <!-- Friend status/Add friend -->
+      <!-- Friend status/Add friend/Remove friend -->
       <FriendStatus v-if="user.username != this.$cookies.get('user')" :idu="idu" />
 
       <v-divider class="mx-16"></v-divider>

@@ -80,6 +80,27 @@
       >
          Friend request sent!
       </p>
+      <!-- Remove Friend -->
+      <v-btn
+         dark
+         v-else-if="isFriend"
+         color="#f07977"
+         class="mb-5"
+         width=180
+         @click="removeFriend"
+      >
+         Remove Friend
+         <v-icon right dense>
+            mdi-account-remove-outline
+         </v-icon>
+      </v-btn>
+      <p
+         v-else-if="!isFriend && removed"
+         color=red
+         class="mb-5"
+      >
+         Friend removed!
+      </p>
 
       <v-snackbar
          v-model="snackbar"
@@ -119,6 +140,8 @@ export default {
          sent: false,
          snackbar: false,
          text: '',
+         uid: null,
+         removed: null,
       };
    },
 
@@ -128,22 +151,43 @@ export default {
          axios
             .post('/read2be/api/users/' + this.idu + '/requests', {}, this.$cookies.get('options'))
             .then(res => {
-               console.log(res.status);
+               res.data = null;
                this.sent = true;
-               this.text = 'Friend request sent!';
+               this.text = 'Friend request sent! :)';
                this.snackbar = true;
             })
             .catch(e => {
                console.log('Erro no POST do friend request: ' + e);
                if (e.response.status == 400) {
-                  this.text = 'Friend request already sent';
+                  this.text = 'Friend request already sent!';
                   this.snackbar = true;
                }
             });
       },
-      // removeFriend: function() {
-      //    this.status = -1;
-      // },
+      removeFriend: function() {
+         axios
+            .delete('/read2be/api/users/' + this.$cookies.get('user') + '/friends/' + this.uid, this.$cookies.get('options'))
+            .then(res => {
+               res.data = null;
+               this.isFriend = false;
+               this.removed = true;
+               this.text = 'Removed friend! :(';
+               this.snackbar = true;
+            })
+            .catch(e => {
+               if (e.response.status == 400) {
+                  this.text = 'No friend to remove!';
+                  this.snackbar = true;
+               }
+               if (e.response.status == 401) {
+                  this.text = 'Forbidden!';
+                  this.snackbar = true;
+               }
+               else {
+                  console.log('Erro no DELETE do friend: ' + e);
+               }
+            });
+      },
       // removePending: function() {
       //    this.status = -1;
       // },
@@ -164,6 +208,14 @@ export default {
             this.isFriend = res.data.friends.some(f => f.username === this.idu);
          })
          .catch(e => console.log('Erro no GET dos friends do user: ' + e));
+      
+      // get user id
+      axios
+         .get('/read2be/api/users/' + this.idu, this.$cookies.get('options'))
+         .then(res => {
+            this.uid = res.data.user_id;
+         })
+         .catch(e => console.log('Erro no GET da info do user: ' + e));
    },
 
 }
