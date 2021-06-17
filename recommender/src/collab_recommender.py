@@ -8,7 +8,6 @@ from surprise import KNNBasic
 import pandas as pd
 from read2be import Read2Be
 
-#knn.train(trainingSet)
 
 
 from collections import defaultdict
@@ -70,8 +69,9 @@ if __name__ == '__main__':
     knn = KNNBasic(sim_options=sim_options)
     knn.fit(trainingSet)
     testSet = trainingSet.build_anti_testset()
+    print(testSet)
     predictions = knn.test(testSet)
     
     #### Recomendacao feita para cada user 
-    top3_recommendations = get_top3_recommendations(predictions)
-    print(top3_recommendations)
+    # top3_recommendations = get_top3_recommendations(predictions)
+    # print(top3_recommendations)
