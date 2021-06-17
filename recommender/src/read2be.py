@@ -12,4 +12,7 @@ class Read2Be:
     def get_books(self):
         books = self.db['books']
         return books.find()
-        #pprint(list(users.find({},{"_id":1})))
+
+    def get_users(self):
+        users = self.db['users']
+        return users.find({}, { '_id':0, 'username':1, 'books':1, })
