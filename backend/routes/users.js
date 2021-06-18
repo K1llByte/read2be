@@ -1044,4 +1044,37 @@ router.delete('/users/:username/collections/:name/books', auth.authenticate(CPer
     }
 });
 
+
+router.get('/users/:username/recommendations', auth.authenticate(CPermissions.amm), (req, res) => {
+
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        axios.get(`http://localhost:5000/recommender/user/${req.params.username}`)
+        .then(res2 => {
+            res.status(200).json(res2.data)
+        })
+        .catch(err => {
+            
+            if(err.response.status == 400)
+            {
+                res.status(400).json(err.response.data);
+            }
+            else if(err.response.status == 500)
+            {
+                res.status(500).json(err.response.data);
+            }
+            else
+            {
+                res.status(500).json({ "error": err.message });
+            }
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+    
+});
+
 module.exports = router;

@@ -9,12 +9,13 @@ class ContentFiltering:
         self.similarities = None
         self.booksdata = None
         self.booksdata_series = None
+        self.trained = False
 
     def fit(self, booksdata):
-        self.booksdata = []
-        for b in booksdata:
-            del b['_id']
-            self.booksdata.append(b)
+        self.booksdata = booksdata
+        # for b in booksdata:
+        #     del b['_id']
+        #     self.booksdata.append(b)
         self.booksdata_series = pd.Series(self.booksdata)
         self.books_titles = [ b["title"] for b in booksdata ]
         self.books_titles_series = pd.Series(self.books_titles)
@@ -23,9 +24,10 @@ class ContentFiltering:
 
         cv_matrix = CountVectorizer().fit_transform(self.books_titles)
         self.similarities = cosine_similarity(cv_matrix,cv_matrix)
+        self.trained = True
 
     def is_trained(self):
-        return (self.booksdata != None)
+        return self.trained
 
     def predict(self, target_isbn, top_n=5):
         if self.is_trained():
@@ -39,4 +41,4 @@ class ContentFiltering:
             else:
                 return self.books_isbns_series[top_n_indexes]
         else:
-            Exception("Model must be trained to provide recommendations")
+            raise Exception("Model must be trained to provide recommendations")

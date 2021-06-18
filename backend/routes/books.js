@@ -410,7 +410,7 @@ router.patch('/books/:isbn', auth.authenticate(Permissions.Admin), upload.single
 
 router.get('/books/:isbn/recommendations', auth.authenticate(CPermissions.amm), (req, res) => {
 
-    axios.get(`http://localhost:5000/recommender/${req.params.isbn}`)
+    axios.get(`http://localhost:5000/recommender/book/${req.params.isbn}`)
     .then(res2 => {
         res.status(200).json(res2.data)
     })
@@ -419,6 +419,10 @@ router.get('/books/:isbn/recommendations', auth.authenticate(CPermissions.amm), 
         if(err.response.status == 404)
         {
             res.status(404).json(err.response.data);
+        }
+        else if(err.response.status == 500)
+        {
+            res.status(500).json(err.response.data);
         }
         else
         {
