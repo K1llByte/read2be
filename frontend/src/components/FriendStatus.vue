@@ -84,7 +84,7 @@
       <v-btn
          dark
          v-else-if="isFriend"
-         color="#f07977"
+         color="red lighten-1"
          class="mb-5"
          width=180
          @click="removeFriend"
