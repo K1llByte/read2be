@@ -1,8 +1,10 @@
 const express = require('express');
 const Book = require('../controllers/book');
+const Genre = require('../controllers/genre');
 const { Permissions, CPermissions } = require('../controllers/user');
 const auth = require('../controllers/auth');
 const { upload, save_cover, delete_file, delete_book_storage } = require('../controllers/storage');
+const axios = require('axios');
 //const { Regex } = require('../controllers/validation');
 
 const router = express.Router();
@@ -39,13 +41,8 @@ const router = express.Router();
  *      '200':
  *        description: Successful
  */
-router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
-    
-    // If the 'search' parameter is set, then its a search,
-    // otherwise, is just a listing of all books.
+router.get('/books', auth.authenticate(CPermissions.amm), async (req, res) => {
     // TODO: Input validation on 'search'
-    const search_query = req.query.search;
-    
     let options = {};
 
     if(req.query.page_num != undefined)
@@ -68,26 +65,60 @@ router.get('/books', auth.authenticate(CPermissions.amm), (req, res) => {
         }
     }
 
-    if(search_query != undefined)
+    if(req.query.q != undefined)
     {
-        Book.search(search_query,options)
-        .then(booksdata => {
-            res.json({ "books": booksdata });
-        })
-        .catch(err => {
-            res.status(500).json({ "error": err.message });
-        });
+        options.search_query = req.query.q;
+    }
+
+    if(req.query.sort_by != undefined)
+    {
+        options.sort_by = req.query.sort_by;
+        if(!["published_year","title"].includes(options.sort_by))
+        {
+            res.status(400).json({'error': "Invalid sort_by"});
+            return;
+        }
+    }
+
+    if(req.query.order != undefined)
+    {
+        options.order = req.query.order;
+        if(options.order === 'A')
+            options.order = 1;
+        else if(options.order === 'D')
+            options.order = -1;
+        else
+        {
+            res.status(400).json({'error': "Invalid order"});
+            return;
+        }
     }
     else
     {
-        Book.list_all(options)
-        .then(booksdata => {
-            res.json({ "books": booksdata });
-        })
-        .catch(err => {
-            res.status(500).json({ "error": err.message });
-        });
+        options.order = -1;
     }
+
+    if(req.query.genre != undefined)
+    {
+        options.genre = await Genre.get_id(req.query.genre);
+        if(options.genre === null)
+        {
+            res.status(400).json({'error': "Invalid genre"});
+            return;
+        }
+        else
+            options.genre = options.genre["genre_id"]
+    }
+    
+    // If the 'search_query' parameter is set, then its a search,
+    // otherwise, is just a listing of all books.
+    Book.list_all(options)
+    .then(booksdata => {
+        res.json(booksdata);
+    })
+    .catch(err => {
+        res.status(500).json({ "error": err.message });
+    });
 });
 
 
@@ -170,6 +201,7 @@ router.post('/books', auth.authenticate(Permissions.Admin), upload.single('cover
         "genres": req.body.genres,
         "language": req.body.language,
         "description": req.body.description,
+        "published_year": req.body.published_year,
         "cover_url": req.body.cover_url,
     };
 
@@ -181,6 +213,7 @@ router.post('/books', auth.authenticate(Permissions.Admin), upload.single('cover
         book.genres      == undefined ||
         book.language    == undefined ||
         book.description == undefined)
+        // published_year can be absent
     {
         delete_file(req.file);
         res.status(400).json({ "error": "Invalid book parameters" });
@@ -353,7 +386,7 @@ router.patch('/books/:isbn', auth.authenticate(Permissions.Admin), upload.single
  *      '404':
  *        description: Book not found
  */
-router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res) => {
+ router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res) => {
     Book.get(req.params.isbn)
     .then(bookdata => {
         if(bookdata != null)
@@ -371,6 +404,30 @@ router.get('/books/:isbn/cover', auth.authenticate(CPermissions.amm), (req, res)
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });
+    });
+});
+
+
+router.get('/books/:isbn/recommendations', auth.authenticate(CPermissions.amm), (req, res) => {
+
+    axios.get(`http://localhost:5000/recommender/book/${req.params.isbn}`)
+    .then(res2 => {
+        res.status(200).json(res2.data)
+    })
+    .catch(err => {
+        
+        if(err.response.status == 404)
+        {
+            res.status(404).json(err.response.data);
+        }
+        else if(err.response.status == 500)
+        {
+            res.status(500).json(err.response.data);
+        }
+        else
+        {
+            res.status(500).json({ "error": err.message });
+        }
     });
 });
 

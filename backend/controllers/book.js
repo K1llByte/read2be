@@ -1,17 +1,18 @@
 const Book = require('../models/book');
 
 const BOOK_PROJECTION = {
-    "_id"         : 0,
-    "isbn"        : 1,
-    "title"       : 1,
-    "authors"     : 1,
-    "publisher"   : 1,
-    "genres"      : "$genres.name",
-    "language"    : { $arrayElemAt: [ "$language.name" , 0 ] },
-    "description" : 1,
-    "rate"        : "$rate.current_rate",
-    "reviews"     : 1,
-    "cover_url"   : 1
+    "_id"            : 0,
+    "isbn"           : 1,
+    "title"          : 1,
+    "authors"        : 1,
+    "publisher"      : 1,
+    "genres"         : "$genres.name",
+    "language"       : { $arrayElemAt: [ "$language.name" , 0 ] },
+    "description"    : 1,
+    "published_year" : 1,
+    "rate"           : "$rate.current_rate",
+    "reviews"        : 1,
+    "cover_url"      : 1
 };
 
 const GENRES_LOOKUP = {
@@ -40,36 +41,79 @@ module.exports.insert = async (bookdata) => {
         return null;
 
     const book = {
-        "isbn":        bookdata.isbn,
-        "title":       bookdata.title,
-        "authors":     bookdata.authors,
-        "publisher":   bookdata.publisher,
-        "genres":      bookdata.genres,
-        "language":    bookdata.language,
-        "description": bookdata.description,
-        "rate":        { "num_rates": 0, "current_rate": 0 },
-        "reviews":     [],
-        "cover_url":   bookdata.cover_url
+        "isbn":           bookdata.isbn,
+        "title":          bookdata.title,
+        "authors":        bookdata.authors,
+        "publisher":      bookdata.publisher,
+        "genres":         bookdata.genres,
+        "language":       bookdata.language,
+        "description":    bookdata.description,
+        "published_year": bookdata.published_year || null,
+        "rate":           { "num_rates": 0, "current_rate": 0 },
+        "reviews":        [],
+        "cover_url":      bookdata.cover_url
     };
     let new_book = new Book(book);
     return new_book.save();
 }
 
-// List all books
-module.exports.list_all = (options={}) => {
+// List & Search books
+module.exports.list_all = async (options={}) => {
     const page_limit = (options.page_limit != undefined) 
         ? options.page_limit : 20 ;
     const page_num = (options.page_num != undefined) 
         ? options.page_num : 0 ;
     
-    return Book.aggregate([
-            GENRES_LOOKUP,
-            LANGUAGE_LOOKUP,
-            { "$project": BOOK_PROJECTION }
-        ])
-        .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
-        .limit(page_limit)
-        .exec();
+    const pipeline = [];
+    const match = { "$match": {} }
+
+    if(options.search_query != undefined)
+    {
+        // Split the search query string and
+        // turn it into a regex to match in the 
+        // database.
+        let search_rgx = RegExp(`((${options.search_query.replace(" ",")|(")}))+`,"gi")
+        
+        match["$match"]["title"] = { "$regex": RegExp(search_rgx,"gi") };
+    }
+
+    if(options.genre != undefined)
+    {   
+        match["$match"]["genres"] = options.genre;
+    }
+
+    pipeline.push(match);
+    
+    pipeline.concat([
+        GENRES_LOOKUP,
+        LANGUAGE_LOOKUP,
+        { "$project": BOOK_PROJECTION }
+    ]);
+    
+    if (options.sort_by != undefined)
+    {
+        let sorting = {
+            "$sort": {}
+        };
+        sorting["$sort"][options.sort_by] = options.order;
+
+        pipeline.push(sorting);
+    }
+
+    pipeline.push({ "$group": { 
+        "_id": null,
+        "num_pages": { "$sum": 1 }, 
+        "books": { "$push": "$$ROOT"  }
+    }});
+
+    pipeline.push({ "$project": { 
+        "_id":0,
+        "num_pages": {"$ceil":{ "$divide": [ "$num_pages", page_limit ] }},
+        "books": { "$slice": [ "$books", (page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0), page_limit ] }
+    } });
+
+    let res = await Book.aggregate(pipeline).exec();
+    return res[0];
 }
 
 // Get a book by isbn
@@ -96,6 +140,7 @@ module.exports.set = (isbn, bookdata) => {
         genres: bookdata.genres,
         language: bookdata.language,
         description: bookdata.description,
+        published_year: bookdata.published_year,
         cover_url: bookdata.cover_url
     };
 
@@ -115,32 +160,6 @@ module.exports.delete = (isbn) => {
 }
 
 // =========================== // Book specific methods
-
-// Search books
-module.exports.search = (query, options={}) => {
-    const page_limit = (options.page_limit != undefined)
-        ? options.page_limit : 20 ;
-    const page_num = (options.page_num != undefined)
-        ? options.page_num : 0 ;
-    
-    // Split the search query string and
-    // turn it into a regex to match in the 
-    // database.
-    let seach_rgx = RegExp(`((${query.replace(" ",")|(")}))+`,"gi")
-
-    return Book.aggregate([
-            { "$match": {
-                    "title": { "$regex": RegExp(seach_rgx,"gi") }
-                }
-            },
-            GENRES_LOOKUP,
-            LANGUAGE_LOOKUP,
-            { "$project": BOOK_PROJECTION }
-        ])
-        .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
-        .limit(page_limit)
-        .exec();
-}
 
 // Add book rate
 module.exports.add_rate = async (isbn, rate) => {

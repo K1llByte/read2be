@@ -2,6 +2,9 @@ const User = require('../models/user');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const Book = require('../controllers/book');
+const Status = require('../controllers/status');
+
+all_status = undefined;
 
 // =========================== // User CRUD operations
 
@@ -12,17 +15,27 @@ module.exports.insert = (userdata) => {
 }
 
 // List all users
-module.exports.list_all = (options={}) => {
+module.exports.list_all = async (options={}) => {
     const page_limit = (options.page_limit != undefined) 
         ? options.page_limit : 20 ;
     const page_num = (options.page_num != undefined) 
         ? options.page_num : 0 ;
     
-    return User
-        .find({},{_id:0,password_hash:0})
-        .skip(page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0)
-        .limit(page_limit)
-        .exec();
+    return (await User.aggregate([
+        { "$project": {"_id":0,password_hash:0} },
+        { "$group": { 
+                "_id": null,
+                "num_pages": { "$sum": 1 }, 
+                "users": { "$push": "$$ROOT"  }
+            }
+        },
+        { "$project": { 
+                "_id":0,
+                "num_pages": {"$ceil":{ "$divide": [ "$num_pages", page_limit ] }},
+                "users": { "$slice": [ "$users", (page_num > 0 ? ( ( page_num - 1 ) * page_limit ) : 0), page_limit ] }
+            }
+        }
+    ]).exec())[0]
 }
 
 // Get a user by id
@@ -32,9 +45,19 @@ module.exports.get = async (username, options={}) => {
             "from": "books",
             "localField": "books.isbn",
             "foreignField": "isbn",
-            "as": "books"
+            "as": "full_books"
         }
     };
+
+    const STATUS_LOOKUP = {
+        "$lookup": {
+            "from": "status",
+            "localField": "books.status",
+            "foreignField": "status_id",
+            "as": "status"
+        }
+    };
+    
 
     const FRIENDS_LOOKUP = {
         "$lookup": {
@@ -53,12 +76,13 @@ module.exports.get = async (username, options={}) => {
             "as": "pending"
         }
     };
+
     
-    const PROJECTION = {
+    let PROJECTION = {
         "$project": {
             "_id":0,
-            "books._id": 0,
-            "books.reviews": 0,
+            "full_books._id": 0,
+            "full_books.reviews": 0,
 
             "friends._id": 0,
             "friends.friends": 0,
@@ -80,17 +104,13 @@ module.exports.get = async (username, options={}) => {
         }
     };
 
-    let NO_PWD_PROJECTION = PROJECTION;
-    NO_PWD_PROJECTION["$project"]["password_hash"] = 0;
-    
-    // TODO: Remove dead code
-    // const NO_PWD_PROJECTION = {
+    // let NO_PWD_PROJECTION = {
     //     "$project": {
     //         "_id":0,
     //         "password_hash":0,
-    //         "books._id": 0,
-    //         "books.reviews": 0,
-            
+    //         "full_books._id": 0,
+    //         "full_books.reviews": 0,
+
     //         "friends._id": 0,
     //         "friends.friends": 0,
     //         "friends.pending": 0,
@@ -99,22 +119,36 @@ module.exports.get = async (username, options={}) => {
     //         "friends.role": 0,
     //         "friends.books": 0,
     //         "friends.collections": 0,
+
+    //         "pending._id": 0,
+    //         "pending.friends": 0,
+    //         "pending.pending": 0,
+    //         "pending.password_hash": 0,
+    //         "pending.email": 0,
+    //         "pending.role": 0,
+    //         "pending.books": 0,
+    //         "pending.collections": 0,
     //     }
     // };
+    // let PROJECTION_2 = { "$project": {} }
 
 
     let pipeline = [];
     if(options.inline_books == 1)
         pipeline.push(BOOK_LOOKUP);
+    
+
     pipeline.push(FRIENDS_LOOKUP);
     pipeline.push(PENDING_LOOKUP);
+    // pipeline.push(STATUS_LOOKUP);
     pipeline.push({ "$match": { username: username } });
-    // console.log("options.no_password",options.no_password);
-    pipeline.push((options.with_password) ? PROJECTION : NO_PWD_PROJECTION);
+    if(!options.with_password)
+        PROJECTION['$project']['password_hash'] = 0;
+    pipeline.push(PROJECTION);
     
     const tmp = await User.aggregate(pipeline);
-    console.log("tmp[0]",tmp[0])
-;    return tmp[0];
+
+    return tmp[0];
 }
 
 // Update user data
@@ -164,7 +198,6 @@ module.exports.verify_password = async (username, in_password) => {
     let userdata = await this.get(username,{ with_password: true })
     if(userdata != null)
     {
-        //console.log("userdata.password_hash",userdata.password_hash);
         const passwd_obj = this.parse_password_hash(userdata.password_hash);
         const in_pass_hash = crypto.createHash(passwd_obj.hash_algorithm)
             .update(passwd_obj.salt + in_password)
@@ -185,6 +218,8 @@ module.exports.exists = async (username) => {
     let val = await User
         .countDocuments({ username: username })
         .exec()
+
+    console.log(val);
     return val > 0;
 }
 
@@ -230,8 +265,9 @@ module.exports.update_book = async (username, isbn, bookdata) => {
 
     let tmp = await User.findOne(
         {username:username},
-        {"books":{"$elemMatch":{"isbn":"439023483"}}}
+        {"books":{"$elemMatch":{"isbn":isbn}}}
     ).exec();
+
     let old_rate = tmp.books[0].rate;
 
     Book.update_rate(isbn, bookdata.rate, old_rate);
@@ -307,7 +343,6 @@ module.exports.update_request = async (username, user_id, friend_user_id, accept
     
     // Remove request from User1's pending 
     // requests list
-    console.log(`username: ${username} , friend_user_id: ${friend_user_id}`)
     let info = await User.updateOne(
         { username: username },
         { $pull: { pending: friend_user_id } }
@@ -336,6 +371,29 @@ module.exports.update_request = async (username, user_id, friend_user_id, accept
         let u1_add_u2 = (await u1_add_u2_p);
         let u2_add_u1 = (await u2_add_u1_p);
     }
+}
+
+// End friendship
+module.exports.delete_friend = async (username, user_id, friend_user_id) => {
+    // User1 - User who wants to end relationship :(
+    // User2 - Target user
+    
+    // Remove User2 from User1's friends 
+    let info1 = await User.updateOne(
+        { username: username },
+        { $pull: { friends: friend_user_id } }
+    ).exec();
+
+    if(info1.nModified !== 1)
+    {
+        throw Error("No friend for that 'friend_user_id'");
+    }
+
+    // Remove User2 from User1's friends 
+    let info2 = await User.updateOne(
+        { user_id: friend_user_id },
+        { $pull: { friends: user_id } }
+    ).exec();
 }
 
 // =========================== // User collections methods

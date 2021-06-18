@@ -138,7 +138,7 @@ router.post('/register', async (req,res) => {
         req.body.password.match(Regex.WEAK_PASSWD))
     {
         // Check if username exists
-        if(await User.exists(req.body.username))
+        if(!await User.exists(req.body.username))
         {
             let pass_hash_p = User.gen_password_hash(req.body.password);
             User.insert({
@@ -147,7 +147,7 @@ router.post('/register', async (req,res) => {
                 nickname: "",
                 password_hash: await pass_hash_p,
                 email: req.body.email,
-                role: User.CPermissions.amm,
+                role: User.Permissions.Member,
                 avatar_url: "",
                 books: [],
                 friends: [],

@@ -17,6 +17,7 @@ let publishers = [];
 let users = [];
 
 
+let empty = 0;
 // Small Books Dataset
 
 // fs.createReadStream('db/books.csv')
@@ -80,7 +81,7 @@ async function populate_books()
             {
                 row.publisher = utf8.decode(row.publisher);
                 row.author = utf8.decode(row.author);
-                row.title = utf8.decode(row.title);
+                row.title = utf8.decode(row.original_title);
         
                 if(row.isbn != "" && row.isbn != undefined)
                 {
@@ -132,16 +133,27 @@ async function populate_books()
                         else
                             author_data.books.push(row.isbn); 
                     });
-            
+                    
+                    const published_year = row.date_published.replace(/.*(\d{4})/, "$1");
+                    if(published_year === "")
+                    {
+                        ++empty;
+                    }
+
+                    const unique_genres_ids = genres_ids.filter(function (item, pos) {
+                        return genres_ids.indexOf(item) == pos;
+                    })
+
                     // BOOK
                     let book = {
                         "isbn": row.isbn,
-                        "title": row.original_title,
+                        "title": row.title,
                         "authors": splited_authors,
                         "publisher": row.publisher,
-                        "genres": genres_ids,
+                        "genres": unique_genres_ids,
                         "language": 1,
                         "description": row.description,
+                        "published_year": ((published_year === "") ? null : published_year),
                         "rate": {
                             "num_rates": 0,
                             "current_rate": 0
@@ -150,6 +162,8 @@ async function populate_books()
                         "cover_url": row.cover_link
                     };
                     books.push(book);
+
+                    // console.log("date_published",tmp);
                 }
                 ++i;
             }
@@ -161,11 +175,14 @@ async function populate_books()
             // description
         })
         .on('end', () => {
+            // console.log("empty",empty);
             // console.log(JSON.stringify(genres, null, 4));
             // console.log(JSON.stringify(publishers, null, 4));
             // console.log(JSON.stringify(authors, null, 4));
             // console.log(JSON.stringify(books, null, 4));
         
+            console.log(empty);
+
             fs.writeFile('db/newdata/genres.json', JSON.stringify(genres, null, 4), (err) => {} );
             fs.writeFile('db/newdata/publishers.json', JSON.stringify(publishers, null, 4), (err) => {} );
             fs.writeFile('db/newdata/authors.json', JSON.stringify(authors, null, 4), (err) => {} );
@@ -173,8 +190,6 @@ async function populate_books()
             resolve();
         });
     });
-
-    // console.log("Out books");
 }
 
 

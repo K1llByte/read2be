@@ -58,11 +58,13 @@ const users_router = require('./routes/users');
 const books_router = require('./routes/books');
 const authors_router = require('./routes/authors');
 const publishers_router = require('./routes/publishers');
+const genres_router = require('./routes/genres');
 app.use('/api', authentication_router);
 app.use('/api', users_router);
 app.use('/api', books_router);
 app.use('/api', authors_router);
 app.use('/api', publishers_router);
+app.use('/api', genres_router);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

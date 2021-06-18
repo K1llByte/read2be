@@ -6,6 +6,7 @@ const { Permissions, CPermissions } = require('../controllers/user');
 const auth = require('../controllers/auth');
 const { Regex } = require('../controllers/validation');
 const { upload, save_avatar, delete_file } = require('../controllers/storage');
+const axios = require('axios');
 
 const router = express.Router();
 
@@ -51,7 +52,7 @@ router.get('/users', auth.authenticate(CPermissions.amm), (req, res) => {
 
     User.list_all(options)
     .then(usersdata => {
-        res.json({ "users": usersdata });
+        res.json(usersdata);
     })
     .catch(err => {
         res.status(500).json({ "error": err.message });
@@ -500,7 +501,7 @@ router.patch('/users/:username/books/:isbn', auth.authenticate(CPermissions.amm)
         let any = false;
 
         const status = Number(req.body.status,10);
-        let status_exists_p =  Status.exists(status || 0);
+        let status_exists_p = Status.exists(status || 0);
 
         if(req.body.status)
         {
@@ -593,7 +594,21 @@ router.patch('/users/:username/requests/:friend_user_id', auth.authenticate(CPer
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
-        const accept = req.body.accept || true;
+
+        if(req.body.accept === "true")
+        {
+            var accept = true;
+        }
+        else if(req.body.accept === "false")
+        {
+            var accept = false;
+        }
+        else
+        {
+            res.status(400).json({ "error": "Invalid 'accept' or not present" })
+            return;
+        }
+
         User.update_request(target_username, req.user.user_id, req.params.friend_user_id, accept)
         .then(() => {
             res.json({ "success": "Friend request updated successfully" });
@@ -641,6 +656,61 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
     .catch(err => {
         res.status(400).json({ "error": err.message });
     });
+});
+
+
+/**
+ * @swagger
+ * /users/{username}/requests/{friend_user_id}:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - User
+ *    summary: Update friend request
+ *    description: Accept or reject  friend request
+ *    produces: application/json
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        description: Username
+ *        type: string
+ *      - name: friend_user_id
+ *        in: path
+ *        required: true
+ *        description: User ID of friend request
+ *        type: string
+ *      - name: accept
+ *        in: formData
+ *        required: false
+ *        default: true
+ *        description: Accept or not friend request
+ *        type: boolean
+ *    responses:
+ *      '200':
+ *        description: Friend request updated successfully
+ *      '400':
+ *        description: No pending request for 'friend_user_id'
+ *      '401':
+ *        description: Forbidden
+ */
+ router.delete('/users/:username/friends/:friend_user_id', auth.authenticate(CPermissions.amm), async (req, res) => {
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        User.delete_friend(target_username, req.user.user_id, req.params.friend_user_id)
+        .then(() => {
+            res.json({ "success": "Friend removed successfully" });
+        })
+        .catch(err => {
+            res.status(400).json({ "error": err.message });
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
 });
 
 
@@ -973,6 +1043,39 @@ router.delete('/users/:username/collections/:name/books', auth.authenticate(CPer
     {
         res.status(401).json({ "error": "Forbidden" });
     }
+});
+
+
+router.get('/users/:username/recommendations', auth.authenticate(CPermissions.amm), (req, res) => {
+
+    const target_username = req.params.username;
+    if(target_username === req.user.username)
+    {
+        axios.get(`http://localhost:5000/recommender/user/${req.params.username}`)
+        .then(res2 => {
+            res.status(200).json(res2.data)
+        })
+        .catch(err => {
+            
+            if(err.response.status == 400)
+            {
+                res.status(400).json(err.response.data);
+            }
+            else if(err.response.status == 500)
+            {
+                res.status(500).json(err.response.data);
+            }
+            else
+            {
+                res.status(500).json({ "error": err.message });
+            }
+        });
+    }
+    else
+    {
+        res.status(401).json({ "error": "Forbidden" });
+    }
+    
 });
 
 module.exports = router;
