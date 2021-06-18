@@ -1,28 +1,18 @@
 <template>
-   <v-card class="mx-auto pt-5 pb-3 mt-6" color="rgb(255, 0, 0, 0.2)"  width="1300px">
+   <v-card class="mx-auto pl-8 pt-5 pb-3 mt-8" color="rgb(255, 0, 0, 0.2)"  width="1300px">
       <v-container>
-         <v-row>
+         <p v-if="books.length" class="armwrestler main-color">Recommended for you:</p>
+         <v-row
+            v-if="books.length"
+         >
             <v-col
                v-for="b in books"
                :key="b.name"
-               cols="2"
             >
                <Book :b="b"/>
             </v-col>
          </v-row>
-         <v-row class="mt-4">
-            <v-col>
-               <div class="text-center">
-                  <v-pagination
-                     color="teal lighten-1"
-                     v-model="page"
-                     :length="num_pages"
-                     :total-visible="7"
-                     @input="changePage"
-                  ></v-pagination>
-               </div>
-            </v-col>
-         </v-row>
+         <p v-else class="armwrestler main-color mx-auto mt-3 py-10">You have no recommendations yet!</p>
       </v-container>
    </v-card>
    
@@ -42,41 +32,17 @@ export default {
 
       data: () => ({
          books: [],
-         page: 1,
-         num_pages: 10,
       }),
 
-      methods: {
-         changePage: function() {
-            // get books' name and image
-            axios
-               .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
-               .then(res => {
-                  this.num_pages = res.data.num_pages;
-                  this.books = res.data.books;
-               })
-               .catch(e => console.log('Erro no GET dos books da home: ' + e));
-         },
-      },
-
       created: function() {
-         // get books' name and image
-         // existe maneira de usar aqui o changePage para não repetir?
+         // get user's recommendations
          axios
-            .get('/read2be/api/books?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
+            .get('/read2be/api/users/' + this.$cookies.get('user') + '/recommendations', this.$cookies.get('options'))
             .then(res => {
-               this.num_pages = res.data.num_pages;
-               this.books = res.data.books;
+               this.books = res.data.recommendations;
             })
-            .catch(e => console.log('Erro no GET dos books da home: ' + e));
+            .catch(e => console.log('Erro no GET das recomendacoes do user (inicial): ' + e));
       },
 };
 
 </script>
-
-<style lang="sass" scoped>
-.v-card.on-hover.theme--light
-   background-color: rgba(#FFF, 0.8)
-   >.v-card__text
-      color: #fff
-</style>

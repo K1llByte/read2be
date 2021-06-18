@@ -8,7 +8,7 @@
       <!-- List of friends -->
       <ConsultFriends v-if="friends.length" :friends="friends" />
       <v-card v-else class="mx-auto mt-8 py-16" color="rgb(255, 0, 0, 0.2)"  width="1300px"  height="180px">
-         <p class="armwrestler">You have no friends yet</p>
+         <p class="armwrestler main-color">You have no friends yet</p>
       </v-card>
    </div>
 </template>
@@ -36,7 +36,7 @@ export default {
 
    created: function() {
 
-      // get author's books' name and image
+      // get user's friends
       axios
          .get('/read2be/api/users/' + this.$cookies.get('user'), this.$cookies.get('options'))
          .then(res => {

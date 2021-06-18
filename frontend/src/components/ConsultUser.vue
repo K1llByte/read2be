@@ -65,7 +65,6 @@ export default {
    data() {
       return {
          user: [],
-         // books_status: [],
          full_books: [],
       };
    },
@@ -77,7 +76,6 @@ export default {
          .get('/read2be/api/users/' + this.idu + '?inline_books=1', this.$cookies.get('options'))
          .then(res => {
             this.user = res.data;
-            // this.books_status = res.data.books;
             this.full_books = res.data.full_books;
          })
          .catch(e => {
