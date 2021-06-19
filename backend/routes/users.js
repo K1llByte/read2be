@@ -667,8 +667,8 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
  *      - bearerAuth: []
  *    tags:
  *      - User
- *    summary: Update friend request
- *    description: Accept or reject  friend request
+ *    summary: Remove friend
+ *    description: Remove friend
  *    produces: application/json
  *    parameters:
  *      - name: username
