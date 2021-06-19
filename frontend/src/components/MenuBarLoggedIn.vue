@@ -27,8 +27,9 @@
          <v-menu
             v-model="menu"
             :close-on-content-click="false"
-            :nudge-width="220"
+            :nudge-width="340"
             :nudge-bottom="20"
+            :nudge-left="15"
             offset-x
             offset-y
             bottom
