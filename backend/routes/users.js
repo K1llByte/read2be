@@ -695,7 +695,7 @@ router.post('/users/:username/requests', auth.authenticate(CPermissions.amm), as
  *      '401':
  *        description: Forbidden
  */
- router.delete('/users/:username/friends/:friend_user_id', auth.authenticate(CPermissions.amm), async (req, res) => {
+router.delete('/users/:username/friends/:friend_user_id', auth.authenticate(CPermissions.amm), async (req, res) => {
     const target_username = req.params.username;
     if(target_username === req.user.username)
     {
