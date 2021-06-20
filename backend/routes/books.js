@@ -408,6 +408,31 @@ router.patch('/books/:isbn', auth.authenticate(Permissions.Admin), upload.single
 });
 
 
+/**
+ * @swagger
+ * /books/{isbn}/recommendations:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *      - Book
+ *    summary: Get book recomendations
+ *    description: Get book recomendations
+ *    produces: application/json
+ *    parameters:
+ *      - name: isbn
+ *        in: path
+ *        required: true
+ *        description: Book ISBN
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: Successful
+ *      '404':
+ *        description: Book not found
+ *      '500':
+ *        description: Model isn't trained yet
+ */
 router.get('/books/:isbn/recommendations', auth.authenticate(CPermissions.amm), (req, res) => {
 
     axios.get(`http://localhost:5000/recommender/book/${req.params.isbn}`)

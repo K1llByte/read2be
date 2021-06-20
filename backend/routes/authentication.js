@@ -148,7 +148,7 @@ router.post('/register', async (req,res) => {
                 password_hash: await pass_hash_p,
                 email: req.body.email,
                 role: User.Permissions.Member,
-                avatar_url: "",
+                avatar_url: "http://localhost:8080/storage/users/default.png",
                 books: [],
                 friends: [],
                 pending: [],
