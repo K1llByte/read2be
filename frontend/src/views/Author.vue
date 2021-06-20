@@ -1,15 +1,17 @@
 <template>
-    <ConsultAuthor :ida="$route.params.name" mensagem="Teste" />
+    <div>
+        <ConsultAuthor :ida="$route.params.name" />
+    </div>
 </template>
 
 <script>
 import ConsultAuthor from "@/components/ConsultAuthor.vue"
 
 export default {
-    name: 'Authors',
+    name: 'Author',
     
     components: {
-        ConsultAuthor
+        ConsultAuthor,
     },
 }
 </script>

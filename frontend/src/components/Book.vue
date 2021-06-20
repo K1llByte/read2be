@@ -1,0 +1,68 @@
+<template>
+    <div>
+        <v-container>
+            <v-hover>
+                <template v-slot:default="{ hover }">
+                    <v-card
+                        height="220"
+                        width="150"
+                    >
+                        <v-img
+                            height="220"
+                            width="150"
+                            :src=b.cover_url
+                        ></v-img>
+
+                        <v-fade-transition>
+                            <v-overlay
+                                v-if="hover"
+                                absolute
+                                color="#036358"
+                            >
+                                <v-btn @click="goBook(b.isbn)">More info</v-btn>
+                            </v-overlay>
+                        </v-fade-transition>
+                    </v-card>
+                </template>
+            </v-hover>
+        </v-container>
+        <v-container id="title">
+            <v-flex align-self-end>
+                {{b.title}}
+            </v-flex>
+        </v-container>
+    </div>
+</template>
+
+<script>
+
+export default {
+    
+    name: 'Book',
+
+    props: ["b"],
+
+    data() {
+        return {
+
+        };
+    },
+
+    methods: {
+        goBook: function(isbn){
+            this.$goTo('/books/' + isbn);
+        }
+    }
+}
+</script>
+
+<style scoped>
+    #title {
+        overflow: hidden;
+        max-height: 7ch;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>

@@ -1,25 +1,42 @@
 <template>
     <div class="w3-container">
-        <h1>Read2be</h1>
-        <h2>{{(new Date()).toISOString().substring(0,10)}}</h2>
-        <h3>Autores do read2be</h3>
-        <table class="w3-table-all">
+        <h1 class="armwrestler x-large dark my-5">Authors</h1>
+
+        <!-- Search author -->
+        <SearchAuthor />
+        
+        <table class="w3-table-all mt-8">
             <thead>
                 <tr>
                     <th>Author</th>
                 </tr>
             </thead>
             <tbody>
-                <tr @click="goAuthor(a.name)" v-for="a in authors" v-bind:key="a.name">
+                <tr
+                    @click="goAuthor(a.name)"
+                    v-for="a in authors"
+                    v-bind:key="a.name"
+                    class="w3-hover-pale-red"
+                >
                     <td>{{a.name}}</td>
                 </tr>
             </tbody>
         </table>
+        <div class="text-center mt-5">
+            <v-pagination
+                color="teal lighten-1"
+                v-model="page"
+                :length="num_pages"
+                :total-visible="7"
+                @input="changePage"
+            ></v-pagination>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import SearchAuthor from "@/components/SearchAuthor.vue";
 
 export default {
     name: 'Authors',
@@ -27,31 +44,42 @@ export default {
     data: function() {
         return {
             authors: null,
+            num_pages: null,
+            page: 1
         };
     },
 
+    components: {
+        SearchAuthor,
+    },
+    
     created: function() {
-        
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjA0M2Y4NGI2ZTY2NTJmMzk1ZjZkYzc5IiwidXNlcm5hbWUiOiJhODUyNzIiLCJyb2xlIjoxLCJleHAiOjE2MjA1NzQ5NjUsImlhdCI6MTYxOTk3MDE2NX0.RwH1CnWvXXCj03XYRrDSK8tPVVC2hZhG7nBU47fArXg';
-
-        const options = {
-            crossdomain: true,
-            headers: { Authorization: `Bearer ${token}` }
-        };
 
         // get authors
         axios
-            .get('/read2be/api/authors/', options)
+            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
             .then(res => {
-                this.authors = res.data.authors;
+                this.num_pages = res.data.authors.num_pages;
+                this.authors = res.data.authors.authors;
             })
             .catch(e => console.log('Erro no GET dos authors: ' + e))
     },
 
     methods: {
         goAuthor: function(name){
-            this.$router.push('/authors/' + name);
-        }
+            this.$goTo('/authors/' + name);
+        },
+
+        changePage: function() {
+        // get books' name and image
+        axios
+            .get('/read2be/api/authors?page_num=' + this.page + '&page_limit=12', this.$cookies.get('options'))
+            .then(res => {
+                this.num_pages = res.data.authors.num_pages;
+                this.authors = res.data.authors.authors;
+            })
+            .catch(e => console.log('Erro no GET dos authors: ' + e));
+        },
     }
 }
 </script>

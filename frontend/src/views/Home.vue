@@ -1,15 +1,19 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-  </div>
+	<div>
+		<h1 class="armwrestler x-large dark my-4">Home</h1>
+		<Books />
+	</div>
 </template>
 
+
 <script>
-// @ is an alias to /src
+import Books from '../components/Books.vue';
 
 export default {
-  name: 'Home',
-  components: {
-  }
+	name: 'Home',
+	components: { Books },
+
+	data: () => ({
+	})
 }
 </script>
