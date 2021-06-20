@@ -15,12 +15,14 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 
 ## Planning
 
-|                |                     |
-|:--------------:|:-------------------:|
-| Base WebApp    | May 20th            |
-| 2nd Checkpoint | May 31th - June 5th |
+|                  |                     |
+|:----------------:|:-------------------:|
+| Base WebApp      | May 20th            |
+| 2nd Checkpoint   | May 31th - June 5th |
+| Final Submission | June 20th           |
 
 
+<!--
 ### Goals
 > <ins>**Base WebApp**</ins>
 > 
@@ -62,6 +64,7 @@ In each project can be found a Readme with <ins>usefull information</ins> about 
 >     - [ ] Automaticly build server (Docker Image)
 >     - [ ] Testing automation with github CI
 >     - [ ] Make deployable build
+-->
 
 
 <!--
